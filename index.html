@@ -1,0 +1,1586 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador FDS - Heineken Brasil</title>
+    
+    <!-- React e ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel para entender JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- html2canvas para gerar a imagem -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- jsPDF para gerar o PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body { -webkit-font-smoothing: antialiased; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // --- ÍCONES SVG ---
+        const IconBase = ({ children, className }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                {children}
+            </svg>
+        );
+
+        const Star = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </IconBase>
+        );
+        const RefreshCw = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                <path d="M21 3v5h-5"></path>
+                <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                <path d="M8 16H3v5"></path>
+            </IconBase>
+        );
+        const ChevronDown = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}><polyline points="6 9 12 15 18 9"></polyline></IconBase>
+        );
+        const ChevronUp = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}><polyline points="18 15 12 9 6 15"></polyline></IconBase>
+        );
+        const CheckCircle = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </IconBase>
+        );
+        const AlertCircle = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </IconBase>
+        );
+        const Globe = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </IconBase>
+        );
+        const TrendingUp = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+            </IconBase>
+        );
+        const AlertTriangle = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </IconBase>
+        );
+        const ImageIcon = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+            </IconBase>
+        );
+        const ArrowRight = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+            </IconBase>
+        );
+
+        // --- DADOS E LÃ“GICA ---
+        const CATEGORIES = {
+            premium: {
+                title: "Premium",
+                target: 57,
+                color: "bg-green-100 border-green-200",
+                headerColor: "bg-[#008200] text-white",
+                products: [
+                    "Heineken Original",
+                    "Heineken 0.0",
+                    "Eisenbahn Pilsen",
+                    "Eisenbahn Unfiltered",
+                    "Amstel Ultra",
+                    "Sol",
+                    "Sol 0.0",
+                    "Praya Lager"
+                ]
+            },
+            craft: {
+                title: "Craft (Artesanais)",
+                target: 53,
+                color: "bg-amber-50 border-amber-200",
+                headerColor: "bg-amber-600 text-white",
+                products: [
+                    "Eisenbahn (Estilos)",
+                    "Baden Baden (Estilos)",
+                    "Praya Clássica",
+                    "Lagunitas",
+                    "Blue Moon"
+                ]
+            },
+            mainstream: {
+                title: "Mainstream",
+                target: 25,
+                color: "bg-blue-50 border-blue-200",
+                headerColor: "bg-blue-600 text-white",
+                products: [
+                    "Amstel",
+                    "Devassa",
+                    "Tiger"
+                ]
+            },
+            economy: {
+                title: "Economy",
+                target: null,
+                color: "bg-gray-50 border-gray-200",
+                headerColor: "bg-gray-500 text-white",
+                products: [
+                    "Kaiser",
+                    "Glacial",
+                    "Bavária",
+                    "Schin"
+                ]
+            },
+            nab: {
+                title: "Nab",
+                target: null,
+                color: "bg-teal-50 border-teal-200",
+                headerColor: "bg-teal-600 text-white",
+                products: [
+                    "Fys Tônica",
+                    "Fys: Sabores",
+                    "Clash'd",
+                    "Mamba Water",
+                    "Baer-Mate",
+                    "Baer-Matcha"
+                ]
+            },
+            rtd: {
+                title: "RTD",
+                target: null,
+                color: "bg-purple-50 border-purple-200",
+                headerColor: "bg-purple-600 text-white",
+                products: [
+                    "Amstel Vibes"
+                ]
+            }
+        };
+        
+        const CategoryTabs = ({ categories, activeCategory, onSelect }) => {
+            return (
+                <div className="flex overflow-x-auto gap-2 p-1 mb-4 pb-2">
+                    {Object.entries(categories).map(([key, config]) => (
+                        <button
+                            key={key}
+                            onClick={() => onSelect(key)}
+                            className={`
+                                whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all shadow-sm border
+                                ${activeCategory === key 
+                                    ? `${config.headerColor} border-transparent scale-105 ring-2 ring-offset-1 ring-gray-200` 
+                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}
+                            `}
+                        >
+                            {config.title}
+                        </button>
+                    ))}
+                </div>
+            );
+        };
+
+        const ProductInput = ({ name, value, onChange, share, totalShelf }) => {
+            return (
+                <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
+                    <div className="w-1/2 pr-2">
+                        <span className="text-sm font-medium text-gray-700 block">{name}</span>
+                        <span className="text-[10px] text-gray-400">
+                            Share: <strong>{totalShelf > 0 ? share : '0.0'}%</strong>
+                        </span>
+                    </div>
+                    <div className="w-1/2 flex items-center gap-3 justify-end">
+                        <input
+                            type="number"
+                            value={value}
+                            onChange={(e) => onChange(e.target.value)}
+                            placeholder="0"
+                            className="w-20 p-2 text-right bg-white border border-gray-300 rounded text-sm focus:ring-1 focus:ring-[#008200] focus:border-[#008200] outline-none transition-all"
+                        />
+                        <span className="text-xs text-gray-400 w-4">cm</span>
+                    </div>
+                </div>
+            );
+        };
+
+        const SCORES_PRESENCA = {
+            "Baden Baden IPA Lata 350ml OU Vidro 600ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 2.0, gelada: 0.5 },
+                cc: { gondola: 2.0, gelada: 0 }
+            },
+            "Baden Baden Pilsen Cristal Lata 350ml OU Vidro 600ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 2.0, gelada: 0.5 },
+                cc: { gondola: 2.0, gelada: 0 }
+            },
+            "Baden Baden Witbier Lata 350ml OU Vidro 600ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 2.0, gelada: 0.5 },
+                cc: { gondola: 2.0, gelada: 0 }
+            },
+            "Blue Moon Lata 350ml ou Vidro 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 1.5, gelada: 0.5 },
+                cc: { gondola: 1.0, gelada: 0 }
+            },
+            "Eisenbahn IPA Lata 350ml OU Vidro 355ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 1.0, gelada: 0.5 },
+                cc: { gondola: 1.0, gelada: 0 }
+            },
+            "Eisenbahn Pale Ale Lata 350ml OU Vidro 355ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 1.0, gelada: 0.5 },
+                cc: { gondola: 1.0, gelada: 0 }
+            },
+            "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
+            },
+            "Eisenbahn Weizenbier Vidro 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Lagunitas IPA Lata 350ml OU Vidro 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 1.5, gelada: 0.5 },
+                cc: { gondola: 1.0, gelada: 0 }
+            },
+            "Praya Classica 355ml OU Classica 600ml": {
+                hiper: { gondola: 0.5, gelada: 0 },
+                super: { gondola: 0.5, gelada: 0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml": {
+                hiper: { gondola: 1.5, gelada: 0.5 },
+                super: { gondola: 1.5, gelada: 0.5 },
+                mini: { gondola: 1.5, gelada: 0.5 },
+                cc: { gondola: 2.5, gelada: 0 }
+            },
+            "Heineken Lager Lata 350ml": {
+                hiper: { gondola: 1.5, gelada: 1.0 },
+                super: { gondola: 2.0, gelada: 1.0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 3.0, gelada: 0 }
+            },
+            "Heineken Lager Vidro 250ml OU Lata 269ml": {
+                hiper: { gondola: 1.5, gelada: 1.0 },
+                super: { gondola: 2.0, gelada: 1.0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 3.0, gelada: 0 }
+            },
+            "Heineken Lager Vidro 330ml": {
+                hiper: { gondola: 1.5, gelada: 0.5 },
+                super: { gondola: 2.0, gelada: 1.0 },
+                mini: { gondola: 3.0, gelada: 1.0 },
+                cc: { gondola: 3.0, gelada: 0 }
+            },
+            "Heineken Pilsen Zero Lata 350ml OU 269ml": {
+                hiper: { gondola: 1.5, gelada: 0.5 },
+                super: { gondola: 2.0, gelada: 1.0 },
+                mini: { gondola: 2.5, gelada: 1.0 },
+                cc: { gondola: 2.5, gelada: 0 }
+            },
+            "Heineken Pilsen Zero Vidro 330ml": {
+                hiper: { gondola: 1.5, gelada: 1.0 },
+                super: { gondola: 0.5, gelada: 1.0 },
+                mini: { gondola: 2.5, gelada: 1.0 },
+                cc: { gondola: 2.5, gelada: 0 }
+            },
+            "Praya Lager 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0.5, gelada: 0.5 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Sol Pilsen Vidro 330ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0.5, gelada: 0.5 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Amstel Ultra Vidro 275ml OU Lata 269ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml": {
+                hiper: { gondola: 1.5, gelada: 0.5 },
+                super: { gondola: 1.5, gelada: 0.5 },
+                mini: { gondola: 1.5, gelada: 0.5 },
+                cc: { gondola: 2.5, gelada: 0 }
+            },
+            "Heineken Lager Lata 473ml": {
+                hiper: { gondola: 1.5, gelada: 1.0 },
+                super: { gondola: 2.0, gelada: 1.0 },
+                mini: { gondola: 3.0, gelada: 1.0 },
+                cc: { gondola: 3.0, gelada: 0 }
+            },
+            "Amstel Lager Lata 269ml": {
+                hiper: { gondola: 0, gelada: 0 },
+                super: { gondola: 0, gelada: 0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Amstel Lager Lata 350ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 1.0, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 2.0, gelada: 0 }
+            },
+            "Amstel Lager Lata 473ml": {
+                hiper: { gondola: 1.5, gelada: 1.0 },
+                super: { gondola: 1.5, gelada: 1.0 },
+                mini: { gondola: 1.5, gelada: 1.0 },
+                cc: { gondola: 2.0, gelada: 0 }
+            },
+            "Amstel Lager Vidro 355ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
+            },
+            "Fys (Todos sabores/variações, exceto Tônica)": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0.5, gelada: 0.5 },
+                cc: { gondola: 0.5, gelada: 0 }
+            },
+            "Fys Tônica Lata 350ml (Regular/Zero)": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0.5, gelada: 0.5 },
+                cc: { gondola: 0.5, gelada: 0 }
+            }
+        };
+
+        const POSICIONAMENTO_CHECKLIST = [
+            { id: 'estilos_ordenados', label: 'A exposição dos estilos está ordenada com os líquidos mais escuros para os mais claros?', points: 1.0 },
+            { id: 'baden_colorado', label: 'Baden Baden está exposta próxima a Colorado?', points: 1.0 },
+            { id: 'baden_blue_lagunitas', label: 'Baden Baden, Blue Moon e Lagunitas estão expostas na gôndola de Especiais?', points: 1.0 },
+            { id: 'amstel_planograma', label: 'Na gôndola de Mainstream, Amstel segue a ordem de posicionamento conforme planograma?', points: 1.0 },
+            { id: 'mainstream_70_30', label: 'Na gôndola de Mainstream, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 1.0 },
+            { id: 'heineken_00_dupla', label: 'Heineken 00 tem dupla exposição (na gôndola de Premium ao lado de Heineken Regular e na gôndola de cervejas sem álcool)?', points: 1.0 },
+            { id: 'premium_protecao', label: 'Na gôndola de Premium, ao menos uma marca do nosso portfólio está protegendo a marca Heineken de Spaten?', points: 1.0 },
+            { id: 'premium_planograma', label: 'Na gôndola de Premium, nossas marcas seguem a ordem de posicionamento conforme planograma?', points: 1.0 },
+            { id: 'praya_abrindo', label: 'Na gôndola de Premium, Praya Lager está abrindo o segmento?', points: 0.5 },
+            { id: 'premium_70_30', label: 'Na gôndola de Premium, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 1.0 },
+            { id: 'fys_tonica', label: 'Tônica FYS está posicionada próxima de Schweppes Tônica ou Antarctica Tônica?', points: 0.5 },
+            { id: 'extra_amstel', label: 'Ponto extra de Amstel está posicionado na área de churrasco/açougue (caso tenha)?', points: 0.0 },
+            { id: 'extra_heineken', label: 'Ponto extra de Heineken está posicionado ao lado do ponto extra de Heineken 0.0 (caso tenha)?', points: 0.0 },
+            { id: 'extra_praya', label: 'Ponto extra de Praya Lager está posicionado ao lado do ponto extra de Corona (caso tenha)?', points: 0.0 },
+            { id: 'extra_sol', label: 'Ponto extra de Sol está posicionado ao lado do ponto extra de Corona (caso tenha)?', points: 0.0 }
+        ];
+
+        const StoreTypeSelector = ({ selected, onSelect }) => {
+            const types = [
+                { id: 'hiper', label: 'Hiper' },
+                { id: 'super', label: 'Super' },
+                { id: 'mini', label: 'Mini' },
+                { id: 'cc', label: 'C&C' }
+            ];
+
+            return (
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <h2 className="text-sm font-bold text-gray-400 uppercase mb-3">Tipo de Loja</h2>
+                    <div className="flex gap-2">
+                        {types.map(type => (
+                            <button
+                                key={type.id}
+                                onClick={() => onSelect(type.id)}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all border ${
+                                    selected === type.id
+                                        ? 'bg-[#008200] text-white border-[#008200] shadow-md'
+                                        : 'bg-gray-50 text-gray-500 border-gray-200 hover:bg-gray-100'
+                                }`}
+                            >
+                                {type.label}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        const AuditoriaScorecard = ({ scores, totalScore }) => {
+            return (
+                <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mb-6 sticky top-[72px] z-30">
+                    <div className="flex justify-between items-center mb-3">
+                        <h2 className="text-sm font-bold text-gray-800 uppercase flex items-center gap-2">
+                            <Star className="w-4 h-4 text-[#008200] fill-current" />
+                            Auditoria FDS
+                        </h2>
+                        <span className="text-2xl font-bold text-[#008200]">{totalScore} <span className="text-xs text-gray-400 font-normal">/ 100 pts</span></span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 text-center">
+                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Presença</span>
+                            <span className="block text-lg font-bold text-gray-800">{scores.presenca}</span>
+                        </div>
+                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Posic.</span>
+                            <span className="block text-lg font-bold text-gray-800">{scores.posicionamento}</span>
+                        </div>
+                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Promo.</span>
+                            <span className="block text-lg font-bold text-gray-800">{scores.visibilidade}</span>
+                        </div>
+                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Preço</span>
+                            <span className="block text-lg font-bold text-gray-800">{scores.precificacao}</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const TabPresenca = ({ data, storeType, onChange }) => {
+            return (
+                <div className="space-y-3">
+                    {Object.entries(SCORES_PRESENCA).map(([product, scores]) => {
+                        const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                        const productState = data[product] || { gondola: false, gelada: false };
+
+                        return (
+                            <div key={product} className="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center">
+                                <span className="text-sm font-medium text-gray-700 w-1/3">{product}</span>
+                                <div className="flex gap-4">
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={productState.gondola}
+                                            onChange={(e) => onChange(product, 'gondola', e.target.checked)}
+                                            className="w-4 h-4 text-[#008200] rounded focus:ring-[#008200]"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-bold text-gray-600">Gôndola</span>
+                                            <span className="text-[10px] text-gray-400">+{currentScores.gondola} pts</span>
+                                        </div>
+                                    </label>
+                                    <label className="flex items-center gap-2 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={productState.gelada}
+                                            onChange={(e) => onChange(product, 'gelada', e.target.checked)}
+                                            className="w-4 h-4 text-[#008200] rounded focus:ring-[#008200]"
+                                        />
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-bold text-gray-600">Gelada</span>
+                                            <span className="text-[10px] text-gray-400">+{currentScores.gelada} pts</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            );
+        };
+
+
+
+        const CategorySection = ({ categoryKey, config, values, onUpdateWorld, onUpdateProduct, isTabbed }) => {
+            const [isOpen, setIsOpen] = useState(true);
+
+            useEffect(() => {
+                if (isTabbed) setIsOpen(true);
+            }, [isTabbed, categoryKey]);
+
+            const worldCm = values.world;
+            const productValues = values.products;
+            const totalShelf = parseFloat(worldCm) || 0;
+            
+            const hnkTotalVal = config.products.reduce((acc, prod) => {
+                return acc + (parseFloat(productValues[prod]) || 0);
+            }, 0);
+
+            const isError = hnkTotalVal > totalShelf && totalShelf > 0;
+            const totalShare = totalShelf > 0 ? ((hnkTotalVal / totalShelf) * 100).toFixed(1) : 0;
+            const isTargetMet = config.target ? parseFloat(totalShare) >= config.target : true;
+
+
+            const targetCm = config.target ? (totalShelf * config.target) / 100 : 0;
+            const missingCm = config.target ? (targetCm - hnkTotalVal).toFixed(1) : 0;
+            const isMissing = parseFloat(missingCm) > 0;
+
+            return (
+                <div className="mb-6 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                    <div 
+                        className={`p-4 flex justify-between items-center text-white transition-colors ${config.headerColor} ${isTabbed ? '' : 'cursor-pointer'}`}
+                        onClick={() => !isTabbed && setIsOpen(!isOpen)}
+                    >
+                        <div className="flex items-center gap-2">
+                            <Star className="w-5 h-5 text-red-500 fill-current" />
+                            <h2 className="text-lg font-bold uppercase tracking-wider">{config.title}</h2>
+                        </div>
+                        <div className="flex items-center gap-3">
+                            {config.target !== null && (
+                                <span className="text-xs font-semibold bg-white/20 px-2 py-1 rounded">
+                                    META: {config.target}%
+                                </span>
+                            )}
+                            {isOpen ? (isTabbed ? null : <ChevronUp size={20} />) : <ChevronDown size={20} />}
+                        </div>
+                    </div>
+
+                    {isOpen && (
+                        <div className="p-4">
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="text-xs font-bold text-blue-800 uppercase flex items-center gap-1">
+                                        <Globe size={14} />
+                                        Espaço Total da Categoria (Mundo)
+                                    </label>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        value={worldCm}
+                                        onChange={(e) => onUpdateWorld(e.target.value)}
+                                        placeholder="Total da gôndola em cm"
+                                        className="w-full p-3 text-lg bg-white border border-blue-200 rounded text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    />
+                                    <span className="font-bold text-blue-300">cm</span>
+                                </div>
+                            </div>
+
+                            <div className="mb-6">
+                                <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 pl-1">Nossos Produtos (cm)</h3>
+                                <div className={`bg-gray-50 rounded-lg p-2 border ${isError ? 'border-red-300' : 'border-gray-200'}`}>
+                                    {config.products.map((prod, idx) => {
+                                        const val = parseFloat(productValues[prod]) || 0;
+                                        const share = totalShelf > 0 ? ((val / totalShelf) * 100).toFixed(1) : 0;
+                                        
+                                        return (
+                                            <ProductInput 
+                                                key={idx}
+                                                name={prod}
+                                                value={productValues[prod] || ''}
+                                                onChange={(val) => onUpdateProduct(prod, val)}
+                                                share={share}
+                                                totalShelf={totalShelf}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                                {isError && (
+                                    <div className="flex items-center gap-1 text-red-500 text-xs mt-1 pl-1">
+                                        <AlertTriangle size={12} />
+                                        <span>Atenção: A soma dos produtos excede o total do mundo!</span>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="border-t-2 border-dashed border-gray-200 pt-4">
+                                <div className="flex justify-between items-end">
+                                    <div>
+                                        <span className="text-sm font-bold text-gray-500 block">SHARE TOTAL</span>
+                                        <span className="text-xs text-gray-400">
+                                            (Nossos: {hnkTotalVal}cm / Mundo: {totalShelf}cm)
+                                        </span>
+                                    </div>
+                                    <div className={`text-4xl font-bold ${isTargetMet ? 'text-[#008200]' : 'text-red-500'}`}>
+                                        {totalShare}%
+                                    </div>
+                                </div>
+                                {config.target && totalShelf > 0 && (
+                                    <div className="space-y-2 mt-3">
+                                        <div className={`p-2 rounded flex items-center justify-center gap-2 text-sm font-bold ${isTargetMet ? 'bg-green-100 text-[#008200]' : 'bg-red-100 text-red-600'}`}>
+                                            {isTargetMet ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+                                            {isTargetMet ? `META DE ${config.target}% ATINGIDA` : `ABAIXO DA META DE ${config.target}%`}
+                                        </div>
+                                        {isMissing && (
+                                            <div className="p-2 rounded flex items-center justify-center gap-2 text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                                                <AlertTriangle size={14} />
+                                                <span>Faltam {missingCm} cm para atingir a meta</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const TabPosicionamento = ({ 
+            allData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct,
+            checklistData, onChecklistChange 
+        }) => {
+            // Calculate shares for display
+            const getCatShare = (catKey) => {
+                const catData = allData[catKey];
+                const worldCm = parseFloat(catData.world) || 0;
+                const config = CATEGORIES[catKey];
+                let catTotalHnk = 0;
+                config.products.forEach(prod => {
+                    catTotalHnk += (parseFloat(catData.products[prod]) || 0);
+                });
+                return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+            };
+
+            const sharePremium = getCatShare('premium');
+            const shareCraft = getCatShare('craft');
+            const shareMainstream = getCatShare('mainstream');
+
+            const scorePremium = sharePremium >= 57 ? 9 : 0;
+            const scoreCraft = shareCraft >= 53 ? 8 : 0;
+            const scoreMainstream = shareMainstream >= 25 ? 8 : 0;
+            
+            let checklistScore = 0;
+            POSICIONAMENTO_CHECKLIST.forEach(item => {
+                if (checklistData[item.id]) checklistScore += item.points;
+            });
+
+            const totalScore = scorePremium + scoreCraft + scoreMainstream + checklistScore;
+
+            return (
+                <div className="space-y-6">
+                    {/* Score Summary */}
+                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                        <h3 className="text-sm font-bold text-gray-700 uppercase mb-3 text-center">Resumo da Pontuação</h3>
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+                            <div className={`p-3 rounded border ${scorePremium > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                                <span className="text-xs text-gray-500 block">Premium (Meta 57%)</span>
+                                <span className="font-bold text-lg">{sharePremium.toFixed(1)}%</span>
+                                <span className={`text-xs font-bold block ${scorePremium > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
+                                    +{scorePremium} pts
+                                </span>
+                            </div>
+                            <div className={`p-3 rounded border ${scoreCraft > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                                <span className="text-xs text-gray-500 block">Craft (Meta 53%)</span>
+                                <span className="font-bold text-lg">{shareCraft.toFixed(1)}%</span>
+                                <span className={`text-xs font-bold block ${scoreCraft > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
+                                    +{scoreCraft} pts
+                                </span>
+                            </div>
+                            <div className={`p-3 rounded border ${scoreMainstream > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
+                                <span className="text-xs text-gray-500 block">Mainstream (Meta 25%)</span>
+                                <span className="font-bold text-lg">{shareMainstream.toFixed(1)}%</span>
+                                <span className={`text-xs font-bold block ${scoreMainstream > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
+                                    +{scoreMainstream} pts
+                                </span>
+                            </div>
+                            <div className="p-3 rounded border bg-white border-gray-200">
+                                <span className="text-xs text-gray-500 block">Checklist</span>
+                                <span className="font-bold text-lg">{checklistScore} pts</span>
+                            </div>
+                        </div>
+                        <div className="text-center bg-[#008200] text-white p-2 rounded font-bold">
+                            Total Posicionamento: {totalScore} / 35 pts
+                        </div>
+                    </div>
+
+                    {/* Calculator Section */}
+                    <div>
+                        <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                            <Globe size={20} className="text-[#008200]" />
+                            Calculadora de Share
+                        </h2>
+
+                        <CategoryTabs 
+                            categories={CATEGORIES} 
+                            activeCategory={activeCategory} 
+                            onSelect={onSelectCategory} 
+                        />
+
+                        <div className="min-h-[300px]">
+                            {Object.entries(CATEGORIES).map(([key, config]) => {
+                                if (key !== activeCategory) return null;
+                                return (
+                                    <CategorySection 
+                                        key={key}
+                                        categoryKey={key}
+                                        config={config}
+                                        values={allData[key]}
+                                        onUpdateWorld={(val) => onUpdateWorld(key, val)}
+                                        onUpdateProduct={(prod, val) => onUpdateProduct(key, prod, val)}
+                                        isTabbed={true}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Checklist Section */}
+                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                        <div className="bg-gray-100 p-3 border-b border-gray-200">
+                            <h3 className="font-bold text-gray-700 text-sm uppercase">Checklist de Execução</h3>
+                        </div>
+                        <div className="divide-y divide-gray-100">
+                            {POSICIONAMENTO_CHECKLIST.map(item => (
+                                <label key={item.id} className="flex items-start gap-3 p-3 hover:bg-gray-50 cursor-pointer transition-colors">
+                                    <input
+                                        type="checkbox"
+                                        checked={checklistData[item.id] || false}
+                                        onChange={(e) => onChecklistChange(item.id, e.target.checked)}
+                                        className="mt-1 w-5 h-5 text-[#008200] rounded focus:ring-[#008200] shrink-0"
+                                    />
+                                    <div className="flex-1">
+                                        <span className="text-sm text-gray-700 block">{item.label}</span>
+                                        <span className="text-[10px] font-bold text-gray-400">Vale {item.points} pts</span>
+                                    </div>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const TabVisibilidade = ({ data, onChange }) => {
+            const totalPes = parseInt(data.totalPes) || 0;
+            
+            let targetCraft = 0;
+            let targetPremium = 0;
+            let targetMainstream = 0;
+
+            if (totalPes <= 5) {
+                targetCraft = 0;
+                targetPremium = 1;
+                targetMainstream = 1;
+            } else if (totalPes >= 6 && totalPes <= 10) {
+                targetCraft = 1;
+                targetPremium = 2;
+                targetMainstream = 1;
+            } else if (totalPes >= 11 && totalPes <= 15) {
+                targetCraft = 1;
+                targetPremium = 3;
+                targetMainstream = 2;
+            } else if (totalPes >= 16 && totalPes <= 20) {
+                targetCraft = 1;
+                targetPremium = 5;
+                targetMainstream = 2;
+            } else if (totalPes >= 21) {
+                targetCraft = 1;
+                targetPremium = 6;
+                targetMainstream = 3;
+            }
+
+            return (
+                <div className="space-y-4">
+                    <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <label className="block text-sm font-bold text-blue-800 mb-2 uppercase">
+                            Total Pes de Cerveja na Loja
+                        </label>
+                        <input
+                            type="number"
+                            value={data.totalPes}
+                            onChange={(e) => onChange('totalPes', e.target.value)}
+                            className="w-full p-3 text-lg bg-white border border-blue-300 rounded text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"
+                            placeholder="Ex: 12"
+                        />
+                        <p className="text-xs text-blue-600 mt-2">
+                            *Define as metas de Pontos Extras
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4">
+                        {/* CRAFT */}
+                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-amber-700 uppercase">Craft (Artesanais)</label>
+                                <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded">
+                                    Meta: {targetCraft > 0 ? targetCraft : '-'} PE
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    value={data.peCraft}
+                                    onChange={(e) => onChange('peCraft', e.target.value)}
+                                    className="flex-1 p-2 border border-gray-300 rounded text-sm"
+                                    placeholder="Qtd PE"
+                                />
+                                <span className="text-xs font-bold text-gray-400 w-16 text-right">
+                                    {targetCraft > 0 ? 'Vale 6 pts' : '-'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* PREMIUM */}
+                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-[#008200] uppercase">Premium</label>
+                                <span className="text-xs font-bold bg-green-100 text-[#008200] px-2 py-1 rounded">
+                                    Meta: {targetPremium} PE
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    value={data.pePremium}
+                                    onChange={(e) => onChange('pePremium', e.target.value)}
+                                    className="flex-1 p-2 border border-gray-300 rounded text-sm"
+                                    placeholder="Qtd PE"
+                                />
+                                <span className="text-xs font-bold text-gray-400 w-16 text-right">Vale 8 pts</span>
+                            </div>
+                        </div>
+
+                        {/* MAINSTREAM */}
+                        <div className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="text-sm font-bold text-blue-700 uppercase">Mainstream</label>
+                                <span className="text-xs font-bold bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                                    Meta: {targetMainstream} PE
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="number"
+                                    value={data.peMainstream}
+                                    onChange={(e) => onChange('peMainstream', e.target.value)}
+                                    className="flex-1 p-2 border border-gray-300 rounded text-sm"
+                                    placeholder="Qtd PE"
+                                />
+                                <span className="text-xs font-bold text-gray-400 w-16 text-right">Vale 6 pts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const TabPrecificacao = ({ data, onChange }) => {
+            return (
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <p className="text-sm font-medium text-gray-700 mb-4">
+                        Todos os produtos HEINEKEN estão precificados corretamente?
+                    </p>
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => onChange(true)}
+                            className={`flex-1 py-2 rounded-lg font-bold border ${data ? 'bg-[#008200] text-white border-[#008200]' : 'bg-white text-gray-500 border-gray-300'}`}
+                        >
+                            SIM
+                        </button>
+                        <button
+                            onClick={() => onChange(false)}
+                            className={`flex-1 py-2 rounded-lg font-bold border ${!data ? 'bg-red-500 text-white border-red-500' : 'bg-white text-gray-500 border-gray-300'}`}
+                        >
+                            NÃO
+                        </button>
+                    </div>
+                    <p className="text-center mt-4 font-bold text-gray-600">
+                        {data ? '5 Pontos' : '0 Pontos'}
+                    </p>
+                </div>
+            );
+        };
+
+        const AuditoriaTabs = ({ 
+            activeTab, onTabChange, 
+            presencaData, onPresencaChange, storeType,
+            allData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct,
+            checklistData, onChecklistChange,
+            visibilidadeData, onVisibilidadeChange,
+            precificacaoData, onPrecificacaoChange
+        }) => {
+            const tabs = [
+                { id: 'presenca', label: 'Presença' },
+                { id: 'posicionamento', label: 'Posicionamento' },
+                { id: 'visibilidade', label: 'Promoção' },
+                { id: 'precificacao', label: 'Preço' }
+            ];
+
+            return (
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
+                    <div className="flex border-b border-gray-200">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => onTabChange(tab.id)}
+                                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wide transition-colors ${
+                                    activeTab === tab.id
+                                        ? 'bg-[#008200] text-white'
+                                        : 'bg-white text-gray-500 hover:bg-gray-50'
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="p-4">
+                        {activeTab === 'presenca' && (
+                            <TabPresenca 
+                                data={presencaData} 
+                                storeType={storeType} 
+                                onChange={onPresencaChange} 
+                            />
+                        )}
+                        {activeTab === 'posicionamento' && (
+                            <TabPosicionamento 
+                                allData={allData}
+                                CATEGORIES={CATEGORIES}
+                                activeCategory={activeCategory}
+                                onSelectCategory={onSelectCategory}
+                                onUpdateWorld={onUpdateWorld}
+                                onUpdateProduct={onUpdateProduct}
+                                checklistData={checklistData}
+                                onChecklistChange={onChecklistChange}
+                            />
+                        )}
+                        {activeTab === 'visibilidade' && (
+                            <TabVisibilidade 
+                                data={visibilidadeData} 
+                                onChange={onVisibilidadeChange} 
+                            />
+                        )}
+                        {activeTab === 'precificacao' && (
+                            <TabPrecificacao 
+                                data={precificacaoData} 
+                                onChange={onPrecificacaoChange} 
+                            />
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+
+
+        const ReportTable = ({ allData, globalData, date, time, storeName, fds, auditoriaData, auditoriaScore, storeType }) => {
+            return (
+                <div className="bg-white p-6 w-[3200px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-[#008200] pb-6 mb-8 flex justify-between items-end">
+                        <div>
+                            <h1 className="text-6xl font-bold text-[#008200] uppercase tracking-tighter">Relatório de Execução</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-3">HEINEKEN BRASIL - EXECUÇÃO PERFEITA</p>
+                        </div>
+                        <div className="text-right text-3xl text-gray-500">
+                            <p>{date}</p>
+                            <p>{time}</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8 grid grid-cols-3 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
+                            <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <div className="flex items-baseline gap-2">
+                                <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* AUDITORIA FDS SECTION */}
+                    <div className="mb-10 border-2 border-gray-400 rounded-xl overflow-hidden">
+                        <div className="bg-[#008200] text-white p-6 flex justify-between items-center font-bold uppercase">
+                            <span className="text-4xl">Auditoria FDS</span>
+                            <span className="text-5xl">{auditoriaScore.total} / 100 pts</span>
+                        </div>
+                        <div className="grid grid-cols-4 divide-x-2 divide-gray-300 bg-gray-50 border-b border-gray-300">
+                            <div className="p-6 text-center">
+                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Presença</span>
+                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.presenca}</span>
+                            </div>
+                            <div className="p-6 text-center">
+                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Posicionamento</span>
+                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.posicionamento}</span>
+                            </div>
+                            <div className="p-6 text-center">
+                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Promoção</span>
+                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.visibilidade}</span>
+                            </div>
+                            <div className="p-6 text-center">
+                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Preço</span>
+                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.precificacao}</span>
+                            </div>
+                        </div>
+                        <div className="p-6 bg-white">
+                            <h4 className="text-4xl font-bold text-gray-500 uppercase mb-4">Detalhamento</h4>
+                            <div className="grid grid-cols-2 gap-8 text-4xl leading-relaxed">
+                                <div>
+                                    <p className="font-bold text-gray-700 mb-1">Presença (Mix Obrigatório):</p>
+                                    <ul className="list-disc pl-4 space-y-1 text-gray-600">
+                                        {Object.entries(auditoriaData.presenca).map(([prod, state]) => {
+                                            if (!state.gondola && !state.gelada) return null;
+                                            return (
+                                                <li key={prod}>
+                                                    {prod}: 
+                                                    {state.gondola ? ' Gôndola' : ''}
+                                                    {state.gondola && state.gelada ? ' + ' : ''}
+                                                    {state.gelada ? ' Gelada' : ''}
+                                                </li>
+                                            );
+                                        })}
+                                        {Object.keys(auditoriaData.presenca).length === 0 && <li>Nenhum item marcado</li>}
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-gray-700 mb-1">Posicionamento & Promoção:</p>
+                                    <ul className="space-y-1 text-gray-600">
+                                        <li><strong>Checklist Posicionamento:</strong></li>
+                                        {POSICIONAMENTO_CHECKLIST.map(item => {
+                                            if (!auditoriaData.posicionamentoChecklist?.[item.id]) return null;
+                                            return <li key={item.id} className="pl-2">- {item.label} ({item.points} pts)</li>
+                                        })}
+                                        <li className="mt-2 font-bold text-gray-700">Promoção (Total Pes: {auditoriaData.visibilidade.totalPes || 0}):</li>
+                                        <li>Craft: {auditoriaData.visibilidade.peCraft || 0} PE (Meta: {
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '-' : '1'
+                                        })</li>
+                                        <li>Premium: {auditoriaData.visibilidade.pePremium || 0} PE (Meta: {
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '1' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 10 ? '2' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 15 ? '3' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 20 ? '5' : '6'
+                                        })</li>
+                                        <li>Mainstream: {auditoriaData.visibilidade.peMainstream || 0} PE (Meta: {
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '1' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 10 ? '1' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 15 ? '2' :
+                                            (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 20 ? '2' : '3'
+                                        })</li>
+                                        <li>Preço Correto: {auditoriaData.precificacao ? 'Sim' : 'Não'}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-6">
+                        {Object.entries(CATEGORIES).map(([key, config]) => {
+                            const catData = allData[key];
+                            const worldCm = parseFloat(catData.world) || 0;
+                            const productValues = catData.products;
+                            
+                            let catTotalHnk = 0;
+                            config.products.forEach(p => catTotalHnk += (parseFloat(productValues[p]) || 0));
+                            
+                            const catShare = worldCm > 0 ? ((catTotalHnk / worldCm) * 100).toFixed(1) : 0;
+                            const isMet = config.target ? parseFloat(catShare) >= config.target : true;
+
+                            return (
+                                <div key={key} className="border-2 border-gray-400 rounded-xl overflow-hidden">
+                                    <div className={`${config.headerColor} p-6 flex flex-col gap-3 font-bold uppercase`}>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-4xl">{config.title}</span>
+                                            <div className="flex gap-8 text-3xl">
+                                                {config.target && <span>Meta: {config.target}%</span>}
+                                                <span>Atingido: {catShare}%</span>
+                                            </div>
+                                        </div>
+                                        {config.target && (parseFloat(catShare) < config.target) && (
+                                            <div className="bg-white/20 p-3 rounded text-center text-2xl mt-2">
+                                                Faltam {((worldCm * config.target / 100) - catTotalHnk).toFixed(1)} cm para a meta
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    <table className="w-full text-3xl">
+                                        <thead>
+                                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600">
+                                                <th className="p-6 text-left w-1/2">Produto</th>
+                                                <th className="p-6 text-center">Executado (cm)</th>
+                                                <th className="p-6 text-center">Share Indiv.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y-2 divide-gray-200">
+                                            {config.products.map((prod, idx) => {
+                                                const val = parseFloat(productValues[prod]) || 0;
+                                                const share = worldCm > 0 ? ((val / worldCm) * 100).toFixed(1) : 0;
+                                                return (
+                                                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                        <td className="p-6 font-medium">{prod}</td>
+                                                        <td className="p-6 text-center">{val} cm</td>
+                                                        <td className="p-6 text-center font-bold text-gray-500">{share}%</td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                        <tfoot className="bg-gray-50 font-bold border-t-2 border-gray-300">
+                                            <tr>
+                                                <td className="p-6 text-right text-gray-500">TOTAL MUNDO: {worldCm}cm</td>
+                                                <td className="p-6 text-center text-gray-800">{catTotalHnk} cm</td>
+                                                <td className={`p-6 text-center ${isMet ? 'text-[#008200] bg-green-50' : 'text-red-600 bg-red-50'}`}>
+                                                    {isMet ? 'META OK' : 'GAP'}
+                                                </td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            );
+                        })}
+
+                        <div className="bg-gray-800 text-white p-6 flex justify-between items-center border-t-8 border-[#008200]">
+                            <div>
+                                <p className="text-sm text-gray-400 uppercase">Resultado Consolidado</p>
+                                <p className="font-bold text-2xl">SHARE CERVEJA</p>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-5xl font-bold">{globalData.share}%</span>
+                                <p className="text-sm text-gray-400 mt-1">Total HNK: {globalData.hnk}cm / Total Mundo: {globalData.world}cm</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const [allData, setAllData] = useState(() => {
+                const initial = {};
+                Object.keys(CATEGORIES).forEach(key => initial[key] = { world: '', products: {} });
+                return initial;
+            });
+            
+            const [storeName, setStoreName] = useState('');
+            const [fds, setFds] = useState('');
+            const [activeCategory, setActiveCategory] = useState('premium');
+
+            // AUDITORIA STATE
+            const [storeType, setStoreType] = useState('hiper');
+            const [activeAuditoriaTab, setActiveAuditoriaTab] = useState('presenca');
+            const [auditoriaData, setAuditoriaData] = useState({
+                presenca: {}, // { "Heineken Lata": { gondola: true, gelada: false } }
+                posicionamentoChecklist: {},
+                visibilidade: {
+                    craftPontoExtra: false,
+                    premiumPes: '',
+                    mainstreamPes: ''
+                },
+                precificacao: false
+            });
+
+            const reportRef = useRef(null);
+            const [isCapturing, setIsCapturing] = useState(false);
+
+            const handleUpdateWorld = (catKey, val) => {
+                setAllData(prev => ({
+                    ...prev,
+                    [catKey]: { ...prev[catKey], world: val }
+                }));
+            };
+
+            const handleUpdateProduct = (catKey, prodName, val) => {
+                setAllData(prev => ({
+                    ...prev,
+                    [catKey]: {
+                        ...prev[catKey],
+                        products: { ...prev[catKey].products, [prodName]: val }
+                    }
+                }));
+            };
+
+            // AUDITORIA HANDLERS
+            const handleUpdateAuditoriaPresenca = (product, type, value) => {
+                setAuditoriaData(prev => ({
+                    ...prev,
+                    presenca: {
+                        ...prev.presenca,
+                        [product]: {
+                            ...prev.presenca[product],
+                            [type]: value
+                        }
+                    }
+                }));
+            };
+
+            const handleUpdateAuditoriaVisibilidade = (field, value) => {
+                setAuditoriaData(prev => ({
+                    ...prev,
+                    visibilidade: {
+                        ...prev.visibilidade,
+                        [field]: value
+                    }
+                }));
+            };
+
+            const handleUpdateAuditoriaPrecificacao = (value) => {
+                setAuditoriaData(prev => ({
+                    ...prev,
+                    precificacao: value
+                }));
+            };
+
+            const handleUpdateAuditoriaPosicionamentoChecklist = (id, checked) => {
+                setAuditoriaData(prev => ({
+                    ...prev,
+                    posicionamentoChecklist: {
+                        ...prev.posicionamentoChecklist,
+                        [id]: checked
+                    }
+                }));
+            };
+
+            const handleReset = () => {
+                if(window.confirm("Deseja limpar todos os dados inseridos?")) {
+                    const reset = {};
+                    Object.keys(CATEGORIES).forEach(key => reset[key] = { world: '', products: {} });
+                    setAllData(reset);
+                    setStoreName('');
+                    setFds('');
+                    setAuditoriaData({
+                        presenca: {},
+                        visibilidade: { craftPontoExtra: false, premiumPes: '', mainstreamPes: '' },
+                        precificacao: false
+                    });
+                    setStoreType('hiper');
+                }
+            };
+
+            const calculateGlobalShare = () => {
+                let totalHnk = 0;
+                let totalWorld = 0;
+
+                Object.entries(allData).forEach(([key, data]) => {
+                    if (key === 'nab' || key === 'rtd') return;
+
+                    const worldCm = parseFloat(data.world) || 0;
+                    totalWorld += worldCm;
+                    
+                    const config = CATEGORIES[key];
+                    config.products.forEach(prod => {
+                        totalHnk += (parseFloat(data.products[prod]) || 0);
+                    });
+                });
+
+                const share = totalWorld > 0 ? ((totalHnk / totalWorld) * 100).toFixed(1) : '0.0';
+                return { share, hnk: totalHnk, world: totalWorld };
+            };
+
+            const globalData = calculateGlobalShare();
+
+            const calculateAuditoriaScore = () => {
+                // 1. PRESENÇA
+                let scorePresenca = 0;
+                Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
+                    const productState = auditoriaData.presenca[product];
+                    if (productState) {
+                        const typeScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                        if (productState.gondola) scorePresenca += typeScores.gondola;
+                        if (productState.gelada) scorePresenca += typeScores.gelada;
+                    }
+                });
+
+                // 2. POSICIONAMENTO (SOVI)
+                let scorePosicionamento = 0;
+                
+                // Helper to calculate share for a category
+                const getCatShare = (catKey) => {
+                    const catData = allData[catKey];
+                    const worldCm = parseFloat(catData.world) || 0;
+                    const config = CATEGORIES[catKey];
+                    let catTotalHnk = 0;
+                    config.products.forEach(prod => {
+                        catTotalHnk += (parseFloat(catData.products[prod]) || 0);
+                    });
+                    return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+                };
+
+                // Premium Rule: >= 57% -> +9 pts
+                if (getCatShare('premium') >= 57) scorePosicionamento += 9;
+                
+                // Craft Rule: >= 53% -> +8 pts
+                if (getCatShare('craft') >= 53) scorePosicionamento += 8;
+
+                // Mainstream Rule: >= 25% -> +8 pts
+                if (getCatShare('mainstream') >= 25) scorePosicionamento += 8;
+                
+                // Checklist Score
+                POSICIONAMENTO_CHECKLIST.forEach(item => {
+                    if (auditoriaData.posicionamentoChecklist?.[item.id]) {
+                        scorePosicionamento += item.points;
+                    }
+                });
+
+                // 3. VISIBILIDADE
+                let scoreVisibilidade = 0;
+                const totalPes = parseInt(auditoriaData.visibilidade.totalPes) || 0;
+                const peCraft = parseInt(auditoriaData.visibilidade.peCraft) || 0;
+                const pePremium = parseInt(auditoriaData.visibilidade.pePremium) || 0;
+                const peMainstream = parseInt(auditoriaData.visibilidade.peMainstream) || 0;
+
+                // Determine targets based on Total Feet Range
+                let targetCraft = 0;
+                let targetPremium = 0;
+                let targetMainstream = 0;
+
+                if (totalPes <= 5) {
+                    targetCraft = 0;
+                    targetPremium = 1;
+                    targetMainstream = 1;
+                } else if (totalPes >= 6 && totalPes <= 10) {
+                    targetCraft = 1;
+                    targetPremium = 2;
+                    targetMainstream = 1;
+                } else if (totalPes >= 11 && totalPes <= 15) {
+                    targetCraft = 1;
+                    targetPremium = 3;
+                    targetMainstream = 2;
+                } else if (totalPes >= 16 && totalPes <= 20) {
+                    targetCraft = 1;
+                    targetPremium = 5;
+                    targetMainstream = 2;
+                } else if (totalPes >= 21) {
+                    targetCraft = 1;
+                    targetPremium = 6;
+                    targetMainstream = 3;
+                }
+
+                // Calculate Score
+                if (peCraft >= targetCraft && targetCraft > 0) scoreVisibilidade += 6; // Craft (6 pts)
+                if (pePremium >= targetPremium) scoreVisibilidade += 8; // Premium (8 pts)
+                if (peMainstream >= targetMainstream) scoreVisibilidade += 6; // Mainstream (6 pts)
+
+                // 4. PRECIFICAÇÃO
+                const scorePrecificacao = auditoriaData.precificacao ? 5 : 0;
+
+                return {
+                    presenca: scorePresenca,
+                    posicionamento: scorePosicionamento,
+                    visibilidade: scoreVisibilidade,
+                    precificacao: scorePrecificacao,
+                    total: scorePresenca + scorePosicionamento + scoreVisibilidade + scorePrecificacao
+                };
+            };
+
+            const handleDownloadPDF = async () => {
+                if (!window.html2canvas || !window.jspdf) {
+                    alert("As ferramentas de captura ainda estão carregando. Tente novamente em alguns segundos.");
+                    return;
+                }
+                
+                setIsCapturing(true);
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    const canvas = await window.html2canvas(reportRef.current, {
+                        scale: 1, // Reduced from 2 (3200px width is already high res)
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/jpeg', 0.98); // JPEG with very high quality
+                    const pdf = new window.jspdf.jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                        compress: true // Enable compression
+                    });
+
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    
+                    const imgWidth = imgProps.width;
+                    const imgHeight = imgProps.height;
+                    
+                    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                    
+                    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                    const imgY = 0; // Top align
+
+                    pdf.addImage(imgData, 'JPEG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                    
+                    const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+                    pdf.save(`RELATORIO_SOVI_HEINEKEN_${dateStr}.pdf`);
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao gerar PDF. Tente novamente.");
+                } finally {
+                    setIsCapturing(false);
+                }
+            };
+
+            const handleDownloadPNG = async () => {
+                if (!window.html2canvas) {
+                    alert("As ferramentas de captura ainda estão carregando. Tente novamente em alguns segundos.");
+                    return;
+                }
+                
+                setIsCapturing(true);
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    const canvas = await window.html2canvas(reportRef.current, {
+                        scale: 2,
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const link = document.createElement('a');
+                    link.download = `RELATORIO_SOVI_HEINEKEN_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao gerar imagem. Tente novamente.");
+                } finally {
+                    setIsCapturing(false);
+                }
+            };
+
+            const auditoriaScore = calculateAuditoriaScore();
+
+            return (
+                <div className="min-h-screen pb-20 font-sans text-gray-800">
+                    <header className="bg-[#008200] text-white p-4 shadow-lg sticky top-0 z-50">
+                        <div className="max-w-md mx-auto flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <Star className="fill-current text-red-500" />
+                                <h1 className="text-xl font-bold tracking-tighter">SIMULADOR DE FDS</h1>
+                                <span className="text-[10px] text-white/80 ml-1 font-normal">Desenvolvido por: Pedro Lameirão</span>
+                            </div>
+                            <button onClick={handleReset} className="text-white/80 hover:text-white transition-colors">
+                                <RefreshCw size={20} />
+                            </button>
+                        </div>
+                    </header>
+
+                    <main className="max-w-md mx-auto p-4">
+                        <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                            <h2 className="text-sm font-bold text-gray-400 uppercase mb-3">Dados da Loja</h2>
+                            <div className="space-y-3">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">NOME DA LOJA</label>
+                                    <input 
+                                        type="text" 
+                                        value={storeName}
+                                        onChange={(e) => setStoreName(e.target.value)}
+                                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#008200] transition-all"
+                                        placeholder="EX: Supermercado Pão de Mel"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">NOME DO COLABORADOR</label>
+                                    <input 
+                                        type="text" 
+                                        value={fds}
+                                        onChange={(e) => setFds(e.target.value)}
+                                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#008200] transition-all"
+                                        placeholder="Ex: João Silva"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <StoreTypeSelector selected={storeType} onSelect={setStoreType} />
+                        
+                        <AuditoriaScorecard scores={auditoriaScore} totalScore={auditoriaScore.total} />
+
+                        <AuditoriaTabs 
+                            activeTab={activeAuditoriaTab} 
+                            onTabChange={setActiveAuditoriaTab}
+                            presencaData={auditoriaData.presenca}
+                            onPresencaChange={handleUpdateAuditoriaPresenca}
+                            storeType={storeType}
+                            allData={allData}
+                            CATEGORIES={CATEGORIES}
+                            activeCategory={activeCategory}
+                            onSelectCategory={setActiveCategory}
+                            onUpdateWorld={handleUpdateWorld}
+                            onUpdateProduct={handleUpdateProduct}
+                            checklistData={auditoriaData.posicionamentoChecklist}
+                            onChecklistChange={handleUpdateAuditoriaPosicionamentoChecklist}
+                            visibilidadeData={auditoriaData.visibilidade}
+                            onVisibilidadeChange={handleUpdateAuditoriaVisibilidade}
+                            precificacaoData={auditoriaData.precificacao}
+                            onPrecificacaoChange={handleUpdateAuditoriaPrecificacao}
+                        />
+
+                        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
+                            <div className="max-w-md mx-auto flex gap-3">
+                                <div className="flex-1">
+                                    <p className="text-xs text-gray-500 font-bold uppercase">Share Cerveja</p>
+                                    <p className="text-3xl font-bold text-[#008200]">{globalData.share}%</p>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
+                                    Baixe o seu relatório <ArrowRight size={16} />
+                                </div>
+                                <div className="flex gap-2">
+                                    <button 
+                                        onClick={handleDownloadPDF}
+                                        disabled={isCapturing}
+                                        className="bg-[#008200] text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
+                                    >
+                                        <span>{isCapturing ? '...' : 'PDF'}</span>
+                                    </button>
+                                    <button 
+                                        onClick={handleDownloadPNG}
+                                        disabled={isCapturing}
+                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
+                                    >
+                                        <span>{isCapturing ? '...' : 'PNG'}</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+
+                    {/* Hidden Report for Capture */}
+                    <div className="fixed top-0 left-0 -z-50 opacity-0 pointer-events-none">
+                        <div ref={reportRef}>
+                            <ReportTable 
+                                allData={allData} 
+                                globalData={globalData}
+                                date={new Date().toLocaleDateString('pt-BR')}
+                                time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                                storeName={storeName}
+                                fds={fds}
+                                auditoriaData={auditoriaData}
+                                auditoriaScore={auditoriaScore}
+                                storeType={storeType}
+                            />
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
