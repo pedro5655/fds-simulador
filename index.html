@@ -105,6 +105,33 @@
                 <polyline points="12 5 19 12 12 19"></polyline>
             </IconBase>
         );
+        const LayoutGrid = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </IconBase>
+        );
+        const Target = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="6"></circle>
+                <circle cx="12" cy="12" r="2"></circle>
+            </IconBase>
+        );
+        const Megaphone = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="m3 11 18-5v12L3 14v-3z"></path>
+                <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path>
+            </IconBase>
+        );
+        const Tag = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                <line x1="7" y1="7" x2="7.01" y2="7"></line>
+            </IconBase>
+        );
 
         // --- DADOS E LÃ“GICA ---
         const CATEGORIES = {
@@ -519,7 +546,7 @@
 
 
 
-        const CategorySection = ({ categoryKey, config, values, onUpdateWorld, onUpdateProduct, isTabbed }) => {
+        const CategorySection = ({ categoryKey, config, values, onUpdateWorld, onUpdateProduct, isTabbed, onSelectCategory, allCategories }) => {
             const [isOpen, setIsOpen] = useState(true);
 
             useEffect(() => {
@@ -542,6 +569,11 @@
             const targetCm = config.target ? (totalShelf * config.target) / 100 : 0;
             const missingCm = config.target ? (targetCm - hnkTotalVal).toFixed(1) : 0;
             const isMissing = parseFloat(missingCm) > 0;
+
+            // Navigation Logic
+            const currentIndex = allCategories ? allCategories.indexOf(categoryKey) : -1;
+            const prevCategory = currentIndex > 0 ? allCategories[currentIndex - 1] : null;
+            const nextCategory = currentIndex !== -1 && currentIndex < allCategories.length - 1 ? allCategories[currentIndex + 1] : null;
 
             return (
                 <div className="mb-6 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
@@ -638,6 +670,31 @@
                                     </div>
                                 )}
                             </div>
+
+                            {/* Navigation Buttons */}
+                            {isTabbed && allCategories && (
+                                <div className="flex justify-between mt-6 pt-4 border-t border-gray-100">
+                                    {prevCategory ? (
+                                        <button
+                                            onClick={() => onSelectCategory(prevCategory)}
+                                            className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-[#008200] transition-colors"
+                                        >
+                                            <ArrowRight size={16} className="rotate-180" />
+                                            Anterior
+                                        </button>
+                                    ) : <div></div>}
+                                    
+                                    {nextCategory ? (
+                                        <button
+                                            onClick={() => onSelectCategory(nextCategory)}
+                                            className="flex items-center gap-2 text-sm font-bold text-[#008200] hover:text-[#006000] transition-colors"
+                                        >
+                                            Próximo
+                                            <ArrowRight size={16} />
+                                        </button>
+                                    ) : <div></div>}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -737,6 +794,8 @@
                                         onUpdateWorld={(val) => onUpdateWorld(key, val)}
                                         onUpdateProduct={(prod, val) => onUpdateProduct(key, prod, val)}
                                         isTabbed={true}
+                                        onSelectCategory={onSelectCategory}
+                                        allCategories={Object.keys(CATEGORIES)}
                                     />
                                 );
                             })}
@@ -919,28 +978,33 @@
             precificacaoData, onPrecificacaoChange
         }) => {
             const tabs = [
-                { id: 'presenca', label: 'Presença' },
-                { id: 'posicionamento', label: 'Posicionamento' },
-                { id: 'visibilidade', label: 'Promoção' },
-                { id: 'precificacao', label: 'Preço' }
+                { id: 'presenca', label: 'Presença', icon: LayoutGrid },
+                { id: 'posicionamento', label: 'Posic.', icon: Target },
+                { id: 'visibilidade', label: 'Promo.', icon: Megaphone },
+                { id: 'precificacao', label: 'Preço', icon: Tag }
             ];
 
             return (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-                    <div className="flex border-b border-gray-200">
-                        {tabs.map(tab => (
-                            <button
-                                key={tab.id}
-                                onClick={() => onTabChange(tab.id)}
-                                className={`flex-1 py-3 text-sm font-bold uppercase tracking-wide transition-colors ${
-                                    activeTab === tab.id
-                                        ? 'bg-[#008200] text-white'
-                                        : 'bg-white text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                {tab.label}
-                            </button>
-                        ))}
+                    <div className="bg-gray-100 p-1 rounded-xl flex gap-1 m-4">
+                        {tabs.map(tab => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => onTabChange(tab.id)}
+                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                        isActive
+                                            ? 'bg-white text-[#008200] shadow-sm ring-1 ring-black/5'
+                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
+                                    }`}
+                                >
+                                    <Icon size={16} />
+                                    {tab.label}
+                                </button>
+                            );
+                        })}
                     </div>
                     <div className="p-4">
                         {activeTab === 'presenca' && (
