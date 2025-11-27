@@ -140,6 +140,14 @@
                 <line x1="7" y1="7" x2="7.01" y2="7"></line>
             </IconBase>
         );
+        const Store = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M3 21h18v-8a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8z"></path>
+                <path d="M21 10l-1.5-6.5a2 2 0 0 0-2-1.5h-11a2 2 0 0 0-2 1.5L3 10"></path>
+                <path d="M10 14v4"></path>
+                <path d="M14 14v4"></path>
+            </IconBase>
+        );
 
         // --- DADOS E LÃ“GICA ---
         const CATEGORIES = {
@@ -477,35 +485,87 @@
             );
         };
 
-        const AuditoriaScorecard = ({ scores, totalScore }) => {
-            return (
-                <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mb-6 sticky top-[72px] z-30">
-                    <div className="flex justify-between items-center mb-3">
-                        <h2 className="text-sm font-bold text-gray-800 uppercase flex items-center gap-2">
-                            <Star className="w-4 h-4 text-[#008200] fill-current" />
-                            Auditoria FDS
-                        </h2>
-                        <span className="text-2xl font-bold text-[#008200]">{totalScore} <span className="text-xs text-gray-400 font-normal">/ 100 pts</span></span>
+        const ScoreRules = () => (
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
+                <h3 className="text-sm font-bold text-gray-800 mb-3">Regras de pontuação</h3>
+                <div className="space-y-3">
+                    <div className="flex items-start gap-3">
+                        <div className="relative mt-1">
+                            <Store size={20} className="text-gray-800" />
+                            <Star size={10} className="absolute -top-1 -right-1 text-[#008200] fill-current" />
+                        </div>
+                        <div>
+                            <span className="block text-sm font-bold text-gray-700">Verde (70% - 100%)</span>
+                            <span className="text-xs text-gray-500 leading-tight block">Excelente! Execução dentro do padrão de excelência.</span>
+                        </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-2 text-center">
-                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Presença</span>
-                            <span className="block text-lg font-bold text-gray-800">{scores.presenca}</span>
+                    <div className="flex items-start gap-3">
+                        <div className="relative mt-1">
+                            <Store size={20} className="text-gray-800" />
+                            <Star size={10} className="absolute -top-1 -right-1 text-amber-400 fill-current" />
                         </div>
-                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Posic.</span>
-                            <span className="block text-lg font-bold text-gray-800">{scores.posicionamento}</span>
+                        <div>
+                            <span className="block text-sm font-bold text-gray-700">Amarelo (30% - 69.99%)</span>
+                            <span className="text-xs text-gray-500 leading-tight block">Atenção! Existem oportunidades de melhoria na execução.</span>
                         </div>
-                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Promo.</span>
-                            <span className="block text-lg font-bold text-gray-800">{scores.visibilidade}</span>
+                    </div>
+                    <div className="flex items-start gap-3">
+                        <div className="relative mt-1">
+                            <Store size={20} className="text-gray-800" />
+                            <Star size={10} className="absolute -top-1 -right-1 text-red-500 fill-current" />
                         </div>
-                        <div className="bg-gray-50 p-2 rounded border border-gray-100">
-                            <span className="block text-[10px] font-bold text-gray-400 uppercase">Preço</span>
-                            <span className="block text-lg font-bold text-gray-800">{scores.precificacao}</span>
+                        <div>
+                            <span className="block text-sm font-bold text-gray-700">Vermelho (0% - 29.99%)</span>
+                            <span className="text-xs text-gray-500 leading-tight block">Crítico! A execução está muito abaixo do esperado. Ação imediata necessária.</span>
                         </div>
                     </div>
                 </div>
+            </div>
+        );
+
+        const AuditoriaScorecard = ({ scores, totalScore }) => {
+            let scoreColor = "text-red-500";
+            let starColor = "text-red-500";
+            
+            if (totalScore >= 70) {
+                scoreColor = "text-[#008200]";
+                starColor = "text-[#008200]";
+            } else if (totalScore >= 30) {
+                scoreColor = "text-amber-500";
+                starColor = "text-amber-500";
+            }
+
+            return (
+                <>
+                    <div className="bg-white p-4 rounded-xl shadow-md border border-gray-100 mb-6 sticky top-[72px] z-30">
+                        <div className="flex justify-between items-center mb-3">
+                            <h2 className="text-sm font-bold text-gray-800 uppercase flex items-center gap-2">
+                                <Star className={`w-4 h-4 ${starColor} fill-current`} />
+                                Auditoria FDS
+                            </h2>
+                            <span className={`text-2xl font-bold ${scoreColor}`}>{totalScore} <span className="text-xs text-gray-400 font-normal">/ 100 pts</span></span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2 text-center">
+                            <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                                <span className="block text-[10px] font-bold text-gray-400 uppercase">Presença</span>
+                                <span className="block text-lg font-bold text-gray-800">{scores.presenca}</span>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                                <span className="block text-[10px] font-bold text-gray-400 uppercase">Posic.</span>
+                                <span className="block text-lg font-bold text-gray-800">{scores.posicionamento}</span>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                                <span className="block text-[10px] font-bold text-gray-400 uppercase">Promo.</span>
+                                <span className="block text-lg font-bold text-gray-800">{scores.visibilidade}</span>
+                            </div>
+                            <div className="bg-gray-50 p-2 rounded border border-gray-100">
+                                <span className="block text-[10px] font-bold text-gray-400 uppercase">Preço</span>
+                                <span className="block text-lg font-bold text-gray-800">{scores.precificacao}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <ScoreRules />
+                </>
             );
         };
 
@@ -994,7 +1054,7 @@
 
             return (
                 <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-                    <div className="bg-gray-100 p-1 rounded-xl flex gap-1 m-4">
+                    <div className="bg-gray-100 p-1 rounded-xl flex gap-1 m-2">
                         {tabs.map(tab => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -1002,7 +1062,7 @@
                                 <button
                                     key={tab.id}
                                     onClick={() => onTabChange(tab.id)}
-                                    className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs md:text-sm font-bold transition-all ${
                                         isActive
                                             ? 'bg-white text-[#008200] shadow-sm ring-1 ring-black/5'
                                             : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
@@ -1053,43 +1113,57 @@
 
 
 
-        const ReportTable = ({ allData, globalData, date, time, storeName, fds, auditoriaData, auditoriaScore, storeType }) => {
-            return (
-                <div className="bg-white p-6 w-[3200px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-8 border-[#008200] pb-6 mb-8 flex justify-between items-end">
-                        <div>
-                            <h1 className="text-6xl font-bold text-[#008200] uppercase tracking-tighter">Relatório de Execução</h1>
-                            <p className="text-3xl text-gray-500 font-semibold mt-3">HEINEKEN BRASIL - EXECUÇÃO PERFEITA</p>
-                        </div>
-                        <div className="text-right text-3xl text-gray-500">
-                            <p>{date}</p>
-                            <p>{time}</p>
-                        </div>
-                    </div>
+            const ReportTable = ({ allData, globalData, date, time, storeName, fds, auditoriaData, auditoriaScore, storeType }) => {
+                let headerBg = "bg-red-600";
+                let scoreDesc = "Crítico! A execução está muito abaixo do esperado. Ação imediata necessária.";
+                
+                if (auditoriaScore.total >= 70) {
+                    headerBg = "bg-[#008200]";
+                    scoreDesc = "Excelente! Execução dentro do padrão de excelência.";
+                } else if (auditoriaScore.total >= 30) {
+                    headerBg = "bg-amber-500";
+                    scoreDesc = "Atenção! Existem oportunidades de melhoria na execução.";
+                }
 
-                    <div className="mb-8 grid grid-cols-3 gap-6">
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
-                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
-                        </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
-                            <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
-                        </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
-                            <div className="flex items-baseline gap-2">
-                                <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                return (
+                    <div className="bg-white p-6 w-[3200px] font-sans text-gray-800 border border-gray-300">
+                        <div className="border-b-8 border-[#008200] pb-6 mb-8 flex justify-between items-end">
+                            <div>
+                                <h1 className="text-6xl font-bold text-[#008200] uppercase tracking-tighter">Relatório de Execução</h1>
+                                <p className="text-3xl text-gray-500 font-semibold mt-3">HEINEKEN BRASIL - EXECUÇÃO PERFEITA</p>
+                            </div>
+                            <div className="text-right text-3xl text-gray-500">
+                                <p>{date}</p>
+                                <p>{time}</p>
                             </div>
                         </div>
-                    </div>
 
-                    {/* AUDITORIA FDS SECTION */}
-                    <div className="mb-10 border-2 border-gray-400 rounded-xl overflow-hidden">
-                        <div className="bg-[#008200] text-white p-6 flex justify-between items-center font-bold uppercase">
-                            <span className="text-4xl">Auditoria FDS</span>
-                            <span className="text-5xl">{auditoriaScore.total} / 100 pts</span>
+                        <div className="mb-8 grid grid-cols-3 gap-6">
+                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                                <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                            </div>
+                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
+                                <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
+                            </div>
+                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                                </div>
+                            </div>
                         </div>
+
+                        {/* AUDITORIA FDS SECTION */}
+                        <div className="mb-10 border-2 border-gray-400 rounded-xl overflow-hidden">
+                            <div className={`${headerBg} text-white p-6 flex flex-col justify-center items-center text-center font-bold uppercase gap-2`}>
+                                <div className="flex justify-between w-full items-center">
+                                    <span className="text-4xl">Auditoria FDS</span>
+                                    <span className="text-5xl">{auditoriaScore.total} / 100 pts</span>
+                                </div>
+                                <span className="text-2xl font-medium opacity-90 normal-case mt-2">{scoreDesc}</span>
+                            </div>
                         <div className="grid grid-cols-4 divide-x-2 divide-gray-300 bg-gray-50 border-b border-gray-300">
                             <div className="p-6 text-center">
                                 <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Presença</span>
