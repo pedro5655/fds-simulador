@@ -771,7 +771,7 @@
 
         const TabPosicionamento = ({ 
             allData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct,
-            checklistData, onChecklistChange 
+            checklistData, onChecklistChange, auditoriaScore 
         }) => {
             // Calculate shares for display
             const getCatShare = (catKey) => {
@@ -800,8 +800,12 @@
 
             const totalScore = scorePremium + scoreCraft + scoreMainstream + checklistScore;
 
+
+
             return (
                 <div className="space-y-6">
+
+
                     {/* Score Summary */}
                     <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                         <h3 className="text-sm font-bold text-gray-700 uppercase mb-3 text-center">Resumo da Pontuação</h3>
@@ -949,7 +953,7 @@
                             <div className="flex justify-between items-center mb-2">
                                 <label className="text-sm font-bold text-amber-700 uppercase">Craft (Artesanais)</label>
                                 <span className="text-xs font-bold bg-amber-100 text-amber-800 px-2 py-1 rounded">
-                                    Meta: {targetCraft > 0 ? targetCraft : '-'} PE
+                                    Meta: {targetCraft} PE
                                 </span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -961,7 +965,7 @@
                                     placeholder="Qtd PE"
                                 />
                                 <span className="text-xs font-bold text-gray-400 w-16 text-right">
-                                    {targetCraft > 0 ? 'Vale 6 pts' : '-'}
+                                    Vale 6 pts
                                 </span>
                             </div>
                         </div>
@@ -1043,7 +1047,8 @@
             allData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct,
             checklistData, onChecklistChange,
             visibilidadeData, onVisibilidadeChange,
-            precificacaoData, onPrecificacaoChange
+            precificacaoData, onPrecificacaoChange,
+            auditoriaScore
         }) => {
             const tabs = [
                 { id: 'presenca', label: 'Presença', icon: LayoutGrid },
@@ -1092,6 +1097,7 @@
                                 onUpdateProduct={onUpdateProduct}
                                 checklistData={checklistData}
                                 onChecklistChange={onChecklistChange}
+                                auditoriaScore={auditoriaScore}
                             />
                         )}
                         {activeTab === 'visibilidade' && (
@@ -1330,9 +1336,10 @@
                 presenca: {}, // { "Heineken Lata": { gondola: true, gelada: false } }
                 posicionamentoChecklist: {},
                 visibilidade: {
-                    craftPontoExtra: false,
-                    premiumPes: '',
-                    mainstreamPes: ''
+                    totalPes: '',
+                    peCraft: '',
+                    pePremium: '',
+                    peMainstream: ''
                 },
                 precificacao: false
             });
@@ -1407,7 +1414,7 @@
                     setFds('');
                     setAuditoriaData({
                         presenca: {},
-                        visibilidade: { craftPontoExtra: false, premiumPes: '', mainstreamPes: '' },
+                        visibilidade: { totalPes: '', peCraft: '', pePremium: '', peMainstream: '' },
                         precificacao: false
                     });
                     setStoreType('hiper');
@@ -1481,42 +1488,43 @@
 
                 // 3. VISIBILIDADE
                 let scoreVisibilidade = 0;
-                const totalPes = parseInt(auditoriaData.visibilidade.totalPes) || 0;
-                const peCraft = parseInt(auditoriaData.visibilidade.peCraft) || 0;
-                const pePremium = parseInt(auditoriaData.visibilidade.pePremium) || 0;
-                const peMainstream = parseInt(auditoriaData.visibilidade.peMainstream) || 0;
+                const { totalPes, peCraft, pePremium, peMainstream } = auditoriaData.visibilidade;
+                
+                if (totalPes !== '') {
+                    const totalPesVal = parseInt(totalPes);
 
-                // Determine targets based on Total Feet Range
-                let targetCraft = 0;
-                let targetPremium = 0;
-                let targetMainstream = 0;
+                    // Determine targets based on Total Feet Range
+                    let targetCraft = 0;
+                    let targetPremium = 0;
+                    let targetMainstream = 0;
 
-                if (totalPes <= 5) {
-                    targetCraft = 0;
-                    targetPremium = 1;
-                    targetMainstream = 1;
-                } else if (totalPes >= 6 && totalPes <= 10) {
-                    targetCraft = 1;
-                    targetPremium = 2;
-                    targetMainstream = 1;
-                } else if (totalPes >= 11 && totalPes <= 15) {
-                    targetCraft = 1;
-                    targetPremium = 3;
-                    targetMainstream = 2;
-                } else if (totalPes >= 16 && totalPes <= 20) {
-                    targetCraft = 1;
-                    targetPremium = 5;
-                    targetMainstream = 2;
-                } else if (totalPes >= 21) {
-                    targetCraft = 1;
-                    targetPremium = 6;
-                    targetMainstream = 3;
+                    if (totalPesVal <= 5) {
+                        targetCraft = 0;
+                        targetPremium = 1;
+                        targetMainstream = 1;
+                    } else if (totalPesVal >= 6 && totalPesVal <= 10) {
+                        targetCraft = 1;
+                        targetPremium = 2;
+                        targetMainstream = 1;
+                    } else if (totalPesVal >= 11 && totalPesVal <= 15) {
+                        targetCraft = 1;
+                        targetPremium = 3;
+                        targetMainstream = 2;
+                    } else if (totalPesVal >= 16 && totalPesVal <= 20) {
+                        targetCraft = 1;
+                        targetPremium = 5;
+                        targetMainstream = 2;
+                    } else if (totalPesVal >= 21) {
+                        targetCraft = 1;
+                        targetPremium = 6;
+                        targetMainstream = 3;
+                    }
+
+                    // Calculate Score - Only if input is provided
+                    if (peCraft !== '' && parseInt(peCraft) >= targetCraft) scoreVisibilidade += 6; // Craft (6 pts)
+                    if (pePremium !== '' && parseInt(pePremium) >= targetPremium) scoreVisibilidade += 8; // Premium (8 pts)
+                    if (peMainstream !== '' && parseInt(peMainstream) >= targetMainstream) scoreVisibilidade += 6; // Mainstream (6 pts)
                 }
-
-                // Calculate Score
-                if (peCraft >= targetCraft && targetCraft > 0) scoreVisibilidade += 6; // Craft (6 pts)
-                if (pePremium >= targetPremium) scoreVisibilidade += 8; // Premium (8 pts)
-                if (peMainstream >= targetMainstream) scoreVisibilidade += 6; // Mainstream (6 pts)
 
                 // 4. PRECIFICAÇÃO
                 const scorePrecificacao = auditoriaData.precificacao ? 5 : 0;
@@ -1529,6 +1537,8 @@
                     total: scorePresenca + scorePosicionamento + scoreVisibilidade + scorePrecificacao
                 };
             };
+
+
 
             const handleDownloadPDF = async () => {
                 if (!window.html2canvas || !window.jspdf) {
@@ -1674,6 +1684,7 @@
                             onVisibilidadeChange={handleUpdateAuditoriaVisibilidade}
                             precificacaoData={auditoriaData.precificacao}
                             onPrecificacaoChange={handleUpdateAuditoriaPrecificacao}
+                            auditoriaScore={auditoriaScore}
                         />
 
                         <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
