@@ -1839,6 +1839,8 @@
                                     }
                                 }
 
+                                if (status === "OK") return null;
+
                                 return (
                                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                                         <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
@@ -1981,13 +1983,14 @@
                 // If no SKUs found for this group (shouldn't happen if mapping is complete), skip
                 if (groupSkus.length === 0) return acc;
 
-                // Check if ALL items in this group are 'ruptura'
-                const allRuptura = groupSkus.every(item => {
+                // Check if ALL items in this group are 'ruptura' OR 'n_cadastrado'
+                const allLost = groupSkus.every(item => {
                     const product = `${item.brand} ${item.sku}`;
-                    return data[product] === 'ruptura';
+                    const status = data[product];
+                    return status === 'ruptura' || status === 'n_cadastrado';
                 });
 
-                if (allRuptura) {
+                if (allLost) {
                     const scores = SCORES_PRESENCA[scoreGroup][storeType] || { gondola: 0, gelada: 0 };
                     return acc + scores.gondola + scores.gelada;
                 }
@@ -2045,21 +2048,26 @@
                         {VALIDITY_DATA_LIST.map((item, idx) => {
                             const product = `${item.brand} ${item.sku}`;
                             const status = data[product] || 'ok';
+                            
+                            // Filter out OK items
+                            if (status === 'ok') return null;
+
                             const scoreGroup = getScoreGroup(product);
                             const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
                             const potentialPoints = currentScores.gondola + currentScores.gelada;
                             
                             // Calculate if points are actually lost for this specific item
                             let isLost = false;
-                            if (status === 'ruptura' && scoreGroup) {
-                                // Check if any other item in the same group is NOT ruptura
+                            if ((status === 'ruptura' || status === 'n_cadastrado') && scoreGroup) {
+                                // Check if any other item in the same group is AVAILABLE (not ruptura AND not n_cadastrado)
                                 const groupSkus = VALIDITY_DATA_LIST.filter(i => getScoreGroup(`${i.brand} ${i.sku}`) === scoreGroup);
-                                const anyOk = groupSkus.some(i => {
+                                const anyAvailable = groupSkus.some(i => {
                                     const p = `${i.brand} ${i.sku}`;
-                                    return data[p] !== 'ruptura';
+                                    const s = data[p];
+                                    return s !== 'ruptura' && s !== 'n_cadastrado';
                                 });
-                                // If NO item is OK (all are ruptura), then points are lost
-                                isLost = !anyOk;
+                                // If NO item is available, then points are lost
+                                isLost = !anyAvailable;
                             }
 
                             const lostPoints = isLost ? potentialPoints : 0;
@@ -2072,6 +2080,9 @@
                             } else if (status === 'baixo_volume') {
                                 statusColor = "bg-amber-100 text-amber-800 border-amber-200";
                                 statusText = "BAIXO VOL.";
+                            } else if (status === 'n_cadastrado') {
+                                statusColor = "bg-gray-100 text-gray-800 border-gray-200";
+                                statusText = "N/ CADAST.";
                             }
 
                             return (
@@ -2081,7 +2092,12 @@
                                         <span className="text-5xl text-gray-600 block">{item.sku}</span>
                                     </div>
                                     <div className="flex justify-between items-end mt-2">
-                                        <span className={`px-3 py-1 rounded-lg text-2xl font-bold uppercase ${status === 'ok' ? 'bg-green-200' : status === 'ruptura' ? 'bg-red-200' : 'bg-amber-200'}`}>
+                                        <span className={`px-3 py-1 rounded-lg text-2xl font-bold uppercase ${
+                                            status === 'ok' ? 'bg-green-200' : 
+                                            status === 'ruptura' ? 'bg-red-200' : 
+                                            status === 'baixo_volume' ? 'bg-amber-200' :
+                                            'bg-gray-300'
+                                        }`}>
                                             {statusText}
                                         </span>
                                         {lostPoints > 0 && (
@@ -2133,6 +2149,7 @@
                                     <div key={product} className={`p-4 rounded-lg border transition-all ${
                                         status === 'ruptura' ? 'bg-red-50 border-red-200' : 
                                         status === 'baixo_volume' ? 'bg-amber-50 border-amber-200' : 
+                                        status === 'n_cadastrado' ? 'bg-gray-100 border-gray-300' :
                                         'bg-gray-50 border-gray-200'
                                     }`}>
                                         <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
@@ -2141,10 +2158,10 @@
                                                 <span className="text-xs text-gray-500">Impacto: {potentialPoints} pts</span>
                                             </div>
                                             
-                                            <div className="flex gap-2">
+                                            <div className="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
                                                 <button
                                                     onClick={() => onChange(product, 'ok')}
-                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                    className={`px-2 py-2 rounded text-xs sm:text-sm font-bold border transition-all w-full sm:w-auto ${
                                                         status === 'ok' 
                                                             ? 'bg-green-600 text-white border-green-600 shadow-sm' 
                                                             : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
@@ -2154,7 +2171,7 @@
                                                 </button>
                                                 <button
                                                     onClick={() => onChange(product, 'baixo_volume')}
-                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                    className={`px-2 py-2 rounded text-xs sm:text-sm font-bold border transition-all w-full sm:w-auto ${
                                                         status === 'baixo_volume' 
                                                             ? 'bg-amber-500 text-white border-amber-500 shadow-sm' 
                                                             : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
@@ -2164,13 +2181,23 @@
                                                 </button>
                                                 <button
                                                     onClick={() => onChange(product, 'ruptura')}
-                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                    className={`px-2 py-2 rounded text-xs sm:text-sm font-bold border transition-all w-full sm:w-auto ${
                                                         status === 'ruptura' 
                                                             ? 'bg-red-600 text-white border-red-600 shadow-sm' 
                                                             : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
                                                     }`}
                                                 >
                                                     Ruptura
+                                                </button>
+                                                <button
+                                                    onClick={() => onChange(product, 'n_cadastrado')}
+                                                    className={`px-2 py-2 rounded text-xs sm:text-sm font-bold border transition-all w-full sm:w-auto ${
+                                                        status === 'n_cadastrado' 
+                                                            ? 'bg-gray-600 text-white border-gray-600 shadow-sm' 
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    N/ Cadast.
                                                 </button>
                                             </div>
                                         </div>
@@ -2561,6 +2588,7 @@
                     });
                     
                     const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                    
                     const pdf = new window.jspdf.jsPDF({
                         orientation: 'portrait',
                         unit: 'mm',
