@@ -1318,6 +1318,871 @@
             );
         };
 
+        const PRICE_RULER_DATA_CC = [
+            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.29, promo: 4.99 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 269", price: 3.09, promo: 3.09 },
+            { brand: "AMSTEL", sku: "LATA 269", price: 3.29, promo: 3.09 },
+            { brand: "LAGUNITAS", sku: "LONG NECK", price: 10.99, promo: 10.99 },
+            // EISENBAHN ESTILOS LONG NECK
+            { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 6.79, promo: 6.59 },
+            { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 6.79, promo: 6.59 },
+            { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
+            
+            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.99, promo: 5.79 },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.09, promo: 4.19 },
+            
+            // BADEN BADEN LATA 350
+            { brand: "BADEN BADEN WITBIER", sku: "LATA 350", price: 6.09, promo: 5.39 },
+            { brand: "BADEN BADEN AMBER", sku: "LATA 350", price: 6.09, promo: 5.39 },
+            { brand: "BADEN BADEN IPA", sku: "LATA 350", price: 6.09, promo: 5.39 },
+            { brand: "BADEN BADEN CRYSTAL", sku: "LATA 350", price: 6.09, promo: 5.39 },
+            { brand: "BADEN BADEN PEACH", sku: "LATA 350", price: 6.09, promo: 5.39 },
+            { brand: "BADEN BADEN GOLDEN", sku: "LATA 350", price: 6.09, promo: 5.39 },
+
+            // EISENBAHN ESTILOS LATA 350
+            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.69, promo: 5.09 },
+            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
+
+            { brand: "HEINEKEN", sku: "LATA 350", price: 5.69, promo: 5.29 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.69, promo: 5.29 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 3.99, promo: 3.99 },
+            { brand: "AMSTEL", sku: "LATA 350", price: 3.89, promo: 3.69 },
+            { brand: "HEINEKEN", sku: "LATA 473", price: 6.59, promo: 6.09 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 4.79, promo: 4.79 },
+            { brand: "AMSTEL", sku: "LATA 473", price: 4.89, promo: 4.69 },
+            
+            // BADEN BADEN 600
+            { brand: "BADEN BADEN WITBIER", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
+            { brand: "BADEN BADEN IPA", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
+            { brand: "BADEN BADEN CRYSTAL", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
+            { brand: "BADEN BADEN PEACH", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
+            { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
+
+            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
+            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 113.99, promo: 113.99 },
+            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 3.99, promo: 3.49 },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.79, promo: 4.79 },
+            { brand: "HEINEKEN", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "BLUE MOON", sku: "LONG NECK", price: 10.99, promo: 10.99 },
+            { brand: "BLUE MOON", sku: "LATA 350", price: 8.99, promo: 6.99 },
+            
+            // FYS TONICA
+            { brand: "FYS TONICA", sku: "LATA 350", price: 2.99, promo: 2.69 },
+            { brand: "FYS TONICA ZERO", sku: "LATA 350", price: 2.99, promo: 2.69 },
+
+            // FYS REFRIGERANTES
+            { brand: "FYS LIMÃO SICILIANO", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            { brand: "FYS LIMÃO SICILIANO ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            { brand: "FYS GUARANÁ", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            { brand: "FYS GUARANÁ ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            { brand: "FYS LARANJA", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
+
+            { brand: "LAGUNITAS", sku: "LATA 350", price: 8.99, promo: 6.99 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.09, promo: 4.19 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 3.99, promo: 3.99 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "CLASHD", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "AMSTEL", sku: "LONG NECK", price: 4.69, promo: 4.49 },
+            
+            // AMSTEL VIBES
+            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.69, promo: 3.79 },
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.69, promo: 3.79 },
+
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 4.79, promo: 4.79 },
+            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 8.99, promo: 8.99 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.99, promo: 5.79 }
+        ];
+
+        const PRICE_RULER_DATA_VAREJO = [
+            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.59, promo: 5.29 },
+            { brand: "AMSTEL", sku: "LATA 269", price: 3.49, promo: 3.29 },
+            { brand: "LAGUNITAS", sku: "LONG NECK", price: 11.59, promo: 11.59 },
+            
+            // EISENBAHN ESTILOS LONG NECK
+            { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 7.19, promo: 7.19 },
+            { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 7.19, promo: 7.19 },
+            { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 7.19, promo: 7.19 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 7.19, promo: 7.19 },
+
+            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 6.29, promo: 6.09 },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.39, promo: 4.49 },
+            
+            // BADEN BADEN LATA 350
+            { brand: "BADEN BADEN WITBIER", sku: "LATA 350", price: 6.39, promo: 5.69 },
+            { brand: "BADEN BADEN AMBER", sku: "LATA 350", price: 6.39, promo: 5.69 },
+            { brand: "BADEN BADEN IPA", sku: "LATA 350", price: 6.39, promo: 5.69 },
+            { brand: "BADEN BADEN CRYSTAL", sku: "LATA 350", price: 6.39, promo: 5.69 },
+            { brand: "BADEN BADEN PEACH", sku: "LATA 350", price: 6.39, promo: 5.69 },
+            { brand: "BADEN BADEN GOLDEN", sku: "LATA 350", price: 6.39, promo: 5.69 },
+
+            // EISENBAHN ESTILOS LATA 350
+            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.99, promo: 5.39 },
+            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
+
+            { brand: "HEINEKEN", sku: "LATA 350", price: 5.99, promo: 5.59 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.99, promo: 5.59 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 4.19, promo: 4.19 },
+            { brand: "AMSTEL", sku: "LATA 350", price: 4.09, promo: 3.89 },
+            { brand: "HEINEKEN", sku: "LATA 473", price: 7.29, promo: 6.79 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 5.29, promo: 5.29 },
+            { brand: "AMSTEL", sku: "LATA 473", price: 5.49, promo: 5.29 },
+            { brand: "SCHIN", sku: "LATA 473", price: 3.69, promo: 3.69 },
+            
+            // BADEN BADEN 600
+            { brand: "BADEN BADEN WITBIER", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
+            { brand: "BADEN BADEN IPA", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
+            { brand: "BADEN BADEN CRYSTAL", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
+            { brand: "BADEN BADEN PEACH", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
+            { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
+
+            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
+            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 119.99, promo: 119.99 },
+            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 4.19, promo: 3.69 },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.99, promo: 4.99 },
+            { brand: "HEINEKEN", sku: "LATA 269", price: 4.79, promo: 4.19 },
+            { brand: "BLUE MOON", sku: "LONG NECK", price: 11.59, promo: 11.59 },
+            { brand: "BLUE MOON", sku: "LATA 350", price: 9.49, promo: 7.39 },
+            
+            // FYS TONICA
+            { brand: "FYS TONICA", sku: "LATA 350", price: 3.19, promo: 2.89 },
+            { brand: "FYS TONICA ZERO", sku: "LATA 350", price: 3.19, promo: 2.89 },
+
+            // FYS REFRIGERANTES
+            { brand: "FYS LIMÃO SICILIANO", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            { brand: "FYS LIMÃO SICILIANO ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            { brand: "FYS GUARANÁ", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            { brand: "FYS GUARANÁ ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            { brand: "FYS LARANJA", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
+
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.39, promo: 4.49 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 4.19, promo: 4.19 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.79, promo: 4.19 },
+            { brand: "CLASHD", sku: "LATA 269", price: 4.89, promo: 4.29 },
+            { brand: "AMSTEL", sku: "LONG NECK", price: 4.99, promo: 4.79 },
+            
+            // AMSTEL VIBES
+            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.99, promo: 3.99 },
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.99, promo: 3.99 },
+
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 5.29, promo: 5.29 },
+            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 9.49, promo: 9.49 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 6.29, promo: 6.09 }
+        ];
+
+        const VALIDITY_DATA_LIST = [
+            // HEINEKEN
+            { brand: "HEINEKEN", sku: "SHOT 250ml" },
+            { brand: "HEINEKEN", sku: "LATA 269ml" },
+            { brand: "HEINEKEN", sku: "LATA 350ml" },
+            { brand: "HEINEKEN", sku: "LATA 473ml" },
+            { brand: "HEINEKEN", sku: "LONG NECK 330ml" },
+            { brand: "HEINEKEN", sku: "GARRAFA 600ml" },
+            { brand: "HEINEKEN", sku: "KEG 5L" },
+            { brand: "HEINEKEN 0.0", sku: "LATA 269ml" },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350ml" },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK 330ml" },
+            
+            // AMSTEL
+            { brand: "AMSTEL", sku: "LATA 269ml" },
+            { brand: "AMSTEL", sku: "LATA 350ml" },
+            { brand: "AMSTEL", sku: "LATA 473ml" },
+            { brand: "AMSTEL", sku: "LONG NECK" },
+            { brand: "AMSTEL", sku: "GARRAFA 600ml" },
+            { brand: "AMSTEL ULTRA", sku: "LATA 269ml" },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK" },
+            { brand: "AMSTEL VIBES", sku: "LEMON (LIMÃO) 269ml" },
+            { brand: "AMSTEL VIBES", sku: "STRAWMELLON 269ml" },
+
+            // EISENBAHN PILSEN
+            { brand: "EISENBAHN PILSEN", sku: "LATA 269ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK" },
+            { brand: "EISENBAHN PILSEN", sku: "GARRAFA 600ml" },
+
+            // EISENBAHN UNFILTERED
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350ml" },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473ml" },
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK" },
+
+            // EISENBAHN ESTILOS
+            { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK" },
+            { brand: "EISENBAHN PALE ALE", sku: "LONG NECK" },
+            { brand: "EISENBAHN PALE ALE", sku: "LATA 350ml" },
+            { brand: "EISENBAHN IPA", sku: "LONG NECK" },
+            { brand: "EISENBAHN IPA", sku: "LATA 350ml" },
+            { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK" },
+            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350ml" },
+
+            // BADEN BADEN
+            { brand: "BADEN BADEN WITBIER", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN WITBIER", sku: "GARRAFA 600ml" },
+            { brand: "BADEN BADEN AMBER", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN IPA", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN IPA", sku: "GARRAFA 600ml" },
+            { brand: "BADEN BADEN CRYSTAL", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN CRYSTAL", sku: "GARRAFA 600ml" },
+            { brand: "BADEN BADEN PEACH", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN PEACH", sku: "GARRAFA 600ml" },
+            { brand: "BADEN BADEN GOLDEN", sku: "LATA 350ml" },
+            { brand: "BADEN BADEN GOLDEN", sku: "GARRAFA 600ml" },
+
+            // SOL
+            { brand: "SOL PREMIUM", sku: "LONG NECK" },
+            { brand: "SOL PREMIUM", sku: "GARRAFA 600ml" },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK" },
+
+            // PRAYA
+            { brand: "PRAYA", sku: "CLASSICA 355ml" },
+            { brand: "PRAYA", sku: "CLASSICA 600ml" },
+            { brand: "PRAYA", sku: "LAGER 355ml" },
+
+            // LAGUNITAS
+            { brand: "LAGUNITAS", sku: "LONG NECK" },
+            { brand: "LAGUNITAS", sku: "LATA 350ml" },
+
+            // BLUE MOON
+            { brand: "BLUE MOON", sku: "LONG NECK" },
+            { brand: "BLUE MOON", sku: "LATA 350ml" },
+
+            // FYS
+            { brand: "FYS", sku: "LIMÃO SICILIANO 350ml" },
+            { brand: "FYS", sku: "LIMÃO SICILIANO ZERO 350ml" },
+            { brand: "FYS", sku: "GUARANÁ DA AMAZÔNIA 350ml" },
+            { brand: "FYS", sku: "GUARANÁ DA AMAZÔNIA ZERO 350ml" },
+            { brand: "FYS", sku: "LARANJA PERA 350ml" },
+            { brand: "FYS", sku: "LARANJA PERA ZERO 350ml" },
+            { brand: "FYS TÔNICA", sku: "ÁGUA TÔNICA 350ml" },
+            { brand: "FYS TÔNICA", sku: "ÁGUA TÔNICA ZERO 350ml" },
+            
+             // CLASH'D
+            { brand: "CLASHD", sku: "LIMÃO, MORANGO E GENGIBRE 269ml" },
+            { brand: "CLASHD", sku: "FRUTAS VERMELHAS E HIBISCO 269ml" },
+            { brand: "CLASHD", sku: "MAÇÃ, CANELA E BAUNILHA 269ml" }
+        ];
+
+        const SKU_TO_SCORE_GROUP = {
+            "BADEN BADEN IPA LATA 350ml": "Baden Baden IPA Lata 350ml OU Vidro 600ml",
+            "BADEN BADEN IPA GARRAFA 600ml": "Baden Baden IPA Lata 350ml OU Vidro 600ml",
+            "BADEN BADEN WITBIER LATA 350ml": "Baden Baden Witbier Lata 350ml OU Vidro 600ml",
+            "BADEN BADEN WITBIER GARRAFA 600ml": "Baden Baden Witbier Lata 350ml OU Vidro 600ml",
+            "BADEN BADEN CRYSTAL LATA 350ml": "Baden Baden Pilsen Cristal Lata 350ml OU Vidro 600ml",
+            "BADEN BADEN CRYSTAL GARRAFA 600ml": "Baden Baden Pilsen Cristal Lata 350ml OU Vidro 600ml",
+            "EISENBAHN IPA LATA 350ml": "Eisenbahn IPA Lata 350ml OU Vidro 355ml",
+            "EISENBAHN IPA LONG NECK": "Eisenbahn IPA Lata 350ml OU Vidro 355ml",
+            "EISENBAHN PALE ALE LATA 350ml": "Eisenbahn Pale Ale Lata 350ml OU Vidro 355ml",
+            "EISENBAHN PALE ALE LONG NECK": "Eisenbahn Pale Ale Lata 350ml OU Vidro 355ml",
+            "EISENBAHN SESSION IPA LATA 350ml": "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml",
+            "EISENBAHN SESSION IPA LONG NECK": "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml",
+            "EISENBAHN WEIZENBIER LATA 350ml": "Eisenbahn Weizenbier Vidro 355ml",
+            "EISENBAHN WEIZENBIER LONG NECK": "Eisenbahn Weizenbier Vidro 355ml",
+            "LAGUNITAS LONG NECK": "Lagunitas IPA Lata 350ml OU Vidro 355ml",
+            "LAGUNITAS LATA 350ml": "Lagunitas IPA Lata 350ml OU Vidro 355ml",
+            "BLUE MOON LONG NECK": "Blue Moon Lata 350ml ou Vidro 355ml",
+            "BLUE MOON LATA 350ml": "Blue Moon Lata 350ml ou Vidro 355ml",
+            "PRAYA CLASSICA 355ml": "Praya Classica 355ml OU Classica 600ml",
+            "PRAYA CLASSICA 600ml": "Praya Classica 355ml OU Classica 600ml",
+            "PRAYA LAGER 355ml": "Praya Lager 355ml",
+            "EISENBAHN PILSEN LONG NECK": "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml",
+            "EISENBAHN UNFILTERED LONG NECK": "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml",
+            "EISENBAHN PILSEN LATA 473ml": "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml",
+            "EISENBAHN UNFILTERED LATA 350ml": "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml",
+            "HEINEKEN LATA 350ml": "Heineken Lager Lata 350ml",
+            "HEINEKEN LATA 269ml": "Heineken Lager Vidro 250ml OU Lata 269ml",
+            "HEINEKEN SHOT 250ml": "Heineken Lager Vidro 250ml OU Lata 269ml",
+            "HEINEKEN LATA 473ml": "Heineken Lager Lata 473ml",
+            "HEINEKEN LONG NECK 330ml": "Heineken Lager Vidro 330ml",
+            "HEINEKEN 0.0 LATA 350ml": "Heineken Pilsen Zero Lata 350ml OU 269ml",
+            "HEINEKEN 0.0 LATA 269ml": "Heineken Pilsen Zero Lata 350ml OU 269ml",
+            "HEINEKEN 0.0 LONG NECK 330ml": "Heineken Pilsen Zero Vidro 330ml",
+            "SOL PREMIUM LONG NECK": "Sol Pilsen Vidro 330ml",
+            "AMSTEL ULTRA LONG NECK": "Amstel Ultra Vidro 275ml OU Lata 269ml",
+            "AMSTEL ULTRA LATA 269ml": "Amstel Ultra Vidro 275ml OU Lata 269ml",
+            "AMSTEL LATA 269ml": "Amstel Lager Lata 269ml",
+            "AMSTEL LATA 350ml": "Amstel Lager Lata 350ml",
+            "AMSTEL LATA 473ml": "Amstel Lager Lata 473ml",
+            "AMSTEL LONG NECK": "Amstel Lager Vidro 355ml",
+        };
+
+        const getScoreGroup = (product) => {
+            if (SKU_TO_SCORE_GROUP[product]) return SKU_TO_SCORE_GROUP[product];
+            if (product.includes("FYS TÔNICA")) return "Fys Tônica Lata 350ml (Regular/Zero)";
+            if (product.includes("FYS")) return "Fys (Todos sabores/variações, exceto Tônica)";
+            return null;
+        };
+
+        const ValidadeReport = ({ data, storeName, fds, date, time }) => {
+            return (
+                <div className="bg-white p-8 w-[2400px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-blue-600 pb-6 mb-8 flex justify-between items-end">
+                        <div>
+                            <h1 className="text-6xl font-bold text-blue-600 uppercase tracking-tighter">Relatório de Validade</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-3">Controle de Vencimentos - Heineken Brasil</p>
+                        </div>
+                        <div className="text-right text-3xl text-gray-500">
+                            <p>{date}</p>
+                            <p>{time}</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8 grid grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        </div>
+                    </div>
+
+                    <table className="w-full text-2xl border-collapse">
+                        <thead>
+                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-4 text-left">Produto</th>
+                                <th className="p-4 text-center">Quantidade</th>
+                                <th className="p-4 text-center">Data de Vencimento</th>
+                                <th className="p-4 text-center">Dias Restantes</th>
+                                <th className="p-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y-2 divide-gray-200">
+                            {VALIDITY_DATA_LIST.map((item, idx) => {
+                                const key = `${item.brand} - ${item.sku}`;
+                                const itemData = data[key] || {};
+                                const expirationDate = itemData.date;
+                                
+                                if (!expirationDate) return null;
+
+                                const daysRemaining = Math.ceil((new Date(expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
+                                let statusColor = "bg-green-100 text-green-800";
+                                let statusText = "OK";
+
+                                if (daysRemaining < 0) {
+                                    statusColor = "bg-red-100 text-red-800";
+                                    statusText = "VENCIDO";
+                                } else if (daysRemaining <= 30) {
+                                    statusColor = "bg-amber-100 text-amber-800";
+                                    statusText = "CRÍTICO";
+                                }
+
+                                return (
+                                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-4 text-center font-bold">{itemData.quantity || '-'}</td>
+                                        <td className="p-4 text-center">{new Date(expirationDate).toLocaleDateString('pt-BR')}</td>
+                                        <td className="p-4 text-center font-bold">{daysRemaining} dias</td>
+                                        <td className="p-4 text-center">
+                                            <span className={`px-4 py-1 rounded-full font-bold text-xl ${statusColor}`}>
+                                                {statusText}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        };
+
+        const ValidadeView = ({ data, onChange, onDownload, onDownloadPNG }) => {
+            return (
+                <div className="space-y-6">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <RefreshCw className="text-blue-500" />
+                                Controle de Validade
+                            </h2>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={onDownload}
+                                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-sm text-xs"
+                                >
+                                    PDF
+                                </button>
+                                <button
+                                    onClick={onDownloadPNG}
+                                    className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600 transition-colors shadow-sm text-xs"
+                                >
+                                    PNG
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3">
+                            {VALIDITY_DATA_LIST.map((item, idx) => {
+                                const key = `${item.brand} - ${item.sku}`;
+                                const itemData = data[key] || {};
+                                const expirationDate = itemData.date || '';
+                                const quantity = itemData.quantity || '';
+                                let daysRemaining = null;
+                                let statusColor = "text-gray-500";
+
+                                if (expirationDate) {
+                                    daysRemaining = Math.ceil((new Date(expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
+                                    if (daysRemaining < 0) statusColor = "text-red-600 font-bold";
+                                    else if (daysRemaining <= 30) statusColor = "text-amber-600 font-bold";
+                                    else statusColor = "text-green-600 font-bold";
+                                }
+
+                                return (
+                                    <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                                        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                            <div className="flex-1 min-w-0">
+                                                <span className="font-bold text-gray-800 block">{item.brand}</span>
+                                                <span className="text-xs text-gray-500 break-words">{item.sku}</span>
+                                            </div>
+                                            <div className="flex items-center gap-4">
+                                                {daysRemaining !== null && (
+                                                    <span className={`text-sm ${statusColor}`}>
+                                                        {daysRemaining} dias
+                                                    </span>
+                                                )}
+                                                <div className="flex flex-col">
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1">Qtd</label>
+                                                    <input
+                                                        type="number"
+                                                        value={quantity}
+                                                        onChange={(e) => onChange(key, 'quantity', e.target.value)}
+                                                        className="p-2 border border-gray-300 rounded text-sm w-20 focus:ring-1 focus:ring-blue-500 outline-none"
+                                                        placeholder="0"
+                                                    />
+                                                </div>
+                                                <div className="flex flex-col w-32 sm:w-auto">
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1">Validade</label>
+                                                    <input
+                                                        type="date"
+                                                        value={expirationDate}
+                                                        onChange={(e) => onChange(key, 'date', e.target.value)}
+                                                        className="w-full p-2 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 outline-none"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const PriceRulerReport = ({ data, rulerData, storeName, fds, date, time }) => {
+            return (
+                <div className="bg-white p-8 w-[2400px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-green-600 pb-6 mb-8 flex justify-between items-end">
+                        <div>
+                            <h1 className="text-6xl font-bold text-green-600 uppercase tracking-tighter">Relatório de Régua de Preço</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-3">Auditoria de Preços - Heineken Brasil</p>
+                        </div>
+                        <div className="text-right text-3xl text-gray-500">
+                            <p>{date}</p>
+                            <p>{time}</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8 grid grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        </div>
+                    </div>
+
+                    <table className="w-full text-2xl border-collapse">
+                        <thead>
+                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-4 text-left">Produto</th>
+                                <th className="p-4 text-center">Preço Régua</th>
+                                <th className="p-4 text-center">Preço Loja</th>
+                                <th className="p-4 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y-2 divide-gray-200">
+                            {rulerData.map((item, idx) => {
+                                const key = `${item.brand} - ${item.sku}`;
+                                const entry = data[key] || {};
+                                const priceStore = entry.price;
+                                const pricePromo = entry.promo;
+                                
+                                if (!priceStore && !pricePromo) return null;
+
+                                let status = "OK";
+                                let statusColor = "bg-green-100 text-green-800";
+                                
+                                // Validation Logic
+                                if (priceStore) {
+                                    if (parseFloat(priceStore) !== item.price) {
+                                        status = "FORA DA RÉGUA";
+                                        statusColor = "bg-red-100 text-red-800";
+                                    }
+                                }
+                                if (pricePromo) {
+                                    if (parseFloat(pricePromo) !== item.promo) {
+                                        status = "FORA DA RÉGUA (PROMO)";
+                                        statusColor = "bg-red-100 text-red-800";
+                                    }
+                                }
+
+                                return (
+                                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-4 text-center">
+                                            <div className="flex flex-col">
+                                                <span className="text-gray-500 text-2xl">Reg: R$ {item.price.toFixed(2).replace('.', ',')}</span>
+                                                <span className="text-gray-500 text-2xl">Promo: R$ {item.promo.toFixed(2).replace('.', ',')}</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-center font-bold">
+                                            {priceStore && <div>Reg: R$ {parseFloat(priceStore).toFixed(2).replace('.', ',')}</div>}
+                                            {pricePromo && <div>Promo: R$ {parseFloat(pricePromo).toFixed(2).replace('.', ',')}</div>}
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <span className={`px-4 py-1 rounded-full font-bold text-xl ${statusColor}`}>
+                                                {status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        };
+
+        const PriceRulerView = ({ data, rulerData, onChange, onDownload, onDownloadPNG }) => {
+            const formatCurrency = (value) => {
+                if (!value) return '';
+                return parseFloat(value).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+            };
+
+            const handleCurrencyChange = (key, field, value) => {
+                const digits = value.replace(/\D/g, '');
+                if (!digits) {
+                    onChange(key, field, '');
+                    return;
+                }
+                const number = (parseInt(digits, 10) / 100).toFixed(2);
+                onChange(key, field, number);
+            };
+
+            return (
+                <div className="space-y-6">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <Tag className="text-green-600" />
+                                Régua de Preço
+                            </h2>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={onDownload}
+                                    className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors shadow-sm text-xs"
+                                >
+                                    PDF
+                                </button>
+                                <button
+                                    onClick={onDownloadPNG}
+                                    className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-600 transition-colors shadow-sm text-xs"
+                                >
+                                    PNG
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3">
+                            {rulerData.map((item, idx) => {
+                                const key = `${item.brand} - ${item.sku}`;
+                                const entry = data[key] || {};
+                                
+                                const isStorePriceWrong = entry.price && parseFloat(entry.price) !== item.price;
+                                const isPromoPriceWrong = entry.promo && parseFloat(entry.promo) !== item.promo;
+
+                                return (
+                                    <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50">
+                                        <div className="flex flex-col gap-3">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <span className="font-bold text-gray-800 block">{item.brand}</span>
+                                                    <span className="text-xs text-gray-500">{item.sku}</span>
+                                                </div>
+                                                <div className="text-right text-xs text-gray-500">
+                                                    <div>Régua: <span className="font-bold">R$ {item.price.toFixed(2).replace('.', ',')}</span></div>
+                                                    <div>Promo: <span className="font-bold">R$ {item.promo.toFixed(2).replace('.', ',')}</span></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="flex gap-4">
+                                                <div className="flex-1">
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Preço Loja</label>
+                                                    <input
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        value={formatCurrency(entry.price)}
+                                                        onChange={(e) => handleCurrencyChange(key, 'price', e.target.value)}
+                                                        className={`w-full p-2 border rounded text-sm outline-none ${isStorePriceWrong ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-300 focus:border-green-500'}`}
+                                                        placeholder="0,00"
+                                                    />
+                                                    {isStorePriceWrong && <span className="text-[10px] text-red-500 font-bold">Fora da Régua</span>}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Preço Promo (Caso esteja)</label>
+                                                    <input
+                                                        type="text"
+                                                        inputMode="numeric"
+                                                        value={formatCurrency(entry.promo)}
+                                                        onChange={(e) => handleCurrencyChange(key, 'promo', e.target.value)}
+                                                        className={`w-full p-2 border rounded text-sm outline-none ${isPromoPriceWrong ? 'border-red-500 bg-red-50 text-red-700' : 'border-gray-300 focus:border-green-500'}`}
+                                                        placeholder="0,00"
+                                                    />
+                                                    {isPromoPriceWrong && <span className="text-[10px] text-red-500 font-bold">Fora da Régua</span>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const RupturasReport = ({ data, storeType, storeName, fds, date, time }) => {
+            const totalPotentialPoints = Object.values(SCORES_PRESENCA).reduce((acc, scores) => {
+                const s = scores[storeType] || { gondola: 0, gelada: 0 };
+                return acc + s.gondola + s.gelada;
+            }, 0);
+
+            // Calculate total lost points based on Score Groups (OR logic)
+            const totalLostPoints = Object.keys(SCORES_PRESENCA).reduce((acc, scoreGroup) => {
+                // Find all SKUs that belong to this score group
+                const groupSkus = VALIDITY_DATA_LIST.filter(item => {
+                    const product = `${item.brand} ${item.sku}`;
+                    return getScoreGroup(product) === scoreGroup;
+                });
+
+                // If no SKUs found for this group (shouldn't happen if mapping is complete), skip
+                if (groupSkus.length === 0) return acc;
+
+                // Check if ALL items in this group are 'ruptura'
+                const allRuptura = groupSkus.every(item => {
+                    const product = `${item.brand} ${item.sku}`;
+                    return data[product] === 'ruptura';
+                });
+
+                if (allRuptura) {
+                    const scores = SCORES_PRESENCA[scoreGroup][storeType] || { gondola: 0, gelada: 0 };
+                    return acc + scores.gondola + scores.gelada;
+                }
+
+                return acc;
+            }, 0);
+
+            const ruptureCount = Object.values(data).filter(s => s === 'ruptura').length;
+            const lowVolumeCount = Object.values(data).filter(s => s === 'baixo_volume').length;
+
+            return (
+                <div className="bg-white p-8 w-[3200px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-red-600 pb-6 mb-8 flex justify-between items-end">
+                        <div>
+                            <h1 className="text-6xl font-bold text-red-600 uppercase tracking-tighter">Relatório de Rupturas</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-3">Gestão de Disponibilidade - Heineken Brasil</p>
+                        </div>
+                        <div className="text-right text-3xl text-gray-500">
+                            <p>{date}</p>
+                            <p>{time}</p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8 grid grid-cols-3 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
+                            <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
+                        </div>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-6 mb-8">
+                        <div className="bg-red-50 p-6 rounded-xl border border-red-200 text-center">
+                            <span className="text-2xl font-bold text-red-600 uppercase block mb-2">Itens em Ruptura</span>
+                            <span className="text-6xl font-bold text-red-700">{ruptureCount}</span>
+                        </div>
+                        <div className="bg-amber-50 p-6 rounded-xl border border-amber-200 text-center">
+                            <span className="text-2xl font-bold text-amber-600 uppercase block mb-2">Baixo Volume</span>
+                            <span className="text-6xl font-bold text-amber-700">{lowVolumeCount}</span>
+                        </div>
+                        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center text-white">
+                            <span className="text-2xl font-bold text-gray-400 uppercase block mb-2">Pontos Perdidos</span>
+                            <span className="text-6xl font-bold">{totalLostPoints} <span className="text-2xl text-gray-500">/ {totalPotentialPoints}</span></span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-4">
+                        {VALIDITY_DATA_LIST.map((item, idx) => {
+                            const product = `${item.brand} ${item.sku}`;
+                            const status = data[product] || 'ok';
+                            const scoreGroup = getScoreGroup(product);
+                            const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
+                            const potentialPoints = currentScores.gondola + currentScores.gelada;
+                            
+                            // Calculate if points are actually lost for this specific item
+                            let isLost = false;
+                            if (status === 'ruptura' && scoreGroup) {
+                                // Check if any other item in the same group is NOT ruptura
+                                const groupSkus = VALIDITY_DATA_LIST.filter(i => getScoreGroup(`${i.brand} ${i.sku}`) === scoreGroup);
+                                const anyOk = groupSkus.some(i => {
+                                    const p = `${i.brand} ${i.sku}`;
+                                    return data[p] !== 'ruptura';
+                                });
+                                // If NO item is OK (all are ruptura), then points are lost
+                                isLost = !anyOk;
+                            }
+
+                            const lostPoints = isLost ? potentialPoints : 0;
+
+                            let statusColor = "bg-green-100 text-green-800 border-green-200";
+                            let statusText = "OK";
+                            if (status === 'ruptura') {
+                                statusColor = "bg-red-100 text-red-800 border-red-200";
+                                statusText = "RUPTURA";
+                            } else if (status === 'baixo_volume') {
+                                statusColor = "bg-amber-100 text-amber-800 border-amber-200";
+                                statusText = "BAIXO VOL.";
+                            }
+
+                            return (
+                                <div key={product} className={`p-4 rounded-lg border ${statusColor} flex flex-col justify-between h-full`}>
+                                    <div className="mb-2">
+                                        <span className="font-bold text-gray-800 text-5xl leading-tight block mb-1">{item.brand}</span>
+                                        <span className="text-5xl text-gray-600 block">{item.sku}</span>
+                                    </div>
+                                    <div className="flex justify-between items-end mt-2">
+                                        <span className={`px-3 py-1 rounded-lg text-2xl font-bold uppercase ${status === 'ok' ? 'bg-green-200' : status === 'ruptura' ? 'bg-red-200' : 'bg-amber-200'}`}>
+                                            {statusText}
+                                        </span>
+                                        {lostPoints > 0 && (
+                                            <span className="text-red-600 font-bold text-3xl">-{lostPoints} pts</span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const RupturasView = ({ storeType, data, onChange, onDownload, onDownloadPNG }) => {
+            return (
+                <div className="space-y-6">
+                    <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                         <div className="flex justify-between items-center mb-4">
+                            <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                                <AlertTriangle className="text-red-500" />
+                                Controle de Rupturas
+                            </h2>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={onDownload}
+                                    className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm text-xs"
+                                >
+                                    PDF
+                                </button>
+                                <button
+                                    onClick={onDownloadPNG}
+                                    className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-600 transition-colors shadow-sm text-xs"
+                                >
+                                    PNG
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-3">
+                            {VALIDITY_DATA_LIST.map((item) => {
+                                const product = `${item.brand} ${item.sku}`;
+                                const scoreGroup = getScoreGroup(product);
+                                const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
+                                const potentialPoints = currentScores.gondola + currentScores.gelada;
+                                const status = data[product] || 'ok';
+
+                                return (
+                                    <div key={product} className={`p-4 rounded-lg border transition-all ${
+                                        status === 'ruptura' ? 'bg-red-50 border-red-200' : 
+                                        status === 'baixo_volume' ? 'bg-amber-50 border-amber-200' : 
+                                        'bg-gray-50 border-gray-200'
+                                    }`}>
+                                        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                            <div className="flex-1">
+                                                <span className="font-bold text-gray-800 block">{product}</span>
+                                                <span className="text-xs text-gray-500">Impacto: {potentialPoints} pts</span>
+                                            </div>
+                                            
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => onChange(product, 'ok')}
+                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                        status === 'ok' 
+                                                            ? 'bg-green-600 text-white border-green-600 shadow-sm' 
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    OK
+                                                </button>
+                                                <button
+                                                    onClick={() => onChange(product, 'baixo_volume')}
+                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                        status === 'baixo_volume' 
+                                                            ? 'bg-amber-500 text-white border-amber-500 shadow-sm' 
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    Baixo Vol.
+                                                </button>
+                                                <button
+                                                    onClick={() => onChange(product, 'ruptura')}
+                                                    className={`px-3 py-2 rounded text-sm font-bold border transition-all ${
+                                                        status === 'ruptura' 
+                                                            ? 'bg-red-600 text-white border-red-600 shadow-sm' 
+                                                            : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'
+                                                    }`}
+                                                >
+                                                    Ruptura
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const App = () => {
             const [allData, setAllData] = useState(() => {
                 const initial = {};
@@ -1328,6 +2193,14 @@
             const [storeName, setStoreName] = useState('');
             const [fds, setFds] = useState('');
             const [activeCategory, setActiveCategory] = useState('premium');
+            const [activeView, setActiveView] = useState('simulador');
+            const [rupturasData, setRupturasData] = useState({});
+            const [validityData, setValidityData] = useState({});
+            const [priceRulerData, setPriceRulerData] = useState({});
+            
+            const rupturasReportRef = useRef(null);
+            const validityReportRef = useRef(null);
+            const priceRulerReportRef = useRef(null);
 
             // AUDITORIA STATE
             const [storeType, setStoreType] = useState('hiper');
@@ -1405,6 +2278,30 @@
                 }));
             };
 
+            const handleRupturasChange = (product, status) => {
+                setRupturasData(prev => ({ ...prev, [product]: status }));
+            };
+
+            const handleValidityChange = (key, field, value) => {
+                setValidityData(prev => ({ 
+                    ...prev, 
+                    [key]: {
+                        ...prev[key],
+                        [field]: value
+                    }
+                }));
+            };
+
+            const handlePriceRulerChange = (key, field, value) => {
+                setPriceRulerData(prev => ({
+                    ...prev,
+                    [key]: {
+                        ...prev[key],
+                        [field]: value
+                    }
+                }));
+            };
+
             const handleReset = () => {
                 if(window.confirm("Deseja limpar todos os dados inseridos?")) {
                     const reset = {};
@@ -1418,6 +2315,9 @@
                         precificacao: false
                     });
                     setStoreType('hiper');
+                    setRupturasData({});
+                    setValidityData({});
+                    setPriceRulerData({});
                 }
             };
 
@@ -1589,6 +2489,109 @@
                 }
             };
 
+            const handleDownloadRupturasReport = async () => {
+                await generatePDF(rupturasReportRef, `RELATORIO_RUPTURAS_HEINEKEN`);
+            };
+
+            const handleDownloadValidityReport = async () => {
+                await generatePDF(validityReportRef, `RELATORIO_VALIDADE_HEINEKEN`);
+            };
+
+            const handleDownloadPriceRulerReport = async () => {
+                await generatePDF(priceRulerReportRef, `RELATORIO_REGUA_PRECO_HEINEKEN`);
+            };
+
+            const handleDownloadRupturasPNG = async () => {
+                await generatePNG(rupturasReportRef, `RELATORIO_RUPTURAS_HEINEKEN`);
+            };
+
+            const handleDownloadValidityPNG = async () => {
+                await generatePNG(validityReportRef, `RELATORIO_VALIDADE_HEINEKEN`);
+            };
+
+            const handleDownloadPriceRulerPNG = async () => {
+                await generatePNG(priceRulerReportRef, `RELATORIO_REGUA_PRECO_HEINEKEN`);
+            };
+
+            const generatePNG = async (ref, filenamePrefix) => {
+                if (!window.html2canvas) {
+                    alert("As ferramentas de captura ainda estão carregando. Tente novamente em alguns segundos.");
+                    return;
+                }
+                
+                setIsCapturing(true);
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    const canvas = await window.html2canvas(ref.current, {
+                        scale: 2,
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const link = document.createElement('a');
+                    const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+                    link.download = `${filenamePrefix}_${dateStr}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao gerar imagem. Tente novamente.");
+                } finally {
+                    setIsCapturing(false);
+                }
+            };
+
+            const generatePDF = async (ref, filenamePrefix) => {
+                if (!window.html2canvas || !window.jspdf) {
+                    alert("As ferramentas de captura ainda estão carregando. Tente novamente em alguns segundos.");
+                    return;
+                }
+                
+                setIsCapturing(true);
+                try {
+                    await new Promise(resolve => setTimeout(resolve, 200));
+                    
+                    const canvas = await window.html2canvas(ref.current, {
+                        scale: 1,
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        useCORS: true
+                    });
+                    
+                    const imgData = canvas.toDataURL('image/jpeg', 0.98);
+                    const pdf = new window.jspdf.jsPDF({
+                        orientation: 'portrait',
+                        unit: 'mm',
+                        format: 'a4',
+                        compress: true
+                    });
+
+                    const imgProps = pdf.getImageProperties(imgData);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    
+                    const imgWidth = imgProps.width;
+                    const imgHeight = imgProps.height;
+                    
+                    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+                    
+                    const imgX = (pdfWidth - imgWidth * ratio) / 2;
+                    const imgY = 0;
+
+                    pdf.addImage(imgData, 'JPEG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                    
+                    const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+                    pdf.save(`${filenamePrefix}_${dateStr}.pdf`);
+                } catch (err) {
+                    console.error(err);
+                    alert("Erro ao gerar PDF. Tente novamente.");
+                } finally {
+                    setIsCapturing(false);
+                }
+            };
+
             const handleDownloadPNG = async () => {
                 if (!window.html2canvas) {
                     alert("As ferramentas de captura ainda estão carregando. Tente novamente em alguns segundos.");
@@ -1619,6 +2622,8 @@
             };
 
             const auditoriaScore = calculateAuditoriaScore();
+            
+            const activePriceRulerData = storeType === 'cc' ? PRICE_RULER_DATA_CC : PRICE_RULER_DATA_VAREJO;
 
             return (
                 <div className="min-h-screen pb-20 font-sans text-gray-800">
@@ -1636,6 +2641,50 @@
                     </header>
 
                     <main className="max-w-md mx-auto p-4">
+                        {/* Navigation Bar */}
+                        <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-100 mb-6 flex gap-1">
+                            <button
+                                onClick={() => setActiveView('simulador')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    activeView === 'simulador'
+                                        ? 'bg-[#008200] text-white shadow-md'
+                                        : 'text-gray-500 hover:bg-gray-50'
+                                }`}
+                            >
+                                Simulador
+                            </button>
+                            <button
+                                onClick={() => setActiveView('rupturas')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    activeView === 'rupturas'
+                                        ? 'bg-red-600 text-white shadow-md'
+                                        : 'text-gray-500 hover:bg-gray-50'
+                                }`}
+                            >
+                                Rupturas
+                            </button>
+                            <button
+                                onClick={() => setActiveView('validade')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    activeView === 'validade'
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : 'text-gray-500 hover:bg-gray-50'
+                                }`}
+                            >
+                                Validade
+                            </button>
+                            <button
+                                onClick={() => setActiveView('regua')}
+                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
+                                    activeView === 'regua'
+                                        ? 'bg-green-600 text-white shadow-md'
+                                        : 'text-gray-500 hover:bg-gray-50'
+                                }`}
+                            >
+                                Régua de Preço
+                            </button>
+                        </div>
+
                         <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
                             <h2 className="text-sm font-bold text-gray-400 uppercase mb-3">Dados da Loja</h2>
                             <div className="space-y-3">
@@ -1664,60 +2713,122 @@
 
                         <StoreTypeSelector selected={storeType} onSelect={setStoreType} />
                         
-                        <AuditoriaScorecard scores={auditoriaScore} totalScore={auditoriaScore.total} />
+                        {activeView === 'simulador' && (
+                            <>
+                                <AuditoriaScorecard scores={auditoriaScore} totalScore={auditoriaScore.total} />
 
-                        <AuditoriaTabs 
-                            activeTab={activeAuditoriaTab} 
-                            onTabChange={setActiveAuditoriaTab}
-                            presencaData={auditoriaData.presenca}
-                            onPresencaChange={handleUpdateAuditoriaPresenca}
-                            storeType={storeType}
-                            allData={allData}
-                            CATEGORIES={CATEGORIES}
-                            activeCategory={activeCategory}
-                            onSelectCategory={setActiveCategory}
-                            onUpdateWorld={handleUpdateWorld}
-                            onUpdateProduct={handleUpdateProduct}
-                            checklistData={auditoriaData.posicionamentoChecklist}
-                            onChecklistChange={handleUpdateAuditoriaPosicionamentoChecklist}
-                            visibilidadeData={auditoriaData.visibilidade}
-                            onVisibilidadeChange={handleUpdateAuditoriaVisibilidade}
-                            precificacaoData={auditoriaData.precificacao}
-                            onPrecificacaoChange={handleUpdateAuditoriaPrecificacao}
-                            auditoriaScore={auditoriaScore}
-                        />
+                                <AuditoriaTabs 
+                                    activeTab={activeAuditoriaTab} 
+                                    onTabChange={setActiveAuditoriaTab}
+                                    presencaData={auditoriaData.presenca}
+                                    onPresencaChange={handleUpdateAuditoriaPresenca}
+                                    storeType={storeType}
+                                    allData={allData}
+                                    CATEGORIES={CATEGORIES}
+                                    activeCategory={activeCategory}
+                                    onSelectCategory={setActiveCategory}
+                                    onUpdateWorld={handleUpdateWorld}
+                                    onUpdateProduct={handleUpdateProduct}
+                                    checklistData={auditoriaData.posicionamentoChecklist}
+                                    onChecklistChange={handleUpdateAuditoriaPosicionamentoChecklist}
+                                    visibilidadeData={auditoriaData.visibilidade}
+                                    onVisibilidadeChange={handleUpdateAuditoriaVisibilidade}
+                                    precificacaoData={auditoriaData.precificacao}
+                                    onPrecificacaoChange={handleUpdateAuditoriaPrecificacao}
+                                    auditoriaScore={auditoriaScore}
+                                />
 
-                        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
-                            <div className="max-w-md mx-auto flex gap-3">
-                                <div className="flex-1">
-                                    <p className="text-xs text-gray-500 font-bold uppercase">Share Cerveja</p>
-                                    <p className="text-3xl font-bold text-[#008200]">{globalData.share}%</p>
+                                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
+                                    <div className="max-w-md mx-auto flex gap-3">
+                                        <div className="flex-1">
+                                            <p className="text-xs text-gray-500 font-bold uppercase">Share Cerveja</p>
+                                            <p className="text-3xl font-bold text-[#008200]">{globalData.share}%</p>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
+                                            Baixe o seu relatório <ArrowRight size={16} />
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button 
+                                                onClick={handleDownloadPDF}
+                                                disabled={isCapturing}
+                                                className="bg-[#008200] text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
+                                            >
+                                                <span>{isCapturing ? '...' : 'PDF'}</span>
+                                            </button>
+                                            <button 
+                                                onClick={handleDownloadPNG}
+                                                disabled={isCapturing}
+                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
+                                            >
+                                                <span>{isCapturing ? '...' : 'PNG'}</span>
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
-                                    Baixe o seu relatório <ArrowRight size={16} />
-                                </div>
-                                <div className="flex gap-2">
-                                    <button 
-                                        onClick={handleDownloadPDF}
-                                        disabled={isCapturing}
-                                        className="bg-[#008200] text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
-                                    >
-                                        <span>{isCapturing ? '...' : 'PDF'}</span>
-                                    </button>
-                                    <button 
-                                        onClick={handleDownloadPNG}
-                                        disabled={isCapturing}
-                                        className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
-                                    >
-                                        <span>{isCapturing ? '...' : 'PNG'}</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                            </>
+                        )}
+
+                        {activeView === 'rupturas' && (
+                            <RupturasView 
+                                storeType={storeType}
+                                data={rupturasData}
+                                onChange={handleRupturasChange}
+                                onDownload={handleDownloadRupturasReport}
+                                onDownloadPNG={handleDownloadRupturasPNG}
+                            />
+                        )}
+
+                        {activeView === 'validade' && (
+                            <ValidadeView 
+                                data={validityData}
+                                onChange={handleValidityChange}
+                                onDownload={handleDownloadValidityReport}
+                                onDownloadPNG={handleDownloadValidityPNG}
+                            />
+                        )}
+
+                        {activeView === 'regua' && (
+                            <PriceRulerView 
+                                data={priceRulerData}
+                                rulerData={activePriceRulerData}
+                                onChange={handlePriceRulerChange}
+                                onDownload={handleDownloadPriceRulerReport}
+                                onDownloadPNG={handleDownloadPriceRulerPNG}
+                            />
+                        )}
                     </main>
 
                     {/* Hidden Report for Capture */}
                     <div className="fixed top-0 left-0 -z-50 opacity-0 pointer-events-none">
+                        <div ref={rupturasReportRef}>
+                            <RupturasReport 
+                                data={rupturasData}
+                                storeType={storeType}
+                                storeName={storeName}
+                                fds={fds}
+                                date={new Date().toLocaleDateString('pt-BR')}
+                                time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                            />
+                        </div>
+                        <div ref={validityReportRef}>
+                            <ValidadeReport 
+                                data={validityData}
+                                storeName={storeName}
+                                fds={fds}
+                                date={new Date().toLocaleDateString('pt-BR')}
+                                time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                            />
+                        </div>
+                        <div ref={priceRulerReportRef}>
+                            <PriceRulerReport 
+                                data={priceRulerData}
+                                rulerData={activePriceRulerData}
+                                storeName={storeName}
+                                fds={fds}
+                                date={new Date().toLocaleDateString('pt-BR')}
+                                time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                            />
+                        </div>
                         <div ref={reportRef}>
                             <ReportTable 
                                 allData={allData} 
