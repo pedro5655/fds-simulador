@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -29,17 +29,22 @@
     <!-- jsPDF para gerar o PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <style>
-        body { -webkit-font-smoothing: antialiased; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    <style>body {
+  -webkit-font-smoothing: antialiased;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
     </style>
 </head>
 <body class="bg-gray-50">
     <div id="root"></div>
 
-    <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+    <script type="text/babel">        const { useState, useEffect, useRef } = React;
 
         // --- ÍCONES SVG ---
         const IconBase = ({ children, className }) => (
@@ -1126,204 +1131,237 @@
 
 
 
-            const ReportTable = ({ allData, globalData, date, time, storeName, fds, auditoriaData, auditoriaScore, storeType }) => {
+            const ReportTablePage1 = ({ allData, globalData, date, time, storeName, fds, auditoriaData, auditoriaScore, storeType }) => {
                 let headerBg = "bg-red-600";
-                let scoreDesc = "Crítico! A execução está muito abaixo do esperado. Ação imediata necessária.";
+                let scoreDesc = "Crítico! Ação imediata necessária.";
                 
                 if (auditoriaScore.total >= 70) {
                     headerBg = "bg-[#008200]";
-                    scoreDesc = "Excelente! Execução dentro do padrão de excelência.";
+                    scoreDesc = "Excelente! Execução dentro do padrão.";
                 } else if (auditoriaScore.total >= 30) {
                     headerBg = "bg-amber-500";
-                    scoreDesc = "Atenção! Existem oportunidades de melhoria na execução.";
+                    scoreDesc = "Atenção! Oportunidades de melhoria.";
                 }
 
                 return (
-                    <div className="bg-white p-6 w-[3200px] font-sans text-gray-800 border border-gray-300">
-                        <div className="border-b-8 border-[#008200] pb-6 mb-8 flex justify-between items-end">
-                            <div>
-                                <h1 className="text-6xl font-bold text-[#008200] uppercase tracking-tighter">Relatório de Execução</h1>
-                                <p className="text-3xl text-gray-500 font-semibold mt-3">HEINEKEN BRASIL - EXECUÇÃO PERFEITA</p>
-                            </div>
-                            <div className="text-right text-3xl text-gray-500">
-                                <p>{date}</p>
-                                <p>{time}</p>
-                            </div>
-                        </div>
-
-                        <div className="mb-8 grid grid-cols-3 gap-6">
-                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
-                                <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
-                            </div>
-                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
-                                <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
-                            </div>
-                            <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                                <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* AUDITORIA FDS SECTION */}
-                        <div className="mb-10 border-2 border-gray-400 rounded-xl overflow-hidden">
-                            <div className={`${headerBg} text-white p-6 flex flex-col justify-center items-center text-center font-bold uppercase gap-2`}>
-                                <div className="flex justify-between w-full items-center">
-                                    <span className="text-4xl">Auditoria FDS</span>
-                                    <span className="text-5xl">{auditoriaScore.total} / 100 pts</span>
-                                </div>
-                                <span className="text-2xl font-medium opacity-90 normal-case mt-2">{scoreDesc}</span>
-                            </div>
-                        <div className="grid grid-cols-4 divide-x-2 divide-gray-300 bg-gray-50 border-b border-gray-300">
-                            <div className="p-6 text-center">
-                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Presença</span>
-                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.presenca}</span>
-                            </div>
-                            <div className="p-6 text-center">
-                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Posicionamento</span>
-                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.posicionamento}</span>
-                            </div>
-                            <div className="p-6 text-center">
-                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Promoção</span>
-                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.visibilidade}</span>
-                            </div>
-                            <div className="p-6 text-center">
-                                <span className="block text-2xl font-bold text-gray-500 uppercase mb-2">Preço</span>
-                                <span className="block text-5xl font-bold text-gray-800">{auditoriaScore.precificacao}</span>
-                            </div>
-                        </div>
-                        <div className="p-6 bg-white">
-                            <h4 className="text-4xl font-bold text-gray-500 uppercase mb-4">Detalhamento</h4>
-                            <div className="grid grid-cols-2 gap-8 text-4xl leading-relaxed">
+                    <div className="bg-white p-8 w-[1280px] font-sans text-gray-900 border border-gray-300 relative min-h-[1800px] h-auto flex flex-col justify-between">
+                        <div>
+                            <div className="border-b-8 border-[#008200] pb-6 mb-8 flex justify-between items-end">
                                 <div>
-                                    <p className="font-bold text-gray-700 mb-1">Presença (Mix Obrigatório):</p>
-                                    <ul className="list-disc pl-4 space-y-1 text-gray-600">
+                                    <h1 className="text-6xl font-bold text-[#008200] uppercase tracking-tighter">Relatório de Execução</h1>
+                                    <p className="text-3xl text-gray-600 font-semibold mt-2">HEINEKEN BRASIL - EXECUÇÃO PERFEITA</p>
+                                </div>
+                                <div className="text-right text-3xl text-gray-600">
+                                    <p>{date}</p>
+                                    <p>{time}</p>
+                                </div>
+                            </div>
+
+                            <div className="mb-8 grid grid-cols-3 gap-6">
+                                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                                    <span className="text-4xl font-bold text-gray-900">{storeName || '-'}</span>
+                                </div>
+                                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
+                                    <span className="text-4xl font-bold text-gray-900 uppercase">{storeType || '-'}</span>
+                                </div>
+                                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                                    <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-4xl font-bold text-gray-900">{fds || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* AUDITORIA FDS SECTION */}
+                            <div className="mb-8 border border-gray-400 rounded-xl overflow-hidden shadow-sm">
+                                <div className={`${headerBg} text-white p-10 flex flex-col justify-center items-center text-center font-bold uppercase gap-4`}>
+                                    <div className="flex justify-between w-full items-center px-4">
+                                        <span className="text-4xl">Auditoria FDS</span>
+                                        <span className="text-8xl">{auditoriaScore.total} <span className="text-4xl opacity-80">/ 100</span></span>
+                                    </div>
+                                    <span className="text-3xl font-medium opacity-90 normal-case mt-4">{scoreDesc}</span>
+                                </div>
+                                <div className="grid grid-cols-4 divide-x divide-gray-300 bg-gray-50 border-gray-300 h-[200px] items-center">
+                                    <div className="p-6 text-center h-full flex flex-col justify-center">
+                                        <span className="block text-2xl font-bold text-gray-600 uppercase mb-3">Presença</span>
+                                        <span className="block text-6xl font-black text-gray-900">{auditoriaScore.presenca}</span>
+                                    </div>
+                                    <div className="p-6 text-center h-full flex flex-col justify-center">
+                                        <span className="block text-2xl font-bold text-gray-600 uppercase mb-3">Posicionamento</span>
+                                        <span className="block text-6xl font-black text-gray-900">{auditoriaScore.posicionamento}</span>
+                                    </div>
+                                    <div className="p-6 text-center h-full flex flex-col justify-center">
+                                        <span className="block text-2xl font-bold text-gray-600 uppercase mb-3">Promoção</span>
+                                        <span className="block text-6xl font-black text-gray-900">{auditoriaScore.visibilidade}</span>
+                                    </div>
+                                    <div className="p-6 text-center h-full flex flex-col justify-center">
+                                        <span className="block text-2xl font-bold text-gray-600 uppercase mb-3">Preço</span>
+                                        <span className="block text-6xl font-black text-gray-900">{auditoriaScore.precificacao}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-8 mb-8">
+                                {Object.entries(CATEGORIES).map(([key, config]) => {
+                                    const catData = allData[key];
+                                    const worldCm = parseFloat(catData.world) || 0;
+                                    const productValues = catData.products;
+                                    
+                                    let catTotalHnk = 0;
+                                    config.products.forEach(p => catTotalHnk += (parseFloat(productValues[p]) || 0));
+                                    
+                                    const catShare = worldCm > 0 ? ((catTotalHnk / worldCm) * 100).toFixed(1) : 0;
+                                    const isMet = config.target ? parseFloat(catShare) >= config.target : true;
+
+                                    return (
+                                        <div key={key} className="border border-gray-400 rounded-xl overflow-hidden shadow-sm">
+                                            <div className={`${config.headerColor} p-5 flex flex-col gap-3 font-bold uppercase`}>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-3xl">{config.title}</span>
+                                                    <div className="flex gap-6 text-xl">
+                                                        {config.target && <span>Meta: {config.target}%</span>}
+                                                        <span>Atingido: {catShare}%</span>
+                                                    </div>
+                                                </div>
+                                                {config.target && (parseFloat(catShare) < config.target) && (
+                                                    <div className="bg-white/20 p-3 rounded text-center text-xl mt-2">
+                                                        Faltam <strong>{((worldCm * config.target / 100) - catTotalHnk).toFixed(1)} cm para a meta</strong>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            
+                                            <table className="w-full text-2xl">
+                                                <thead>
+                                                    <tr className="bg-gray-100 border-b border-gray-300 text-gray-700">
+                                                        <th className="p-4 text-left w-1/2">Produto</th>
+                                                        <th className="p-4 text-center">Exec.</th>
+                                                        <th className="p-4 text-center">Share</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="divide-y divide-gray-200">
+                                                    {config.products.map((prod, idx) => {
+                                                        const val = parseFloat(productValues[prod]) || 0;
+                                                        const share = worldCm > 0 ? ((val / worldCm) * 100).toFixed(1) : 0;
+                                                        return (
+                                                            <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                                                                <td className="p-4 font-medium text-gray-900">{prod}</td>
+                                                                <td className="p-4 text-center text-gray-900">{val} cm</td>
+                                                                <td className="p-4 text-center font-bold text-gray-600">{share}%</td>
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                                <tfoot className="bg-gray-50 font-bold border-t border-gray-300">
+                                                    <tr>
+                                                        <td className="p-4 text-right text-gray-600">MUNDO: {worldCm}cm</td>
+                                                        <td className="p-4 text-center text-gray-900">{catTotalHnk} cm</td>
+                                                        <td className={`p-4 text-center ${isMet ? 'text-[#008200] bg-green-50' : 'text-red-600 bg-red-50'}`}>
+                                                            {isMet ? 'OK' : 'GAP'}
+                                                        </td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <div className="bg-gray-900 text-white p-8 flex justify-between items-center border-t-8 border-[#008200] rounded-xl shadow-lg">
+                                <div>
+                                    <p className="text-xl text-gray-400 uppercase tracking-widest">Resultado Consolidado</p>
+                                    <p className="font-black text-5xl mt-2">SHARE CERVEJA</p>
+                                </div>
+                                <div className="text-right">
+                                    <span className="text-7xl font-black text-[#008200]">{globalData.share}%</span>
+                                    <p className="text-xl text-gray-400 mt-2">Total HNK: {globalData.hnk}cm / Total Mundo: {globalData.world}cm</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="text-center text-gray-400 pb-4">
+                            Continua na próxima página...
+                        </div>
+                    </div>
+                );
+            };
+
+            const ReportTablePage2 = ({ date, time, auditoriaData }) => {
+                return (
+                    <div className="bg-white p-8 w-[1280px] font-sans text-gray-900 border border-gray-300 min-h-[1800px]">
+                        <div className="border-b-4 border-gray-200 pb-4 mb-8 flex justify-between items-end">
+                             <h2 className="text-4xl font-bold text-gray-400 uppercase tracking-tighter">Detalhamento</h2>
+                             <div className="text-right text-xl text-gray-400">
+                                {date} - {time}
+                            </div>
+                        </div>
+
+                        <div className="p-8 bg-gray-50 rounded-xl border border-gray-200 mb-8 shadow-sm">
+                            <h4 className="text-3xl font-bold text-gray-600 uppercase mb-8 border-b border-gray-300 pb-4">Detalhamento da Loja</h4>
+                            <div className="grid grid-cols-2 gap-12 text-2xl leading-relaxed">
+                                <div>
+                                    <p className="font-bold text-gray-900 mb-4 uppercase text-lg tracking-wider">Presença (Mix Obrigatório)</p>
+                                    <ul className="list-disc pl-6 space-y-3 text-gray-800">
                                         {Object.entries(auditoriaData.presenca).map(([prod, state]) => {
                                             if (!state.gondola && !state.gelada) return null;
                                             return (
                                                 <li key={prod}>
-                                                    {prod}: 
+                                                    <span className="font-semibold">{prod}</span>: 
                                                     {state.gondola ? ' Gôndola' : ''}
                                                     {state.gondola && state.gelada ? ' + ' : ''}
                                                     {state.gelada ? ' Gelada' : ''}
                                                 </li>
                                             );
                                         })}
-                                        {Object.keys(auditoriaData.presenca).length === 0 && <li>Nenhum item marcado</li>}
+                                        {Object.keys(auditoriaData.presenca).length === 0 && <li className="text-gray-500 italic">Nenhum item marcado</li>}
                                     </ul>
                                 </div>
                                 <div>
-                                    <p className="font-bold text-gray-700 mb-1">Posicionamento & Promoção:</p>
-                                    <ul className="space-y-1 text-gray-600">
-                                        <li><strong>Checklist Posicionamento:</strong></li>
+                                    <p className="font-bold text-gray-900 mb-4 uppercase text-lg tracking-wider">Pontos Extras & Preço</p>
+                                    <ul className="space-y-3 text-gray-800">
+                                        <li className="font-bold text-gray-900 text-lg uppercase">Checklist Posicionamento:</li>
                                         {POSICIONAMENTO_CHECKLIST.map(item => {
                                             if (!auditoriaData.posicionamentoChecklist?.[item.id]) return null;
-                                            return <li key={item.id} className="pl-2">- {item.label} ({item.points} pts)</li>
+                                            return (
+                                                <li key={item.id} className="flex items-start gap-3 pl-4">
+                                                    <span className="text-green-600 font-bold text-xl">?</span>
+                                                    <span>{item.label} <strong>({item.points} pts)</strong></span>
+                                                </li>
+                                            );
                                         })}
-                                        <li className="mt-2 font-bold text-gray-700">Promoção (Total Pes: {auditoriaData.visibilidade.totalPes || 0}):</li>
-                                        <li>Craft: {auditoriaData.visibilidade.peCraft || 0} PE (Meta: {
+                                        
+                                        <li className="mt-6 pt-4 border-t border-gray-300 font-bold text-lg uppercase text-gray-900">
+                                            Promoção (Total Pes: {auditoriaData.visibilidade.totalPes || 0})
+                                        </li>
+                                        <li className="pl-4">Craft: {auditoriaData.visibilidade.peCraft || 0} PE (Meta: {
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '-' : '1'
                                         })</li>
-                                        <li>Premium: {auditoriaData.visibilidade.pePremium || 0} PE (Meta: {
+                                        <li className="pl-4">Premium: {auditoriaData.visibilidade.pePremium || 0} PE (Meta: {
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '1' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 10 ? '2' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 15 ? '3' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 20 ? '5' : '6'
                                         })</li>
-                                        <li>Mainstream: {auditoriaData.visibilidade.peMainstream || 0} PE (Meta: {
+                                        <li className="pl-4">Mainstream: {auditoriaData.visibilidade.peMainstream || 0} PE (Meta: {
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 5 ? '1' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 10 ? '1' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 15 ? '2' :
                                             (parseInt(auditoriaData.visibilidade.totalPes) || 0) <= 20 ? '2' : '3'
                                         })</li>
-                                        <li>Preço Correto: {auditoriaData.precificacao ? 'Sim' : 'Não'}</li>
+                                        <li className="pt-4 mt-2 border-t border-gray-300 flex justify-between items-center text-xl">
+                                            <span>Preço Correto?</span>
+                                            <span className={`font-bold px-3 py-1 rounded ${auditoriaData.precificacao ? 'text-green-700 bg-green-100' : 'text-red-700 bg-red-100'}`}>
+                                                {auditoriaData.precificacao ? 'SIM' : 'NÃO'}
+                                            </span>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="grid grid-cols-3 gap-6">
-                        {Object.entries(CATEGORIES).map(([key, config]) => {
-                            const catData = allData[key];
-                            const worldCm = parseFloat(catData.world) || 0;
-                            const productValues = catData.products;
-                            
-                            let catTotalHnk = 0;
-                            config.products.forEach(p => catTotalHnk += (parseFloat(productValues[p]) || 0));
-                            
-                            const catShare = worldCm > 0 ? ((catTotalHnk / worldCm) * 100).toFixed(1) : 0;
-                            const isMet = config.target ? parseFloat(catShare) >= config.target : true;
-
-                            return (
-                                <div key={key} className="border-2 border-gray-400 rounded-xl overflow-hidden">
-                                    <div className={`${config.headerColor} p-6 flex flex-col gap-3 font-bold uppercase`}>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-4xl">{config.title}</span>
-                                            <div className="flex gap-8 text-3xl">
-                                                {config.target && <span>Meta: {config.target}%</span>}
-                                                <span>Atingido: {catShare}%</span>
-                                            </div>
-                                        </div>
-                                        {config.target && (parseFloat(catShare) < config.target) && (
-                                            <div className="bg-white/20 p-3 rounded text-center text-2xl mt-2">
-                                                Faltam {((worldCm * config.target / 100) - catTotalHnk).toFixed(1)} cm para a meta
-                                            </div>
-                                        )}
-                                    </div>
-                                    
-                                    <table className="w-full text-3xl">
-                                        <thead>
-                                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600">
-                                                <th className="p-6 text-left w-1/2">Produto</th>
-                                                <th className="p-6 text-center">Executado (cm)</th>
-                                                <th className="p-6 text-center">Share Indiv.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y-2 divide-gray-200">
-                                            {config.products.map((prod, idx) => {
-                                                const val = parseFloat(productValues[prod]) || 0;
-                                                const share = worldCm > 0 ? ((val / worldCm) * 100).toFixed(1) : 0;
-                                                return (
-                                                    <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                                        <td className="p-6 font-medium">{prod}</td>
-                                                        <td className="p-6 text-center">{val} cm</td>
-                                                        <td className="p-6 text-center font-bold text-gray-500">{share}%</td>
-                                                    </tr>
-                                                );
-                                            })}
-                                        </tbody>
-                                        <tfoot className="bg-gray-50 font-bold border-t-2 border-gray-300">
-                                            <tr>
-                                                <td className="p-6 text-right text-gray-500">TOTAL MUNDO: {worldCm}cm</td>
-                                                <td className="p-6 text-center text-gray-800">{catTotalHnk} cm</td>
-                                                <td className={`p-6 text-center ${isMet ? 'text-[#008200] bg-green-50' : 'text-red-600 bg-red-50'}`}>
-                                                    {isMet ? 'META OK' : 'GAP'}
-                                                </td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            );
-                        })}
-
-                        <div className="bg-gray-800 text-white p-6 flex justify-between items-center border-t-8 border-[#008200]">
-                            <div>
-                                <p className="text-sm text-gray-400 uppercase">Resultado Consolidado</p>
-                                <p className="font-bold text-2xl">SHARE CERVEJA</p>
-                            </div>
-                            <div className="text-right">
-                                <span className="text-5xl font-bold">{globalData.share}%</span>
-                                <p className="text-sm text-gray-400 mt-1">Total HNK: {globalData.hnk}cm / Total Mundo: {globalData.world}cm</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+                );
+            };
 
         const PRICE_RULER_DATA_CC = [
             { brand: "HEINEKEN", sku: "SHOT 250", price: 5.29, promo: 4.99 },
@@ -1629,40 +1667,40 @@
 
         const ValidadeReport = ({ data, storeName, fds, date, time }) => {
             return (
-                <div className="bg-white p-8 w-[3200px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-8 border-blue-600 pb-6 mb-8 flex justify-between items-end">
+                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-4 border-blue-600 pb-4 mb-6 flex justify-between items-end">
                         <div>
-                            <h1 className="text-6xl font-bold text-blue-600 uppercase tracking-tighter">Relatório de Validade</h1>
-                            <p className="text-3xl text-gray-500 font-semibold mt-3">Controle de Vencimentos - Heineken Brasil</p>
+                            <h1 className="text-3xl font-bold text-blue-600 uppercase tracking-tighter">Relatório de Validade</h1>
+                            <p className="text-lg text-gray-500 font-semibold mt-1">Controle de Vencimentos - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-3xl text-gray-500">
+                        <div className="text-right text-lg text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-8 grid grid-cols-2 gap-6">
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
-                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-6 grid grid-cols-2 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
+                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
-                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
+                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <table className="w-full text-2xl border-collapse">
+                    <table className="w-full text-sm border-collapse">
                         <thead>
-                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
-                                <th className="p-4 text-left">Produto</th>
-                                <th className="p-4 text-center">Quantidade</th>
-                                <th className="p-4 text-center">Data de Vencimento</th>
-                                <th className="p-4 text-center">Dias Restantes</th>
-                                <th className="p-4 text-center">Status</th>
+                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-2 text-left">Produto</th>
+                                <th className="p-2 text-center">Quantidade</th>
+                                <th className="p-2 text-center">Data de Vencimento</th>
+                                <th className="p-2 text-center">Dias Restantes</th>
+                                <th className="p-2 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y-2 divide-gray-200">
+                        <tbody className="divide-y divide-gray-200">
                             {VALIDITY_DATA_LIST.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const itemData = data[key] || {};
@@ -1684,12 +1722,12 @@
 
                                 return (
                                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
-                                        <td className="p-4 text-center font-bold">{itemData.quantity || '-'}</td>
-                                        <td className="p-4 text-center">{new Date(expirationDate).toLocaleDateString('pt-BR')}</td>
-                                        <td className="p-4 text-center font-bold">{daysRemaining} dias</td>
-                                        <td className="p-4 text-center">
-                                            <span className={`px-4 py-1 rounded-full font-bold text-xl ${statusColor}`}>
+                                        <td className="p-2 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-2 text-center font-bold">{itemData.quantity || '-'}</td>
+                                        <td className="p-2 text-center">{new Date(expirationDate).toLocaleDateString('pt-BR')}</td>
+                                        <td className="p-2 text-center font-bold">{daysRemaining} dias</td>
+                                        <td className="p-2 text-center">
+                                            <span className={`px-2 py-1 rounded-full font-bold text-xs ${statusColor}`}>
                                                 {statusText}
                                             </span>
                                         </td>
@@ -1788,39 +1826,39 @@
 
         const PriceRulerReport = ({ data, rulerData, storeName, fds, date, time }) => {
             return (
-                <div className="bg-white p-8 w-[3200px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-8 border-green-600 pb-6 mb-8 flex justify-between items-end">
+                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-4 border-green-600 pb-4 mb-6 flex justify-between items-end">
                         <div>
-                            <h1 className="text-6xl font-bold text-green-600 uppercase tracking-tighter">Relatório de Régua de Preço</h1>
-                            <p className="text-3xl text-gray-500 font-semibold mt-3">Auditoria de Preços - Heineken Brasil</p>
+                            <h1 className="text-3xl font-bold text-green-600 uppercase tracking-tighter">Relatório de Régua de Preço</h1>
+                            <p className="text-lg text-gray-500 font-semibold mt-1">Auditoria de Preços - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-3xl text-gray-500">
+                        <div className="text-right text-lg text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-8 grid grid-cols-2 gap-6">
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
-                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-6 grid grid-cols-2 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
+                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
-                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
+                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <table className="w-full text-2xl border-collapse">
+                    <table className="w-full text-sm border-collapse">
                         <thead>
-                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
-                                <th className="p-4 text-left">Produto</th>
-                                <th className="p-4 text-center">Preço Régua</th>
-                                <th className="p-4 text-center">Preço Loja</th>
-                                <th className="p-4 text-center">Status</th>
+                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-2 text-left">Produto</th>
+                                <th className="p-2 text-center">Preço Régua</th>
+                                <th className="p-2 text-center">Preço Loja</th>
+                                <th className="p-2 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y-2 divide-gray-200">
+                        <tbody className="divide-y divide-gray-200">
                             {rulerData.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const entry = data[key] || {};
@@ -1850,19 +1888,19 @@
 
                                 return (
                                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
-                                        <td className="p-4 text-center">
+                                        <td className="p-2 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-2 text-center">
                                             <div className="flex flex-col">
-                                                <span className="text-gray-500 text-2xl">Reg: R$ {item.price.toFixed(2).replace('.', ',')}</span>
-                                                <span className="text-gray-500 text-2xl">Promo: R$ {item.promo.toFixed(2).replace('.', ',')}</span>
+                                                <span className="text-gray-500 text-sm">Reg: R$ {item.price.toFixed(2).replace('.', ',')}</span>
+                                                <span className="text-gray-500 text-sm">Promo: R$ {item.promo.toFixed(2).replace('.', ',')}</span>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center font-bold">
+                                        <td className="p-2 text-center font-bold">
                                             {priceStore && <div>Reg: R$ {parseFloat(priceStore).toFixed(2).replace('.', ',')}</div>}
                                             {pricePromo && <div>Promo: R$ {parseFloat(pricePromo).toFixed(2).replace('.', ',')}</div>}
                                         </td>
-                                        <td className="p-4 text-center">
-                                            <span className={`px-4 py-1 rounded-full font-bold text-xl ${statusColor}`}>
+                                        <td className="p-2 text-center">
+                                            <span className={`px-2 py-1 rounded-full font-bold text-xs ${statusColor}`}>
                                                 {status}
                                             </span>
                                         </td>
@@ -2009,45 +2047,45 @@
             const lowVolumeCount = Object.values(data).filter(s => s === 'baixo_volume').length;
 
             return (
-                <div className="bg-white p-8 w-[3200px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-8 border-red-600 pb-6 mb-8 flex justify-between items-end">
+                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-4 border-red-600 pb-4 mb-6 flex justify-between items-end">
                         <div>
-                            <h1 className="text-6xl font-bold text-red-600 uppercase tracking-tighter">Relatório de Rupturas</h1>
-                            <p className="text-3xl text-gray-500 font-semibold mt-3">Gestão de Disponibilidade - Heineken Brasil</p>
+                            <h1 className="text-3xl font-bold text-red-600 uppercase tracking-tighter">Relatório de Rupturas</h1>
+                            <p className="text-lg text-gray-500 font-semibold mt-1">Gestão de Disponibilidade - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-3xl text-gray-500">
+                        <div className="text-right text-lg text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-8 grid grid-cols-3 gap-6">
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
-                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-6 grid grid-cols-3 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
+                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
-                            <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Tipo de Loja</span>
+                            <span className="text-xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                            <span className="text-2xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
-                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
+                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-3 gap-6 mb-8">
-                        <div className="bg-red-50 p-6 rounded-xl border border-red-200 text-center">
-                            <span className="text-2xl font-bold text-red-600 uppercase block mb-2">Itens em Ruptura</span>
-                            <span className="text-6xl font-bold text-red-700">{ruptureCount}</span>
+                    <div className="grid grid-cols-3 gap-4 mb-6">
+                        <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-center">
+                            <span className="text-sm font-bold text-red-600 uppercase block mb-1">Itens em Ruptura</span>
+                            <span className="text-4xl font-bold text-red-700">{ruptureCount}</span>
                         </div>
-                        <div className="bg-amber-50 p-6 rounded-xl border border-amber-200 text-center">
-                            <span className="text-2xl font-bold text-amber-600 uppercase block mb-2">Baixo Volume</span>
-                            <span className="text-6xl font-bold text-amber-700">{lowVolumeCount}</span>
+                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 text-center">
+                            <span className="text-sm font-bold text-amber-600 uppercase block mb-1">Baixo Volume</span>
+                            <span className="text-4xl font-bold text-amber-700">{lowVolumeCount}</span>
                         </div>
-                        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center text-white">
-                            <span className="text-2xl font-bold text-gray-400 uppercase block mb-2">Pontos Perdidos</span>
-                            <span className="text-6xl font-bold">{totalLostPoints} <span className="text-2xl text-gray-500">/ {totalPotentialPoints}</span></span>
+                        <div className="bg-gray-800 p-4 rounded-lg border border-gray-700 text-center text-white">
+                            <span className="text-sm font-bold text-gray-400 uppercase block mb-1">Pontos Perdidos</span>
+                            <span className="text-4xl font-bold">{totalLostPoints} <span className="text-xl text-gray-500">/ {totalPotentialPoints}</span></span>
                         </div>
                     </div>
 
@@ -2093,13 +2131,13 @@
                             }
 
                             return (
-                                <div key={product} className={`p-4 rounded-lg border ${statusColor} flex flex-col justify-between h-full`}>
+                                <div key={product} className={`p-3 rounded-lg border ${statusColor} flex flex-col justify-between h-full`}>
                                     <div className="mb-2">
-                                        <span className="font-bold text-gray-800 text-5xl leading-tight block mb-1">{item.brand}</span>
-                                        <span className="text-5xl text-gray-600 block">{item.sku}</span>
+                                        <span className="font-bold text-gray-800 text-xl leading-tight block mb-1">{item.brand}</span>
+                                        <span className="text-sm text-gray-600 block">{item.sku}</span>
                                     </div>
-                                    <div className="flex justify-between items-end mt-2">
-                                        <span className={`px-3 py-1 rounded-lg text-2xl font-bold uppercase ${
+                                    <div className="flex justify-between items-end mt-1">
+                                        <span className={`px-2 py-1 rounded-md text-xs font-bold uppercase ${
                                             status === 'ok' ? 'bg-green-200' : 
                                             status === 'ruptura' ? 'bg-red-200' : 
                                             status === 'baixo_volume' ? 'bg-amber-200' :
@@ -2108,7 +2146,7 @@
                                             {statusText}
                                         </span>
                                         {lostPoints > 0 && (
-                                            <span className="text-red-600 font-bold text-3xl">-{lostPoints} pts</span>
+                                            <span className="text-red-600 font-bold text-lg">-{lostPoints} pts</span>
                                         )}
                                     </div>
                                 </div>
@@ -2236,6 +2274,8 @@
             const rupturasReportRef = useRef(null);
             const validityReportRef = useRef(null);
             const priceRulerReportRef = useRef(null);
+            const reportPage1Ref = useRef(null);
+            const reportPage2Ref = useRef(null);
 
             // AUDITORIA STATE
             const [storeType, setStoreType] = useState('hiper');
@@ -2485,34 +2525,50 @@
                 try {
                     await new Promise(resolve => setTimeout(resolve, 200));
                     
-                    const canvas = await window.html2canvas(reportRef.current, {
-                        scale: 1, // Reduced from 2 (3200px width is already high res)
+                    // Capture Page 1
+                    const canvas1 = await window.html2canvas(reportPage1Ref.current, {
+                        scale: 3, 
+                        backgroundColor: "#ffffff",
+                        logging: false,
+                        useCORS: true
+                    });
+
+                    // Capture Page 2
+                    const canvas2 = await window.html2canvas(reportPage2Ref.current, {
+                        scale: 3, 
                         backgroundColor: "#ffffff",
                         logging: false,
                         useCORS: true
                     });
                     
-                    const imgData = canvas.toDataURL('image/jpeg', 0.98); // JPEG with very high quality
+                    const imgData1 = canvas1.toDataURL('image/jpeg', 0.95);
+                    const imgData2 = canvas2.toDataURL('image/jpeg', 0.95);
+
                     const pdf = new window.jspdf.jsPDF({
                         orientation: 'portrait',
                         unit: 'mm',
                         format: 'a4',
-                        compress: true // Enable compression
+                        compress: true
                     });
 
-                    const imgProps = pdf.getImageProperties(imgData);
+                    // Page 1
+                    const imgProps1 = pdf.getImageProperties(imgData1);
                     const pdfWidth = pdf.internal.pageSize.getWidth();
                     const pdfHeight = pdf.internal.pageSize.getHeight();
-                    
-                    const imgWidth = imgProps.width;
-                    const imgHeight = imgProps.height;
-                    
-                    const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-                    
-                    const imgX = (pdfWidth - imgWidth * ratio) / 2;
-                    const imgY = 0; // Top align
+                    const ratio1 = Math.min(pdfWidth / imgProps1.width, pdfHeight / imgProps1.height);
+                    const imgWidth1 = imgProps1.width * ratio1;
+                    const imgHeight1 = imgProps1.height * ratio1;
+                    const imgX1 = (pdfWidth - imgWidth1) / 2;
+                    pdf.addImage(imgData1, 'JPEG', imgX1, 0, imgWidth1, imgHeight1);
 
-                    pdf.addImage(imgData, 'JPEG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+                    // Page 2
+                    pdf.addPage();
+                    const imgProps2 = pdf.getImageProperties(imgData2);
+                    const ratio2 = Math.min(pdfWidth / imgProps2.width, pdfHeight / imgProps2.height);
+                    const imgWidth2 = imgProps2.width * ratio2;
+                    const imgHeight2 = imgProps2.height * ratio2;
+                    const imgX2 = (pdfWidth - imgWidth2) / 2;
+                    pdf.addImage(imgData2, 'JPEG', imgX2, 0, imgWidth2, imgHeight2);
                     
                     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
                     pdf.save(`RELATORIO_SOVI_HEINEKEN_${dateStr}.pdf`);
@@ -2559,7 +2615,7 @@
                     await new Promise(resolve => setTimeout(resolve, 200));
                     
                     const canvas = await window.html2canvas(ref.current, {
-                        scale: 2,
+                        scale: 3,
                         backgroundColor: "#ffffff",
                         logging: false,
                         useCORS: true
@@ -2589,7 +2645,7 @@
                     await new Promise(resolve => setTimeout(resolve, 200));
                     
                     const canvas = await window.html2canvas(ref.current, {
-                        scale: 1,
+                        scale: 3,
                         backgroundColor: "#ffffff",
                         logging: false,
                         useCORS: true
@@ -2639,7 +2695,7 @@
                     await new Promise(resolve => setTimeout(resolve, 200));
                     
                     const canvas = await window.html2canvas(reportRef.current, {
-                        scale: 2,
+                        scale: 3,
                         backgroundColor: "#ffffff",
                         logging: false,
                         useCORS: true
@@ -2698,7 +2754,7 @@
                                     <p className="text-green-100 text-sm font-medium">Versão 2.0</p>
                                 </div>
                                 <div className="p-6 text-center">
-                                    <p className="text-gray-500 text-xs uppercase tracking-widest font-bold mb-4">Desenvolvido com ❤️ por</p>
+                                    <p className="text-gray-500 text-xs uppercase tracking-widest font-bold mb-4">Desenvolvido com ?? por</p>
                                     
                                     <div className="space-y-3">
                                         <div className="bg-gray-50 p-3 rounded-xl border border-gray-100">
@@ -2834,13 +2890,6 @@
                                             >
                                                 <span>{isCapturing ? '...' : 'PDF'}</span>
                                             </button>
-                                            <button 
-                                                onClick={handleDownloadPNG}
-                                                disabled={isCapturing}
-                                                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex flex-col items-center justify-center text-xs"
-                                            >
-                                                <span>{isCapturing ? '...' : 'PNG'}</span>
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -2908,17 +2957,24 @@
                                 time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
                             />
                         </div>
-                        <div ref={reportRef}>
-                            <ReportTable 
-                                allData={allData} 
-                                globalData={globalData}
+                        <div ref={reportPage1Ref}>
+                            <ReportTablePage1 
                                 date={new Date().toLocaleDateString('pt-BR')}
                                 time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
                                 storeName={storeName}
                                 fds={fds}
-                                auditoriaData={auditoriaData}
                                 auditoriaScore={auditoriaScore}
                                 storeType={storeType}
+                                auditoriaData={auditoriaData}
+                                allData={allData} 
+                                globalData={globalData}
+                            />
+                        </div>
+                        <div ref={reportPage2Ref}>
+                             <ReportTablePage2 
+                                date={new Date().toLocaleDateString('pt-BR')}
+                                time={new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})}
+                                auditoriaData={auditoriaData}
                             />
                         </div>
                     </div>
@@ -2928,6 +2984,7 @@
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
+    </script>
     </script>
 </body>
 </html>
