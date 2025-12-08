@@ -5,6 +5,8 @@
 Este projeto é uma **Web Application (SPA)** desenvolvida para auxiliar colaboradores e representantes da Heineken Brasil na execução perfeita em lojas. O aplicativo permite simular cenários, calcular Share de Gôndola (SOVI), auditar presença, preços e validade de produtos, e gerar relatórios PDF detalhados diretamente pelo celular.
 
 ---
+<img width="826" height="337" alt="Captura de tela 2025-12-08 183047" src="https://github.com/user-attachments/assets/38756b0c-42fb-4474-8f73-d8e02e9d2889" />
+---
 
 ## 🚀 Funcionalidades Principais
 
@@ -14,7 +16,7 @@ O aplicativo é dividido em 4 módulos principais:
 
 - **Cálculo de Share**: Input rápido de cm lineares da concorrência e da Heineken por categoria (Premium, Mainstream, Craft, etc.).
 - **Auditoria de Presença**: Checklist de produtos obrigatórios em gôndola e geladeira.
-- **Auditoria de Pontos Extras**: Regras de pontuação baseadas na quantidade de pontos extras (Total Pés) e mix de produtos.
+- **Auditoria de Pontos Extras**: Regras de pontuação baseadas na quantidade de pontos extras (Total Pes) e mix de produtos.
 - **Scoring Automático**: Cálculo em tempo real da nota da loja (0 a 100), com feedback visual (Verde, Amarelo, Vermelho).
 - **Relatório Completo**: Geração de PDF com duas páginas (Resumo Executivo + Detalhamento).
 
@@ -66,7 +68,7 @@ Não é necessário instalar Node.js ou rodar comandos de build (`npm start`, et
 
 ### Opção 1: Uso Local Simples
 
-1. Baixe o arquivo `index.html` e a pasta de imagens (se houver).
+1. Baixe o arquivo `index.html` e a pasta de imagens.
 2. Abra o arquivo `index.html` em qualquer navegador moderno (Chrome, Edge, Safari do iPhone).
    > **Nota**: Funcionalidades que dependem de carregamento de scripts externos precisam de conexão com a internet.
 
@@ -99,3 +101,4 @@ Desenvolvido por **Pedro Lameirão**.
 ---
 
 _Este projeto é uma ferramenta de produtividade e não possui vínculo oficial direto com os sistemas centrais da companhia, servindo como calculadora de apoio tático._
+
