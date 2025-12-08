@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -1667,40 +1667,40 @@
 
         const ValidadeReport = ({ data, storeName, fds, date, time }) => {
             return (
-                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-4 border-blue-600 pb-4 mb-6 flex justify-between items-end">
+                <div className="bg-white p-8 w-[1280px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-blue-600 pb-6 mb-8 flex justify-between items-end">
                         <div>
-                            <h1 className="text-3xl font-bold text-blue-600 uppercase tracking-tighter">Relatório de Validade</h1>
-                            <p className="text-lg text-gray-500 font-semibold mt-1">Controle de Vencimentos - Heineken Brasil</p>
+                            <h1 className="text-6xl font-bold text-blue-600 uppercase tracking-tighter">Relatório de Validade</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-2">Controle de Vencimentos - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-lg text-gray-500">
+                        <div className="text-right text-3xl text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-6 grid grid-cols-2 gap-4">
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
-                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-8 grid grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
-                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <table className="w-full text-sm border-collapse">
+                    <table className="w-full text-2xl border-collapse">
                         <thead>
-                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600 uppercase">
-                                <th className="p-2 text-left">Produto</th>
-                                <th className="p-2 text-center">Quantidade</th>
-                                <th className="p-2 text-center">Data de Vencimento</th>
-                                <th className="p-2 text-center">Dias Restantes</th>
-                                <th className="p-2 text-center">Status</th>
+                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-4 text-left">Produto</th>
+                                <th className="p-4 text-center">Qtd</th>
+                                <th className="p-4 text-center">Vencimento</th>
+                                <th className="p-4 text-center">Dias Restantes</th>
+                                <th className="p-4 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y-2 divide-gray-200">
                             {VALIDITY_DATA_LIST.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const itemData = data[key] || {};
@@ -1722,12 +1722,12 @@
 
                                 return (
                                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="p-2 font-medium text-gray-800">{item.brand} {item.sku}</td>
-                                        <td className="p-2 text-center font-bold">{itemData.quantity || '-'}</td>
-                                        <td className="p-2 text-center">{new Date(expirationDate).toLocaleDateString('pt-BR')}</td>
-                                        <td className="p-2 text-center font-bold">{daysRemaining} dias</td>
-                                        <td className="p-2 text-center">
-                                            <span className={`px-2 py-1 rounded-full font-bold text-xs ${statusColor}`}>
+                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-4 text-center font-bold">{itemData.quantity || '-'}</td>
+                                        <td className="p-4 text-center">{new Date(expirationDate).toLocaleDateString('pt-BR')}</td>
+                                        <td className="p-4 text-center font-bold">{daysRemaining} dias</td>
+                                        <td className="p-4 text-center">
+                                            <span className={`px-4 py-2 rounded-full font-bold text-xl ${statusColor}`}>
                                                 {statusText}
                                             </span>
                                         </td>
@@ -1826,39 +1826,39 @@
 
         const PriceRulerReport = ({ data, rulerData, storeName, fds, date, time }) => {
             return (
-                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-4 border-green-600 pb-4 mb-6 flex justify-between items-end">
+                <div className="bg-white p-8 w-[1280px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-green-600 pb-6 mb-8 flex justify-between items-end">
                         <div>
-                            <h1 className="text-3xl font-bold text-green-600 uppercase tracking-tighter">Relatório de Régua de Preço</h1>
-                            <p className="text-lg text-gray-500 font-semibold mt-1">Auditoria de Preços - Heineken Brasil</p>
+                            <h1 className="text-6xl font-bold text-green-600 uppercase tracking-tighter">Relatório de Régua de Preço</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-2">Auditoria de Preços - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-lg text-gray-500">
+                        <div className="text-right text-3xl text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-6 grid grid-cols-2 gap-4">
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
-                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-8 grid grid-cols-2 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
-                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <table className="w-full text-sm border-collapse">
+                    <table className="w-full text-2xl border-collapse">
                         <thead>
-                            <tr className="bg-gray-100 border-b-2 border-gray-300 text-gray-600 uppercase">
-                                <th className="p-2 text-left">Produto</th>
-                                <th className="p-2 text-center">Preço Régua</th>
-                                <th className="p-2 text-center">Preço Loja</th>
-                                <th className="p-2 text-center">Status</th>
+                            <tr className="bg-gray-100 border-b-4 border-gray-300 text-gray-600 uppercase">
+                                <th className="p-4 text-left">Produto</th>
+                                <th className="p-4 text-center">Preço Régua</th>
+                                <th className="p-4 text-center">Preço Loja</th>
+                                <th className="p-4 text-center">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y-2 divide-gray-200">
                             {rulerData.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const entry = data[key] || {};
@@ -1888,19 +1888,19 @@
 
                                 return (
                                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                                        <td className="p-2 font-medium text-gray-800">{item.brand} {item.sku}</td>
-                                        <td className="p-2 text-center">
+                                        <td className="p-4 font-medium text-gray-800">{item.brand} {item.sku}</td>
+                                        <td className="p-4 text-center">
                                             <div className="flex flex-col">
-                                                <span className="text-gray-500 text-sm">Reg: R$ {item.price.toFixed(2).replace('.', ',')}</span>
-                                                <span className="text-gray-500 text-sm">Promo: R$ {item.promo.toFixed(2).replace('.', ',')}</span>
+                                                <span className="text-gray-500 text-xl">Reg: R$ {item.price.toFixed(2).replace('.', ',')}</span>
+                                                <span className="text-gray-500 text-xl">Promo: R$ {item.promo.toFixed(2).replace('.', ',')}</span>
                                             </div>
                                         </td>
-                                        <td className="p-2 text-center font-bold">
+                                        <td className="p-4 text-center font-bold">
                                             {priceStore && <div>Reg: R$ {parseFloat(priceStore).toFixed(2).replace('.', ',')}</div>}
                                             {pricePromo && <div>Promo: R$ {parseFloat(pricePromo).toFixed(2).replace('.', ',')}</div>}
                                         </td>
-                                        <td className="p-2 text-center">
-                                            <span className={`px-2 py-1 rounded-full font-bold text-xs ${statusColor}`}>
+                                        <td className="p-4 text-center">
+                                            <span className={`px-4 py-2 rounded-full font-bold text-xl ${statusColor}`}>
                                                 {status}
                                             </span>
                                         </td>
@@ -2047,49 +2047,49 @@
             const lowVolumeCount = Object.values(data).filter(s => s === 'baixo_volume').length;
 
             return (
-                <div className="bg-white p-4 w-[1024px] font-sans text-gray-800 border border-gray-300">
-                    <div className="border-b-4 border-red-600 pb-4 mb-6 flex justify-between items-end">
+                <div className="bg-white p-8 w-[1280px] font-sans text-gray-800 border border-gray-300">
+                    <div className="border-b-8 border-red-600 pb-6 mb-8 flex justify-between items-end">
                         <div>
-                            <h1 className="text-3xl font-bold text-red-600 uppercase tracking-tighter">Relatório de Rupturas</h1>
-                            <p className="text-lg text-gray-500 font-semibold mt-1">Gestão de Disponibilidade - Heineken Brasil</p>
+                            <h1 className="text-6xl font-bold text-red-600 uppercase tracking-tighter">Relatório de Rupturas</h1>
+                            <p className="text-3xl text-gray-500 font-semibold mt-2">Gestão de Disponibilidade - Heineken Brasil</p>
                         </div>
-                        <div className="text-right text-lg text-gray-500">
+                        <div className="text-right text-3xl text-gray-500">
                             <p>{date}</p>
                             <p>{time}</p>
                         </div>
                     </div>
 
-                    <div className="mb-6 grid grid-cols-3 gap-4">
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Loja</span>
-                            <span className="text-xl font-bold text-gray-800">{storeName || '-'}</span>
+                    <div className="mb-8 grid grid-cols-3 gap-6">
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Loja</span>
+                            <span className="text-4xl font-bold text-gray-800">{storeName || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Tipo de Loja</span>
-                            <span className="text-xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Tipo de Loja</span>
+                            <span className="text-4xl font-bold text-gray-800 uppercase">{storeType || '-'}</span>
                         </div>
-                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                            <span className="text-sm font-bold text-gray-500 uppercase block mb-1">Colaborador</span>
-                            <span className="text-xl font-bold text-gray-800">{fds || '-'}</span>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4 mb-6">
-                        <div className="bg-red-50 p-4 rounded-lg border border-red-200 text-center">
-                            <span className="text-sm font-bold text-red-600 uppercase block mb-1">Itens em Ruptura</span>
-                            <span className="text-4xl font-bold text-red-700">{ruptureCount}</span>
-                        </div>
-                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 text-center">
-                            <span className="text-sm font-bold text-amber-600 uppercase block mb-1">Baixo Volume</span>
-                            <span className="text-4xl font-bold text-amber-700">{lowVolumeCount}</span>
-                        </div>
-                        <div className="bg-gray-800 p-4 rounded-lg border border-gray-700 text-center text-white">
-                            <span className="text-sm font-bold text-gray-400 uppercase block mb-1">Pontos Perdidos</span>
-                            <span className="text-4xl font-bold">{totalLostPoints} <span className="text-xl text-gray-500">/ {totalPotentialPoints}</span></span>
+                        <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
+                            <span className="text-xl font-bold text-gray-500 uppercase block mb-2">Colaborador</span>
+                            <span className="text-4xl font-bold text-gray-800">{fds || '-'}</span>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-4 gap-4">
+                    <div className="grid grid-cols-3 gap-6 mb-8">
+                        <div className="bg-red-50 p-6 rounded-xl border border-red-200 text-center">
+                            <span className="text-xl font-bold text-red-600 uppercase block mb-2">Itens em Ruptura</span>
+                            <span className="text-6xl font-bold text-red-700">{ruptureCount}</span>
+                        </div>
+                        <div className="bg-amber-50 p-6 rounded-xl border border-amber-200 text-center">
+                            <span className="text-xl font-bold text-amber-600 uppercase block mb-2">Baixo Volume</span>
+                            <span className="text-6xl font-bold text-amber-700">{lowVolumeCount}</span>
+                        </div>
+                        <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 text-center text-white">
+                            <span className="text-xl font-bold text-gray-400 uppercase block mb-2">Pontos Perdidos</span>
+                            <span className="text-6xl font-bold">{totalLostPoints} <span className="text-3xl text-gray-500">/ {totalPotentialPoints}</span></span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-6">
                         {VALIDITY_DATA_LIST.map((item, idx) => {
                             const product = `${item.brand} ${item.sku}`;
                             const status = data[product] || 'ok';
@@ -2131,13 +2131,13 @@
                             }
 
                             return (
-                                <div key={product} className={`p-3 rounded-lg border ${statusColor} flex flex-col justify-between h-full`}>
-                                    <div className="mb-2">
-                                        <span className="font-bold text-gray-800 text-xl leading-tight block mb-1">{item.brand}</span>
-                                        <span className="text-sm text-gray-600 block">{item.sku}</span>
+                                <div key={product} className={`p-4 rounded-xl border ${statusColor} flex flex-col justify-between h-full`}>
+                                    <div className="mb-4">
+                                        <span className="font-bold text-gray-800 text-3xl leading-tight block mb-2">{item.brand}</span>
+                                        <span className="text-xl text-gray-600 block">{item.sku}</span>
                                     </div>
-                                    <div className="flex justify-between items-end mt-1">
-                                        <span className={`px-2 py-1 rounded-md text-xs font-bold uppercase ${
+                                    <div className="flex justify-between items-end mt-2">
+                                        <span className={`px-4 py-2 rounded-lg text-xl font-bold uppercase ${
                                             status === 'ok' ? 'bg-green-200' : 
                                             status === 'ruptura' ? 'bg-red-200' : 
                                             status === 'baixo_volume' ? 'bg-amber-200' :
@@ -2146,7 +2146,7 @@
                                             {statusText}
                                         </span>
                                         {lostPoints > 0 && (
-                                            <span className="text-red-600 font-bold text-lg">-{lostPoints} pts</span>
+                                            <span className="text-red-600 font-bold text-3xl">-{lostPoints} pts</span>
                                         )}
                                     </div>
                                 </div>
