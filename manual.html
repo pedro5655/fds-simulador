@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Promotor de Elite - Simulador FDS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-bottom: 8px solid #008200;
+            background: white; /* Ensure white background for capture */
+        }
+        .content-box {
+            background: white;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 64rem;
+            width: 100%;
+        }
+        .step-badge {
+            background: #008200;
+            color: white;
+            font-weight: 900;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .highlight {
+            color: #008200;
+            font-weight: 700;
+        }
+        .alert-box {
+            background-color: #FEF2F2;
+            border-left: 4px solid #DC2626;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        @media print {
+            .slide { break-after: page; min-height: 100vh; border-bottom: none; }
+            .no-print { display: none; }
+            body { background: white; }
+            .content-box { box-shadow: none; padding: 0; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Controls -->
+    <div class="fixed top-6 right-6 z-50 no-print flex gap-4">
+        <button onclick="window.print()" class="bg-white text-[#008200] hover:bg-gray-50 px-6 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-2 border border-[#008200]">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline><path d="M6 18h12"></path><path d="M6 18v3h12v-3"></path><rect x="6" y="6" width="12" height="4"></rect></svg>
+            Imprimir
+        </button>
+        <button onclick="downloadPDF()" class="bg-[#008200] hover:bg-[#006000] text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            Baixar PDF (Visual)
+        </button>
+        <button onclick="downloadPPTX()" class="bg-[#DC2626] hover:bg-[#B91C1C] text-white px-6 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><path d="M8 13h2"></path><path d="M8 17h2"></path><path d="M14 13h2"></path><path d="M14 17h2"></path></svg>
+            Baixar PPTX
+        </button>
+    </div>
+
+    <!-- CAPA -->
+    <div class="slide bg-[#008200] text-white">
+        <div class="text-center max-w-4xl">
+            <div class="mb-8 inline-block p-6 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
+                <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            </div>
+            <h1 class="text-7xl font-black uppercase tracking-tighter mb-4">Manual do Promotor</h1>
+            <p class="text-3xl font-light opacity-90 mb-12">Simulador FDS & Gestão de Excelência</p>
+            <div class="inline-block bg-white text-[#008200] px-8 py-3 rounded-lg font-bold uppercase tracking-widest text-sm">
+                Guia Oficial de Treinamento
+            </div>
+        </div>
+        <div class="absolute bottom-8 flex flex-col items-center opacity-60">
+            <span class="text-[10px] uppercase tracking-widest mb-1">Heineken Brasil • Trade Marketing</span>
+            <div class="flex gap-3 text-xs font-bold">
+                <span>Gustavo Nascimento</span>
+                <span>•</span>
+                <span>Pedro Lameirão</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- INTRODUÇÃO -->
+    <div class="slide">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-200">01</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Sua Arma Secreta</h2>
+                    <p class="text-xl text-gray-500">Por que usar o Simulador FDS?</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-12">
+                <div>
+                    <p class="text-lg leading-relaxed mb-6">
+                        O Simulador FDS não é apenas uma calculadora. É o seu <span class="highlight">escudo contra notas baixas</span>.
+                    </p>
+                    <p class="text-lg leading-relaxed mb-6">
+                        Antigamente, você fazia a auditoria "no escuro". Só descobria que a loja tirou nota vermelha quando o relatório chegava. <span class="font-bold text-red-600">Isso acabou.</span>
+                    </p>
+                    <p class="text-lg leading-relaxed">
+                        Com o Simulador, você antecipa o resultado. Você descobre os problemas (Gaps) <span class="underline decoration-green-500 decoration-4">antes</span> de enviar a auditoria oficial.
+                    </p>
+                </div>
+                <div class="bg-gray-50 p-8 rounded-xl border border-gray-200 flex flex-col justify-center items-center text-center">
+                    <div class="text-6xl mb-4">🎯</div>
+                    <h3 class="text-2xl font-bold mb-2">O Objetivo</h3>
+                    <p class="text-gray-600">Garantir que nenhuma loja seja auditada com nota inferior a <span class="font-bold text-[#008200]">40 pontos</span> sem que você saiba e tenha tentado corrigir.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 1: SHARE -->
+    <div class="slide">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-200">02</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Calculadora de Share</h2>
+                    <p class="text-xl text-gray-500">Matemática, não "achismo".</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0 w-12 h-12 bg-[#008200] text-white rounded-full flex items-center justify-center font-bold text-xl">1</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">Escolha a Categoria</h3>
+                        <p class="text-gray-600 mb-4">No topo do app, selecione o segmento que você está medindo. As metas mudam para cada um!</p>
+                        <div class="flex gap-2">
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded text-sm font-bold">Premium</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm">Mainstream</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded text-sm">Craft</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0 w-12 h-12 bg-[#008200] text-white rounded-full flex items-center justify-center font-bold text-xl">2</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">Meça o "Mundo" (Total da Categoria)</h3>
+                        <p class="text-gray-600 mb-2">Pegue sua trena e meça de ponta a ponta o espaço ocupado por CERVEJAS daquela categoria (Nós + Concorrentes).</p>
+                        <div class="alert-box">
+                            <p class="text-red-800 font-bold text-sm">⚠️ ATENÇÃO ÀS QUEBRAS:</p>
+                            <p class="text-red-700 text-sm">Se houver um buraco vazio na prateleira, ele conta como "Mundo" se fizer parte do planograma da categoria. Não ignore espaços vazios!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-6">
+                    <div class="flex-shrink-0 w-12 h-12 bg-[#008200] text-white rounded-full flex items-center justify-center font-bold text-xl">3</div>
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">Insira Nossas Frentes</h3>
+                        <p class="text-gray-600">Agora meça apenas o espaço ocupado pelos produtos HEINEKEN BRASIL. O app vai calcular automaticamente sua porcentagem.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 2: AUDITORIA -->
+    <div class="slide">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-200">03</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Checklist FDS</h2>
+                    <p class="text-xl text-gray-500">Qualidade da Execução</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded text-sm font-bold">PILAR 1</span>
+                        Presença
+                    </h3>
+                    <p class="text-gray-600 mb-6">
+                        Aqui validamos o <strong>Mix Obrigatório</strong>. O app sabe exatamente o que cada loja (Hiper, Super, Mini) precisa ter.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-center gap-3 p-3 bg-gray-50 rounded">
+                            <span class="text-green-600 text-xl">✓</span>
+                            <span><strong>Gôndola:</strong> O produto está na prateleira principal?</span>
+                        </li>
+                        <li class="flex items-center gap-3 p-3 bg-gray-50 rounded">
+                            <span class="text-blue-600 text-xl">❄️</span>
+                            <span><strong>Gelada:</strong> O produto está no equipamento refrigerado?</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded text-sm font-bold">PILAR 2</span>
+                        Posicionamento
+                    </h3>
+                    <p class="text-gray-600 mb-6">
+                        As "Regras de Ouro" da execução. Responda com sinceridade.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold text-gray-800">Bloco de Marca</h4>
+                            <p class="text-sm text-gray-500">As marcas estão agrupadas? (Ex: Todas as Amstel juntas, todas as Heineken juntas)</p>
+                        </div>
+                        <div class="border-l-4 border-green-500 pl-4">
+                            <h4 class="font-bold text-gray-800">Blindagem</h4>
+                            <p class="text-sm text-gray-500">A Heineken está protegida por outras marcas nossas nas pontas? (Não toca na concorrência)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 3: RUPTURAS (NOVO) -->
+    <div class="slide bg-gray-900">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-300">04</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Gestão de Rupturas</h2>
+                    <p class="text-xl text-gray-500">NOVIDADE CRÍTICA - LEIA COM ATENÇÃO</p>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <p class="text-lg text-gray-700 mb-4">
+                    Atualizamos a forma de medir rupturas. Agora temos 3 status possíveis para cada produto:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 mb-8">
+                <div class="bg-green-50 p-6 rounded-xl border border-green-200 text-center">
+                    <div class="text-green-700 font-bold text-xl mb-2">OK</div>
+                    <p class="text-sm text-gray-600">Produto presente e exposto corretamente.</p>
+                </div>
+                <div class="bg-red-50 p-6 rounded-xl border border-red-200 text-center">
+                    <div class="text-red-700 font-bold text-xl mb-2">RUPTURA</div>
+                    <p class="text-sm text-gray-600">Produto cadastrado na loja, mas <strong>sem estoque</strong> físico (buraco).</p>
+                </div>
+                <div class="bg-gray-100 p-6 rounded-xl border border-gray-300 text-center relative overflow-hidden">
+                    <div class="absolute top-0 right-0 bg-yellow-400 text-xs font-bold px-2 py-1">NOVO</div>
+                    <div class="text-gray-700 font-bold text-xl mb-2">N/ CADASTRADO</div>
+                    <p class="text-sm text-gray-600">Produto <strong>não faz parte</strong> do sortimento da loja.</p>
+                </div>
+            </div>
+
+            <div class="alert-box bg-red-50 border-red-500">
+                <h3 class="text-red-800 font-bold text-lg mb-2 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                    REGRA DE OURO
+                </h3>
+                <p class="text-red-700 text-lg font-medium">
+                    Se um produto é <span class="underline">Obrigatório</span> para aquele tipo de loja, marcar como "N/Cadastrado" <strong>CONTA COMO PERDA DE PONTOS</strong> igual a uma Ruptura!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MÓDULO 4: VALIDADE & PREÇO -->
+    <div class="slide">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-200">05</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Validade & Preço</h2>
+                    <p class="text-xl text-gray-500">O Básico Bem Feito</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Controle de Validade</h3>
+                    <p class="text-gray-600 mb-4">Evite perdas e multas. Monitore os itens críticos.</p>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-4 h-4 rounded-full bg-green-500"></div>
+                            <span><strong>Verde:</strong> Vencimento longe (> 3 meses)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-4 h-4 rounded-full bg-yellow-500"></div>
+                            <span><strong>Amarelo:</strong> Atenção (1 a 3 meses)</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-4 h-4 rounded-full bg-red-500"></div>
+                            <span><strong>Vermelho:</strong> Crítico (< 1 mês) - Ação Imediata!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Régua de Preço</h3>
+                    <p class="text-gray-600 mb-4">Garanta a competitividade.</p>
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <p class="text-sm text-gray-600 mb-2">O app mostra o preço sugerido para cada SKU.</p>
+                        <div class="flex justify-between items-center bg-white p-3 rounded border border-gray-200 mb-2">
+                            <span>Heineken Lata</span>
+                            <span class="text-green-600 font-bold">R$ 4,99</span>
+                        </div>
+                        <p class="text-xs text-gray-500">Se o preço na loja estiver acima ou muito abaixo, reporte!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RELATÓRIOS -->
+    <div class="slide bg-gray-50">
+        <div class="content-box">
+            <div class="flex items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+                <span class="text-6xl font-black text-gray-200">06</span>
+                <div>
+                    <h2 class="text-4xl font-black text-[#008200]">Relatórios Inteligentes</h2>
+                    <p class="text-xl text-gray-500">Mostre seu trabalho</p>
+                </div>
+            </div>
+
+            <div class="mb-8 text-center">
+                <p class="text-lg text-gray-700">
+                    O novo sistema de relatórios foi feito para ser <strong>LIMPO</strong>.
+                    Itens que estão "OK" são escondidos automaticamente. O relatório foca apenas no que precisa de atenção.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8">
+                <div class="bg-white p-8 rounded-xl border-2 border-green-100 hover:border-green-500 transition-colors text-center cursor-pointer group">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">📄</div>
+                    <h3 class="font-bold text-xl mb-2">PDF Completo</h3>
+                    <p class="text-sm text-gray-500 mb-4">Use para enviar por e-mail, arquivar ou apresentar para o gerente da loja em reuniões formais.</p>
+                    <span class="text-xs font-bold text-green-600 uppercase tracking-widest">Recomendado</span>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl border-2 border-blue-100 hover:border-blue-500 transition-colors text-center cursor-pointer group">
+                    <div class="text-5xl mb-4 group-hover:scale-110 transition-transform">🖼️</div>
+                    <h3 class="font-bold text-xl mb-2">Imagem (PNG)</h3>
+                    <p class="text-sm text-gray-500 mb-4">Perfeito para WhatsApp! Mande no grupo da equipe ou direto para o encarregado da loja.</p>
+                    <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Rápido</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const slides = document.querySelectorAll('.slide');
+            const controls = document.querySelector('.fixed');
+            
+            // Hide controls for capture
+            controls.style.display = 'none';
+            
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            for (let i = 0; i < slides.length; i++) {
+                const slide = slides[i];
+                
+                // Capture slide
+                const canvas = await html2canvas(slide, {
+                    scale: 2, // Better quality
+                    useCORS: true,
+                    logging: false,
+                    windowWidth: slide.scrollWidth,
+                    windowHeight: slide.scrollHeight
+                });
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const imgProps = pdf.getImageProperties(imgData);
+                
+                // Calculate dimensions to fit page
+                const imgRatio = imgProps.width / imgProps.height;
+                const pageRatio = pdfWidth / pdfHeight;
+                
+                let renderWidth = pdfWidth;
+                let renderHeight = pdfWidth / imgRatio;
+                
+                if (renderHeight > pdfHeight) {
+                    renderHeight = pdfHeight;
+                    renderWidth = pdfHeight * imgRatio;
+                }
+                
+                // Center image
+                const x = (pdfWidth - renderWidth) / 2;
+                const y = (pdfHeight - renderHeight) / 2;
+
+                if (i > 0) pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', x, y, renderWidth, renderHeight);
+            }
+
+            pdf.save('Manual_Simulador_FDS.pdf');
+            
+            // Show controls again
+            controls.style.display = 'flex';
+        }
+
+        async function downloadPPTX() {
+            const slides = document.querySelectorAll('.slide');
+            const controls = document.querySelector('.fixed');
+            
+            // Hide controls for capture
+            controls.style.display = 'none';
+            
+            const pptx = new PptxGenJS();
+            pptx.layout = 'LAYOUT_16x9'; // 10 x 5.625 inches
+            pptx.author = 'Gustavo Nascimento e Pedro Lameirão';
+            pptx.title = 'Manual do Promotor';
+
+            for (let i = 0; i < slides.length; i++) {
+                const slide = slides[i];
+                
+                // Capture slide with forced 16:9 aspect ratio to match PPTX
+                // We use a high resolution 16:9 viewport
+                const canvas = await html2canvas(slide, {
+                    scale: 2, // Better quality
+                    useCORS: true,
+                    logging: false,
+                    windowWidth: 1280, // Force 16:9 width
+                    windowHeight: 720  // Force 16:9 height
+                });
+
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                
+                const s = pptx.addSlide();
+                
+                // Force image to fill the entire slide (10 x 5.625 inches)
+                s.addImage({ data: imgData, x: 0, y: 0, w: 10, h: 5.625 });
+            }
+
+            pptx.writeFile({ fileName: "Manual_Simulador_FDS.pptx" });
+            
+            // Show controls again
+            controls.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>

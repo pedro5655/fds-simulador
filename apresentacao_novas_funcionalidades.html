@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apresentação Novas Funcionalidades - Simulador FDS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .slide-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+        .slide {
+            scroll-snap-align: start;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-entry {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        @media print {
+            .slide-container { height: auto; overflow: visible; }
+            .slide { height: 100vh; break-after: page; }
+            .no-print { display: none !important; }
+            .animate-entry { opacity: 1 !important; animation: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-black text-white">
+
+    <!-- Controls -->
+    <div class="fixed top-6 right-6 z-50 no-print flex gap-4">
+        <button onclick="generatePPTX()" class="bg-[#008200] hover:bg-[#006000] text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-3 transform hover:scale-105 animate-entry delay-500">
+            <span class="text-xl">📊</span>
+            Baixar PowerPoint (.pptx)
+        </button>
+    </div>
+
+    <div id="slides-root" class="slide-container">
+        <!-- Slides will be injected here via JS -->
+    </div>
+
+    <script>
+        // --- CONTENT DATA SOURCE ---
+        const presentationData = [
+            {
+                id: "cover",
+                bg: "bg-[#008200]",
+                text: "text-white",
+                layout: "cover",
+                title: "Simulador FDS 2.0",
+                subtitle: "Novas Funcionalidades e Inteligência de Dados",
+                footer: "Heineken Brasil • Trade Marketing • Desenvolvido por Gustavo Nascimento e Pedro Lameirão",
+                icon: "shield"
+            },
+            {
+                id: "context",
+                bg: "bg-white",
+                text: "text-gray-900",
+                layout: "split",
+                title: "Evolução Contínua",
+                highlight: "O Que Mudou?",
+                content: [
+                    "O mercado é dinâmico e nossa ferramenta também precisa ser.",
+                    "Identificamos novas oportunidades para refinar a precisão da auditoria.",
+                    "Foco total em eliminar ruídos e mostrar apenas o que importa."
+                ],
+                visual: "risk"
+            },
+            {
+                id: "features",
+                bg: "bg-gray-100",
+                text: "text-gray-900",
+                layout: "feature-list",
+                title: "Novas Funcionalidades",
+                features: [
+                    { title: "Gestão de N/Cadastrado", desc: "Controle preciso de itens não cadastrados na loja." },
+                    { title: "Relatórios Inteligentes", desc: "Filtros automáticos que escondem itens 'OK'." },
+                    { title: "Régua de Preço Dinâmica", desc: "Foco total nas divergências de preço." }
+                ]
+            },
+            {
+                id: "rupturas_new",
+                bg: "bg-white",
+                text: "text-gray-900",
+                layout: "split",
+                title: "Gestão de Rupturas 2.0",
+                highlight: "Visibilidade Total",
+                content: [
+                    "Nova opção 'N/Cadastrado': Item não cadastrado agora conta como perda de pontos.",
+                    "Pontuação Ajustada: Se todos os itens do grupo forem Ruptura ou N/Cadastrado, a pontuação é zerada.",
+                    "Interface Responsiva: Botões ajustados para qualquer tamanho de tela."
+                ],
+                visual: "risk" 
+            },
+            {
+                id: "smart_reports",
+                bg: "bg-[#008200]",
+                text: "text-white",
+                layout: "split-image",
+                title: "Relatórios Inteligentes",
+                content: [
+                    "Foco na Ação: Itens 'OK' são removidos automaticamente do relatório.",
+                    "Régua de Preço: Apenas itens com divergência de preço são listados.",
+                    "Leitura Limpa: O gestor vê apenas o que precisa ser corrigido."
+                ],
+                visual: "report"
+            },
+            {
+                id: "closing",
+                bg: "bg-white",
+                text: "text-gray-900",
+                layout: "center",
+                title: "Simulador FDS 2.0",
+                subtitle: "Mais precisão, menos ruído. A ferramenta definitiva para o Promotor de Alta Performance.",
+                cta: "ATUALIZAR AGORA"
+            }
+        ];
+
+        // --- RENDERER ---
+        const root = document.getElementById('slides-root');
+
+        presentationData.forEach((slide, index) => {
+            const el = document.createElement('div');
+            el.className = `slide ${slide.bg} ${slide.text}`;
+            
+            let contentHtml = '';
+
+            if (slide.layout === 'cover') {
+                contentHtml = `
+                    <div class="text-center z-10 animate-entry">
+                        <div class="mb-8 inline-block p-6 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
+                            <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h1 class="text-7xl font-black uppercase tracking-tighter mb-4 leading-tight delay-100 animate-entry">${slide.title}</h1>
+                        <p class="text-2xl font-light tracking-widest opacity-90 uppercase delay-200 animate-entry">${slide.subtitle}</p>
+                        <div class="mt-12 flex flex-col items-center opacity-80 animate-entry delay-300">
+                            <span class="text-xs uppercase tracking-widest mb-2 font-light">Desenvolvido por</span>
+                            <div class="flex gap-6 font-bold text-lg">
+                                <span>Gustavo Nascimento</span>
+                                <span class="opacity-50">•</span>
+                                <span>Pedro Lameirão</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'split') {
+                contentHtml = `
+                    <div class="max-w-6xl w-full grid grid-cols-2 gap-16 items-center px-12">
+                        <div class="animate-entry">
+                            <h2 class="text-6xl font-black mb-2 leading-tight">${slide.title}</h2>
+                            <h3 class="text-3xl font-bold text-red-600 mb-8">${slide.highlight}</h3>
+                            <ul class="space-y-6 text-xl font-light leading-relaxed opacity-80">
+                                ${slide.content.map((c, i) => `<li class="flex gap-4 animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s"><span class="text-red-600 font-bold">➤</span> ${c}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="flex justify-center animate-entry delay-300">
+                            <div class="w-80 h-80 bg-gray-100 rounded-full flex items-center justify-center relative shadow-2xl">
+                                <span class="text-9xl">🚀</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'cards') {
+                contentHtml = `
+                    <div class="max-w-6xl w-full text-center px-12">
+                        <h2 class="text-5xl font-black mb-4 animate-entry">${slide.title}</h2>
+                        <p class="text-xl opacity-60 mb-16 uppercase tracking-widest animate-entry delay-100">${slide.subtitle}</p>
+                        <div class="grid grid-cols-3 gap-8">
+                            ${slide.cards.map((card, i) => `
+                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:bg-white/10 transition-all animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s">
+                                    <div class="text-5xl mb-6">${card.icon}</div>
+                                    <h3 class="text-2xl font-bold mb-3 text-[#008200]">${card.title}</h3>
+                                    <p class="text-gray-400 leading-relaxed">${card.desc}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'feature-list') {
+                contentHtml = `
+                    <div class="max-w-5xl w-full px-12">
+                        <h2 class="text-6xl font-black mb-16 text-[#008200] animate-entry">${slide.title}</h2>
+                        <div class="space-y-8">
+                            ${slide.features.map((feat, i) => `
+                                <div class="flex items-start gap-8 p-6 hover:bg-gray-50 rounded-2xl transition-colors border-l-4 border-transparent hover:border-[#008200] animate-entry" style="animation-delay: ${0.1 + (i*0.1)}s">
+                                    <span class="text-4xl font-black text-gray-200">0${i+1}</span>
+                                    <div>
+                                        <h3 class="text-2xl font-bold mb-2 text-gray-800">${feat.title}</h3>
+                                        <p class="text-gray-500 text-lg">${feat.desc}</p>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'impact') {
+                contentHtml = `
+                    <div class="max-w-6xl w-full text-center px-12">
+                        <h2 class="text-6xl font-black mb-20 animate-entry">${slide.title}</h2>
+                        <div class="grid grid-cols-3 gap-12">
+                            ${slide.stats.map((stat, i) => `
+                                <div class="animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s">
+                                    <div class="text-8xl font-black mb-4 tracking-tighter">${stat.value}</div>
+                                    <div class="text-xl font-bold uppercase tracking-widest opacity-80 border-t border-white/30 pt-4 inline-block">${stat.label}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'split-image') {
+                contentHtml = `
+                    <div class="max-w-6xl w-full grid grid-cols-2 gap-16 items-center px-12">
+                        <div class="animate-entry">
+                            <h2 class="text-5xl font-black mb-8 text-[#008200]">${slide.title}</h2>
+                            <ul class="space-y-6 text-xl text-gray-600 leading-relaxed">
+                                ${slide.content.map((c, i) => `<li class="flex gap-4 animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s"><span class="text-[#008200] font-bold">✓</span> ${c}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-200 transform rotate-2 animate-entry delay-300">
+                            <div class="h-4 w-1/3 bg-gray-200 rounded mb-6"></div>
+                            <div class="space-y-3 mb-8">
+                                <div class="h-3 w-full bg-gray-100 rounded"></div>
+                                <div class="h-3 w-5/6 bg-gray-100 rounded"></div>
+                            </div>
+                            <div class="flex gap-4">
+                                <div class="h-24 w-1/2 bg-green-50 rounded border border-green-100 flex items-center justify-center text-green-700 font-bold">PDF</div>
+                                <div class="h-24 w-1/2 bg-blue-50 rounded border border-blue-100 flex items-center justify-center text-blue-700 font-bold">IMG</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (slide.layout === 'center') {
+                contentHtml = `
+                    <div class="max-w-4xl w-full text-center px-12">
+                        <h2 class="text-6xl font-black mb-8 text-gray-900 leading-tight animate-entry">${slide.title}</h2>
+                        <p class="text-2xl text-gray-500 mb-12 font-light animate-entry delay-100">${slide.subtitle}</p>
+                        <div class="inline-block bg-[#008200] text-white px-12 py-4 rounded-full font-bold text-xl shadow-xl uppercase tracking-widest animate-entry delay-200">
+                            ${slide.cta}
+                        </div>
+                    </div>
+                `;
+            }
+
+            el.innerHTML = contentHtml;
+            root.appendChild(el);
+        });
+
+        // --- PPTX GENERATOR ---
+        function generatePPTX() {
+            const pptx = new PptxGenJS();
+            pptx.layout = 'LAYOUT_16x9'; // 10 x 5.625 inches
+            pptx.author = 'Gustavo Nascimento e Pedro Lameirão';
+            pptx.company = 'Trade Marketing';
+            pptx.title = 'Simulador FDS 2.0 - Novas Funcionalidades';
+
+            presentationData.forEach(slide => {
+                const s = pptx.addSlide();
+                s.transition = { type: "fade", duration: 1000 }; // Add Fade Transition
+                
+                // Background
+                if (slide.bg.includes('bg-[#008200]')) s.background = { color: "008200" };
+                else if (slide.bg.includes('bg-gray-900') || slide.bg.includes('bg-black')) s.background = { color: "111827" };
+                else if (slide.bg.includes('bg-gray-100')) s.background = { color: "F3F4F6" };
+                else s.background = { color: "FFFFFF" };
+
+                // Text Color Logic
+                const titleColor = slide.text.includes('text-white') ? "FFFFFF" : "008200";
+                const bodyColor = slide.text.includes('text-white') ? "E5E7EB" : "374151";
+
+                if (slide.layout === 'cover') {
+                    // Adjusted for 16x9 (Height 5.625)
+                    s.addText(slide.title.toUpperCase(), { x: 0.5, y: 1.5, w: '90%', fontSize: 44, fontFace: 'Arial Black', color: titleColor, align: 'center' });
+                    s.addText(slide.subtitle.toUpperCase(), { x: 0.5, y: 3.0, w: '90%', fontSize: 18, color: "FFFFFF", align: 'center', transparency: 10 });
+                    s.addText(slide.footer.toUpperCase(), { x: 0.5, y: 5.0, w: '90%', fontSize: 12, color: "FFFFFF", align: 'center', transparency: 40, charSpacing: 3 });
+                }
+                else if (slide.layout === 'split') {
+                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "111827" });
+                    s.addText(slide.highlight, { x: 0.5, y: 1.2, fontSize: 24, fontFace: 'Arial', color: "DC2626", bold: true });
+                    
+                    slide.content.forEach((point, i) => {
+                        s.addText(point, { x: 0.5, y: 2.0 + (i * 0.6), w: '50%', fontSize: 14, color: "374151", bullet: { type: 'number', color: 'DC2626' } });
+                    });
+                    
+                    s.addShape(pptx.ShapeType.ellipse, { x: 6.5, y: 1.5, w: 3, h: 3, fill: { color: "F3F4F6" } });
+                    s.addText("🚀", { x: 6.5, y: 1.5, w: 3, h: 3, fontSize: 60, align: 'center', color: "D1D5DB" });
+                }
+                else if (slide.layout === 'cards') {
+                    s.addText(slide.title, { x: 0.5, y: 0.4, w: '90%', fontSize: 36, fontFace: 'Arial Black', color: titleColor, align: 'center' });
+                    s.addText(slide.subtitle.toUpperCase(), { x: 0.5, y: 1.0, w: '90%', fontSize: 14, color: "9CA3AF", align: 'center', charSpacing: 3 });
+
+                    slide.cards.forEach((card, i) => {
+                        const xPos = 0.5 + (i * 3.2);
+                        s.addShape(pptx.ShapeType.roundRect, { x: xPos, y: 1.8, w: 2.8, h: 3.2, fill: { color: "1F2937" }, line: { color: "374151" } });
+                        s.addText(card.icon, { x: xPos, y: 2.0, w: 2.8, fontSize: 32, align: 'center' });
+                        s.addText(card.title, { x: xPos, y: 2.8, w: 2.8, fontSize: 18, color: "008200", bold: true, align: 'center' });
+                        s.addText(card.desc, { x: xPos + 0.1, y: 3.3, w: 2.6, fontSize: 12, color: "9CA3AF", align: 'center' });
+                    });
+                }
+                else if (slide.layout === 'feature-list') {
+                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "008200" });
+                    
+                    slide.features.forEach((feat, i) => {
+                        const yPos = 1.8 + (i * 1.2);
+                        s.addText(`0${i+1}`, { x: 0.5, y: yPos, fontSize: 24, fontFace: 'Arial Black', color: "E5E7EB" });
+                        s.addText(feat.title, { x: 1.2, y: yPos, fontSize: 18, bold: true, color: "1F2937" });
+                        s.addText(feat.desc, { x: 1.2, y: yPos + 0.4, fontSize: 14, color: "6B7280" });
+                    });
+                }
+                else if (slide.layout === 'impact') {
+                    s.addText(slide.title, { x: 0.5, y: 0.5, w: '90%', fontSize: 40, fontFace: 'Arial Black', color: titleColor, align: 'center' });
+                    
+                    slide.stats.forEach((stat, i) => {
+                        const xPos = 0.5 + (i * 3.2);
+                        s.addText(stat.value, { x: xPos, y: 2.0, w: 3, fontSize: 48, fontFace: 'Arial Black', color: "FFFFFF", align: 'center' });
+                        s.addText(stat.label.toUpperCase(), { x: xPos, y: 3.2, w: 3, fontSize: 14, color: "FFFFFF", align: 'center', transparency: 20 });
+                        s.addShape(pptx.ShapeType.line, { x: xPos + 0.5, y: 3.0, w: 2, h: 0, line: { color: "FFFFFF", transparency: 50 } });
+                    });
+                }
+                else if (slide.layout === 'split-image') {
+                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "008200" });
+                    
+                    slide.content.forEach((point, i) => {
+                        s.addText(point, { x: 0.5, y: 1.5 + (i * 0.8), w: '45%', fontSize: 14, color: "4B5563", bullet: { type: 'check', color: '008200' } });
+                    });
+
+                    s.addShape(pptx.ShapeType.rect, { x: 6.0, y: 1.5, w: 3, h: 3, fill: { color: "FFFFFF" }, line: { color: "E5E7EB" }, shadow: { type: 'outer' } });
+                    s.addText("RELATÓRIO", { x: 6.0, y: 2.0, w: 3, fontSize: 12, align: 'center', color: "9CA3AF" });
+                }
+                else if (slide.layout === 'center') {
+                    s.addText(slide.title, { x: 1, y: 1.5, w: '80%', fontSize: 40, fontFace: 'Arial Black', color: "111827", align: 'center' });
+                    s.addText(slide.subtitle, { x: 1, y: 3.0, w: '80%', fontSize: 18, color: "6B7280", align: 'center' });
+                    
+                    s.addShape(pptx.ShapeType.roundRect, { x: 3.5, y: 4.2, w: 3, h: 0.8, fill: { color: "008200" } });
+                    s.addText(slide.cta.toUpperCase(), { x: 3.5, y: 4.2, w: 3, h: 0.8, fontSize: 14, color: "FFFFFF", bold: true, align: 'center' });
+                }
+            });
+
+            pptx.writeFile({ fileName: "Apresentacao_Simulador_FDS_2.0.pptx" });
+        }
+    </script>
+</body>
+</html>
