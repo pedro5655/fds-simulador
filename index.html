@@ -3257,6 +3257,7 @@
             const [deferredPrompt, setDeferredPrompt] = useState(null);
             const [showInstallModal, setShowInstallModal] = useState(false);
             const [isIOS, setIsIOS] = useState(false);
+            const [installPlatform, setInstallPlatform] = useState('ios'); // 'ios' or 'generic'
 
             useEffect(() => {
                 const handler = (e) => {
@@ -3279,10 +3280,12 @@
                     console.log(`User response to the install prompt: ${outcome}`);
                     setDeferredPrompt(null);
                 } else if (isIOS) {
+                    setInstallPlatform('ios');
                     setShowInstallModal(true);
                 } else {
-                   // Fallback for when PWA is already installed or not supported
-                   alert("Para instalar, procure a opção 'Adicionar à Tela de Início' no menu do seu navegador.");
+                   // Fallback for Edge/Chrome when prompt doesn't fire
+                   setInstallPlatform('generic');
+                   setShowInstallModal(true);
                 }
             };
             const [rupturasData, setRupturasData] = useStickyState({}, 'sovi_heineken_rupturasData');
@@ -3744,12 +3747,10 @@
                                 <h1 className="text-xl font-bold tracking-tighter">SIMULADOR DE FDS</h1>
                             </div>
                             <div className="flex gap-2">
-                                {(deferredPrompt || isIOS) && (
                                     <button onClick={handleInstallClick} className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-bold transition-colors flex items-center gap-1">
                                         <Download size={16} />
                                         Instalar
                                     </button>
-                                )}
                                 <button onClick={() => setShowCreditsModal(true)} className="text-white/80 hover:text-white transition-colors">
                                     <Info size={20} />
                                 </button>
@@ -3795,7 +3796,7 @@
                         </div>
                     )}
 
-                    {/* IOS Install Instructions Modal */}
+                    {/* Install Instructions Modal */}
                     {showInstallModal && (
                         <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
                             <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center relative">
@@ -3810,23 +3811,46 @@
                                     <Download className="text-[#008200]" size={32} />
                                 </div>
                                 
-                                <h3 className="text-xl font-bold text-gray-800 mb-2">Instalar no iPhone</h3>
-                                <p className="text-gray-600 text-sm mb-6">Para instalar este aplicativo no seu iPhone, siga os passos abaixo:</p>
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">
+                                    {installPlatform === 'ios' ? 'Instalar no iPhone' : 'Instalar Aplicativo'}
+                                </h3>
+                                <p className="text-gray-600 text-sm mb-6">
+                                    {installPlatform === 'ios' 
+                                        ? 'Para instalar este aplicativo no seu iPhone, siga os passos abaixo:' 
+                                        : 'Se a instalação não iniciou automaticamente, siga os passos abaixo:'}
+                                </p>
                                 
-                                <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-white p-2 rounded-lg shadow-sm">
-                                            <IconBase width={20} height={20}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></IconBase>
+                                {installPlatform === 'ios' ? (
+                                    <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm">
+                                                <IconBase width={20} height={20}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></IconBase>
+                                            </div>
+                                            <p className="text-sm text-gray-700">1. Toque no botão <span className="font-bold">Compartilhar</span> na barra inferior.</p>
                                         </div>
-                                        <p className="text-sm text-gray-700">1. Toque no botão <span className="font-bold">Compartilhar</span> na barra inferior do Safari.</p>
-                                    </div>
-                                    <div className="flex items-center gap-3">
-                                        <div className="bg-white p-2 rounded-lg shadow-sm">
-                                            <IconBase width={20} height={20}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></IconBase>
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm">
+                                                <IconBase width={20} height={20}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></IconBase>
+                                            </div>
+                                            <p className="text-sm text-gray-700">2. Selecione <span className="font-bold">"Adicionar à Tela de Início"</span>.</p>
                                         </div>
-                                        <p className="text-sm text-gray-700">2. Role para baixo e selecione <span className="font-bold">"Adicionar à Tela de Início"</span>.</p>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm">
+                                                <IconBase width={20} height={20}><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></IconBase>
+                                            </div>
+                                            <p className="text-sm text-gray-700">1. Abra o menu do navegador (três pontos).</p>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <div className="bg-white p-2 rounded-lg shadow-sm">
+                                                <IconBase width={20} height={20}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect></IconBase>
+                                            </div>
+                                            <p className="text-sm text-gray-700">2. Procure por <span className="font-bold">"Instalar Aplicativo"</span> ou "Adicionar à Tela Inicial".</p>
+                                        </div>
+                                    </div>
+                                )}
                                 
                                 <button 
                                     onClick={() => setShowInstallModal(false)}
