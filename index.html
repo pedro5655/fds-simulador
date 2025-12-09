@@ -161,6 +161,14 @@
                 <circle cx="12" cy="12" r="2"></circle>
             </IconBase>
         );
+        const Download = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+            </IconBase>
+        );
+
         const Megaphone = ({ size = 24, className = "" }) => (
             <IconBase className={className} width={size} height={size}>
                 <path d="m3 11 18-5v12L3 14v-3z"></path>
@@ -3246,6 +3254,37 @@
             const [activeCategory, setActiveCategory] = useStickyState('premium', 'sovi_heineken_activeCategory');
             const [activeView, setActiveView] = useStickyState('simulador', 'sovi_heineken_activeView');
             const [showCreditsModal, setShowCreditsModal] = useState(false);
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [showInstallModal, setShowInstallModal] = useState(false);
+            const [isIOS, setIsIOS] = useState(false);
+
+            useEffect(() => {
+                const handler = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                };
+                window.addEventListener('beforeinstallprompt', handler);
+                
+                // Detect iOS
+                const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+                setIsIOS(isIos);
+
+                return () => window.removeEventListener('beforeinstallprompt', handler);
+            }, []);
+
+            const handleInstallClick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    setDeferredPrompt(null);
+                } else if (isIOS) {
+                    setShowInstallModal(true);
+                } else {
+                   // Fallback for when PWA is already installed or not supported
+                   alert("Para instalar, procure a opção 'Adicionar à Tela de Início' no menu do seu navegador.");
+                }
+            };
             const [rupturasData, setRupturasData] = useStickyState({}, 'sovi_heineken_rupturasData');
             const [validityData, setValidityData] = useStickyState({}, 'sovi_heineken_validityData');
             const [priceRulerData, setPriceRulerData] = useStickyState({}, 'sovi_heineken_priceRulerData');
@@ -3705,6 +3744,12 @@
                                 <h1 className="text-xl font-bold tracking-tighter">SIMULADOR DE FDS</h1>
                             </div>
                             <div className="flex gap-2">
+                                {(deferredPrompt || isIOS) && (
+                                    <button onClick={handleInstallClick} className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-bold transition-colors flex items-center gap-1">
+                                        <Download size={16} />
+                                        Instalar
+                                    </button>
+                                )}
                                 <button onClick={() => setShowCreditsModal(true)} className="text-white/80 hover:text-white transition-colors">
                                     <Info size={20} />
                                 </button>
@@ -3746,6 +3791,49 @@
                                         <p className="text-xs text-gray-400 font-medium">Heineken Brasil • Trade Marketing</p>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* IOS Install Instructions Modal */}
+                    {showInstallModal && (
+                        <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 text-center relative">
+                                <button 
+                                    onClick={() => setShowInstallModal(false)}
+                                    className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+                                >
+                                    <IconBase width={24} height={24}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></IconBase>
+                                </button>
+                                
+                                <div className="w-16 h-16 bg-gray-100 rounded-full mx-auto flex items-center justify-center mb-4">
+                                    <Download className="text-[#008200]" size={32} />
+                                </div>
+                                
+                                <h3 className="text-xl font-bold text-gray-800 mb-2">Instalar no iPhone</h3>
+                                <p className="text-gray-600 text-sm mb-6">Para instalar este aplicativo no seu iPhone, siga os passos abaixo:</p>
+                                
+                                <div className="space-y-4 text-left bg-gray-50 p-4 rounded-xl">
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-white p-2 rounded-lg shadow-sm">
+                                            <IconBase width={20} height={20}><rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></IconBase>
+                                        </div>
+                                        <p className="text-sm text-gray-700">1. Toque no botão <span className="font-bold">Compartilhar</span> na barra inferior do Safari.</p>
+                                    </div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="bg-white p-2 rounded-lg shadow-sm">
+                                            <IconBase width={20} height={20}><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></IconBase>
+                                        </div>
+                                        <p className="text-sm text-gray-700">2. Role para baixo e selecione <span className="font-bold">"Adicionar à Tela de Início"</span>.</p>
+                                    </div>
+                                </div>
+                                
+                                <button 
+                                    onClick={() => setShowInstallModal(false)}
+                                    className="mt-6 w-full bg-[#008200] text-white py-3 rounded-xl font-bold hover:bg-[#006600] transition-colors"
+                                >
+                                    Entendi
+                                </button>
                             </div>
                         </div>
                     )}
