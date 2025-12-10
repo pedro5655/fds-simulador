@@ -247,6 +247,13 @@
             <IconBase className={className} width={size} height={size}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></IconBase>
         );
 
+        const Search = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </IconBase>
+        );
+
         // --- TREINAMENTO CONSTANTS ---
          const COMPANY_DATA = {
           values: ["Respeito e Cuidado", "Paixão", "Diversão", "Coragem"],
@@ -2336,59 +2343,82 @@
                 );
             };
 
-        const PRICE_RULER_DATA_CC = [
-            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.29, promo: 4.99 },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 269", price: 3.09, promo: 3.09 },
-            { brand: "AMSTEL", sku: "LATA 269", price: 3.29, promo: 3.09 },
-            { brand: "LAGUNITAS", sku: "LONG NECK", price: 10.99, promo: 10.99 },
-            // EISENBAHN ESTILOS LONG NECK
+const PRICE_RULER_DATA_CC = [
+            // --- CRAFT ---
+            // EISENBAHN ESTILOS
             { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 6.79, promo: 6.59 },
             { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 6.79, promo: 6.59 },
             { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
             { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
-            
-            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
-            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
-            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.99, promo: 5.79 },
-            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.09, promo: 4.19 },
-            
-            // BADEN BADEN LATA 350
+            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.69, promo: 5.09 },
+            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
+
+            // BADEN BADEN
             { brand: "BADEN BADEN WITBIER", sku: "LATA 350", price: 6.09, promo: 5.39 },
             { brand: "BADEN BADEN AMBER", sku: "LATA 350", price: 6.09, promo: 5.39 },
             { brand: "BADEN BADEN IPA", sku: "LATA 350", price: 6.09, promo: 5.39 },
             { brand: "BADEN BADEN CRYSTAL", sku: "LATA 350", price: 6.09, promo: 5.39 },
             { brand: "BADEN BADEN PEACH", sku: "LATA 350", price: 6.09, promo: 5.39 },
             { brand: "BADEN BADEN GOLDEN", sku: "LATA 350", price: 6.09, promo: 5.39 },
-
-            // EISENBAHN ESTILOS LATA 350
-            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.69, promo: 5.09 },
-            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
-            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
-
-            { brand: "HEINEKEN", sku: "LATA 350", price: 5.69, promo: 5.29 },
-            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.69, promo: 5.29 },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 3.99, promo: 3.99 },
-            { brand: "AMSTEL", sku: "LATA 350", price: 3.89, promo: 3.69 },
-            { brand: "HEINEKEN", sku: "LATA 473", price: 6.59, promo: 6.09 },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 4.79, promo: 4.79 },
-            { brand: "AMSTEL", sku: "LATA 473", price: 4.89, promo: 4.69 },
-            
-            // BADEN BADEN 600
             { brand: "BADEN BADEN WITBIER", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
             { brand: "BADEN BADEN IPA", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
             { brand: "BADEN BADEN CRYSTAL", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
             { brand: "BADEN BADEN PEACH", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
             { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
 
-            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
-            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 113.99, promo: 113.99 },
-            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 3.99, promo: 3.49 },
-            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.79, promo: 4.79 },
-            { brand: "HEINEKEN", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            // LAGUNITAS
+            { brand: "LAGUNITAS", sku: "LONG NECK", price: 10.99, promo: 10.99 },
+            { brand: "LAGUNITAS", sku: "LATA 350", price: 8.99, promo: 6.99 },
+
+            // BLUE MOON
             { brand: "BLUE MOON", sku: "LONG NECK", price: 10.99, promo: 10.99 },
             { brand: "BLUE MOON", sku: "LATA 350", price: 8.99, promo: 6.99 },
-            
-            // FYS TONICA
+
+            // --- PREMIUM ---
+            // HEINEKEN
+            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.29, promo: 4.99 },
+            { brand: "HEINEKEN", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "HEINEKEN", sku: "LATA 350", price: 5.69, promo: 5.29 },
+            { brand: "HEINEKEN", sku: "LATA 473", price: 6.59, promo: 6.09 },
+            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
+            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 113.99, promo: 113.99 },
+
+            // HEINEKEN 0.0
+            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.69, promo: 5.29 },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+
+            // EISENBAHN PILSEN
+            { brand: "EISENBAHN PILSEN", sku: "LATA 269", price: 3.09, promo: 3.09 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 3.99, promo: 3.99 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 4.79, promo: 4.79 },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.09, promo: 4.19 },
+
+            // EISENBAHN UNFILTERED
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 3.99, promo: 3.99 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 4.79, promo: 4.79 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.09, promo: 4.19 },
+
+            // SOL PREMIUM
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.99, promo: 5.79 },
+            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 8.99, promo: 8.99 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.99, promo: 5.79 },
+
+            // AMSTEL ULTRA
+            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 3.99, promo: 3.49 },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.79, promo: 4.79 },
+
+            // --- MAINSTREAM ---
+            // AMSTEL
+            { brand: "AMSTEL", sku: "LATA 269", price: 3.29, promo: 3.09 },
+            { brand: "AMSTEL", sku: "LATA 350", price: 3.89, promo: 3.69 },
+            { brand: "AMSTEL", sku: "LATA 473", price: 4.89, promo: 4.69 },
+            { brand: "AMSTEL", sku: "LONG NECK", price: 4.69, promo: 4.49 },
+
+            // --- NAB ---
+            // FYS TÔNICA
             { brand: "FYS TONICA", sku: "LATA 350", price: 2.99, promo: 2.69 },
             { brand: "FYS TONICA ZERO", sku: "LATA 350", price: 2.99, promo: 2.69 },
 
@@ -2400,76 +2430,92 @@
             { brand: "FYS LARANJA", sku: "LATA 350", price: 2.79, promo: 2.49 },
             { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
 
-            { brand: "LAGUNITAS", sku: "LATA 350", price: 8.99, promo: 6.99 },
-            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.09, promo: 4.19 },
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 3.99, promo: 3.99 },
-            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            // CLASH'D
             { brand: "CLASHD", sku: "LATA 269", price: 4.59, promo: 3.99 },
-            { brand: "AMSTEL", sku: "LONG NECK", price: 4.69, promo: 4.49 },
-            
+
+            // --- RTD ---
             // AMSTEL VIBES
             { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.69, promo: 3.79 },
-            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.69, promo: 3.79 },
-
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 4.79, promo: 4.79 },
-            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 8.99, promo: 8.99 },
-            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.99, promo: 5.79 }
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.69, promo: 3.79 }
         ];
 
-        const PRICE_RULER_DATA_VAREJO = [
-            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.59, promo: 5.29 },
-            { brand: "AMSTEL", sku: "LATA 269", price: 3.49, promo: 3.29 },
-            { brand: "LAGUNITAS", sku: "LONG NECK", price: 11.59, promo: 11.59 },
-            
-            // EISENBAHN ESTILOS LONG NECK
+const PRICE_RULER_DATA_VAREJO = [
+            // --- CRAFT ---
+            // EISENBAHN ESTILOS
             { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 7.19, promo: 7.19 },
             { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 7.19, promo: 7.19 },
             { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 7.19, promo: 7.19 },
             { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 7.19, promo: 7.19 },
+            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.99, promo: 5.39 },
+            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
 
-            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
-            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
-            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 6.29, promo: 6.09 },
-            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.39, promo: 4.49 },
-            
-            // BADEN BADEN LATA 350
+            // BADEN BADEN
             { brand: "BADEN BADEN WITBIER", sku: "LATA 350", price: 6.39, promo: 5.69 },
             { brand: "BADEN BADEN AMBER", sku: "LATA 350", price: 6.39, promo: 5.69 },
             { brand: "BADEN BADEN IPA", sku: "LATA 350", price: 6.39, promo: 5.69 },
             { brand: "BADEN BADEN CRYSTAL", sku: "LATA 350", price: 6.39, promo: 5.69 },
             { brand: "BADEN BADEN PEACH", sku: "LATA 350", price: 6.39, promo: 5.69 },
             { brand: "BADEN BADEN GOLDEN", sku: "LATA 350", price: 6.39, promo: 5.69 },
-
-            // EISENBAHN ESTILOS LATA 350
-            { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.99, promo: 5.39 },
-            { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
-            { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.99, promo: 5.39 },
-
-            { brand: "HEINEKEN", sku: "LATA 350", price: 5.99, promo: 5.59 },
-            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.99, promo: 5.59 },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 4.19, promo: 4.19 },
-            { brand: "AMSTEL", sku: "LATA 350", price: 4.09, promo: 3.89 },
-            { brand: "HEINEKEN", sku: "LATA 473", price: 7.29, promo: 6.79 },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 5.29, promo: 5.29 },
-            { brand: "AMSTEL", sku: "LATA 473", price: 5.49, promo: 5.29 },
-            { brand: "SCHIN", sku: "LATA 473", price: 3.69, promo: 3.69 },
-            
-            // BADEN BADEN 600
             { brand: "BADEN BADEN WITBIER", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
             { brand: "BADEN BADEN IPA", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
             { brand: "BADEN BADEN CRYSTAL", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
             { brand: "BADEN BADEN PEACH", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
             { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
 
-            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
-            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 119.99, promo: 119.99 },
-            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 4.19, promo: 3.69 },
-            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.99, promo: 4.99 },
-            { brand: "HEINEKEN", sku: "LATA 269", price: 4.79, promo: 4.19 },
+            // LAGUNITAS
+            { brand: "LAGUNITAS", sku: "LONG NECK", price: 11.59, promo: 11.59 },
+
+            // BLUE MOON
             { brand: "BLUE MOON", sku: "LONG NECK", price: 11.59, promo: 11.59 },
             { brand: "BLUE MOON", sku: "LATA 350", price: 9.49, promo: 7.39 },
-            
-            // FYS TONICA
+
+            // --- PREMIUM ---
+            // HEINEKEN
+            { brand: "HEINEKEN", sku: "SHOT 250", price: 5.59, promo: 5.29 },
+            { brand: "HEINEKEN", sku: "LATA 269", price: 4.79, promo: 4.19 },
+            { brand: "HEINEKEN", sku: "LATA 350", price: 5.99, promo: 5.59 },
+            { brand: "HEINEKEN", sku: "LATA 473", price: 7.29, promo: 6.79 },
+            { brand: "HEINEKEN", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            { brand: "HEINEKEN", sku: "600 ML DESC", price: 13.49, promo: 13.49 },
+            { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 119.99, promo: 119.99 },
+
+            // HEINEKEN 0.0
+            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.99, promo: 5.59 },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+
+            // EISENBAHN PILSEN
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 4.19, promo: 4.19 },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 5.29, promo: 5.29 },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.39, promo: 4.49 },
+
+            // EISENBAHN UNFILTERED
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 4.19, promo: 4.19 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 5.29, promo: 5.29 },
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.39, promo: 4.49 },
+
+            // SOL PREMIUM
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 6.29, promo: 6.09 },
+            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 9.49, promo: 9.49 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 6.29, promo: 6.09 },
+
+            // AMSTEL ULTRA
+            { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 4.19, promo: 3.69 },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK", price: 4.99, promo: 4.99 },
+
+            // --- MAINSTREAM ---
+            // AMSTEL
+            { brand: "AMSTEL", sku: "LATA 269", price: 3.49, promo: 3.29 },
+            { brand: "AMSTEL", sku: "LATA 350", price: 4.09, promo: 3.89 },
+            { brand: "AMSTEL", sku: "LATA 473", price: 5.49, promo: 5.29 },
+            { brand: "AMSTEL", sku: "LONG NECK", price: 4.99, promo: 4.79 },
+
+            // ECONOMY (Included in Mainstream section or right after)
+            { brand: "SCHIN", sku: "LATA 473", price: 3.69, promo: 3.69 },
+
+            // --- NAB ---
+            // FYS TÔNICA
             { brand: "FYS TONICA", sku: "LATA 350", price: 3.19, promo: 2.89 },
             { brand: "FYS TONICA ZERO", sku: "LATA 350", price: 3.19, promo: 2.89 },
 
@@ -2481,57 +2527,17 @@
             { brand: "FYS LARANJA", sku: "LATA 350", price: 2.99, promo: 2.59 },
             { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
 
-            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.39, promo: 4.49 },
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 4.19, promo: 4.19 },
-            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.79, promo: 4.19 },
+            // CLASH'D
             { brand: "CLASHD", sku: "LATA 269", price: 4.89, promo: 4.29 },
-            { brand: "AMSTEL", sku: "LONG NECK", price: 4.99, promo: 4.79 },
-            
+
+            // --- RTD ---
             // AMSTEL VIBES
             { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.99, promo: 3.99 },
-            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.99, promo: 3.99 },
-
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473", price: 5.29, promo: 5.29 },
-            { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 9.49, promo: 9.49 },
-            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 6.29, promo: 6.09 }
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.99, promo: 3.99 }
         ];
 
         const VALIDITY_DATA_LIST = [
-            // HEINEKEN
-            { brand: "HEINEKEN", sku: "SHOT 250ml" },
-            { brand: "HEINEKEN", sku: "LATA 269ml" },
-            { brand: "HEINEKEN", sku: "LATA 350ml" },
-            { brand: "HEINEKEN", sku: "LATA 473ml" },
-            { brand: "HEINEKEN", sku: "LONG NECK 330ml" },
-            { brand: "HEINEKEN", sku: "GARRAFA 600ml" },
-            { brand: "HEINEKEN", sku: "KEG 5L" },
-            { brand: "HEINEKEN 0.0", sku: "LATA 269ml" },
-            { brand: "HEINEKEN 0.0", sku: "LATA 350ml" },
-            { brand: "HEINEKEN 0.0", sku: "LONG NECK 330ml" },
-            
-            // AMSTEL
-            { brand: "AMSTEL", sku: "LATA 269ml" },
-            { brand: "AMSTEL", sku: "LATA 350ml" },
-            { brand: "AMSTEL", sku: "LATA 473ml" },
-            { brand: "AMSTEL", sku: "LONG NECK" },
-            { brand: "AMSTEL", sku: "GARRAFA 600ml" },
-            { brand: "AMSTEL ULTRA", sku: "LATA 269ml" },
-            { brand: "AMSTEL ULTRA", sku: "LONG NECK" },
-            { brand: "AMSTEL VIBES", sku: "LEMON (LIMÃO) 269ml" },
-            { brand: "AMSTEL VIBES", sku: "STRAWMELLON 269ml" },
-
-            // EISENBAHN PILSEN
-            { brand: "EISENBAHN PILSEN", sku: "LATA 269ml" },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 350ml" },
-            { brand: "EISENBAHN PILSEN", sku: "LATA 473ml" },
-            { brand: "EISENBAHN PILSEN", sku: "LONG NECK" },
-            { brand: "EISENBAHN PILSEN", sku: "GARRAFA 600ml" },
-
-            // EISENBAHN UNFILTERED
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350ml" },
-            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473ml" },
-            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK" },
-
+            // --- CRAFT ---
             // EISENBAHN ESTILOS
             { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK" },
             { brand: "EISENBAHN PALE ALE", sku: "LONG NECK" },
@@ -2554,15 +2560,9 @@
             { brand: "BADEN BADEN GOLDEN", sku: "LATA 350ml" },
             { brand: "BADEN BADEN GOLDEN", sku: "GARRAFA 600ml" },
 
-            // SOL
-            { brand: "SOL PREMIUM", sku: "LONG NECK" },
-            { brand: "SOL PREMIUM", sku: "GARRAFA 600ml" },
-            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK" },
-
-            // PRAYA
+            // PRAYA (Classica)
             { brand: "PRAYA", sku: "CLASSICA 355ml" },
             { brand: "PRAYA", sku: "CLASSICA 600ml" },
-            { brand: "PRAYA", sku: "LAGER 355ml" },
 
             // LAGUNITAS
             { brand: "LAGUNITAS", sku: "LONG NECK" },
@@ -2572,6 +2572,54 @@
             { brand: "BLUE MOON", sku: "LONG NECK" },
             { brand: "BLUE MOON", sku: "LATA 350ml" },
 
+            // --- PREMIUM ---
+            // HEINEKEN
+            { brand: "HEINEKEN", sku: "SHOT 250ml" },
+            { brand: "HEINEKEN", sku: "LATA 269ml" },
+            { brand: "HEINEKEN", sku: "LATA 350ml" },
+            { brand: "HEINEKEN", sku: "LATA 473ml" },
+            { brand: "HEINEKEN", sku: "LONG NECK 330ml" },
+            { brand: "HEINEKEN", sku: "GARRAFA 600ml" },
+            { brand: "HEINEKEN", sku: "KEG 5L" },
+
+            // HEINEKEN 0.0
+            { brand: "HEINEKEN 0.0", sku: "LATA 269ml" },
+            { brand: "HEINEKEN 0.0", sku: "LATA 350ml" },
+            { brand: "HEINEKEN 0.0", sku: "LONG NECK 330ml" },
+
+            // EISENBAHN PILSEN
+            { brand: "EISENBAHN PILSEN", sku: "LATA 269ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 350ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LATA 473ml" },
+            { brand: "EISENBAHN PILSEN", sku: "LONG NECK" },
+            { brand: "EISENBAHN PILSEN", sku: "GARRAFA 600ml" },
+
+            // EISENBAHN UNFILTERED
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 350ml" },
+            { brand: "EISENBAHN UNFILTERED", sku: "LATA 473ml" },
+            { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK" },
+
+            // SOL
+            { brand: "SOL PREMIUM", sku: "LONG NECK" },
+            { brand: "SOL PREMIUM", sku: "GARRAFA 600ml" },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK" },
+
+            // PRAYA (Lager)
+            { brand: "PRAYA", sku: "LAGER 355ml" },
+
+            // AMSTEL ULTRA
+            { brand: "AMSTEL ULTRA", sku: "LATA 269ml" },
+            { brand: "AMSTEL ULTRA", sku: "LONG NECK" },
+
+            // --- MAINSTREAM ---
+            // AMSTEL
+            { brand: "AMSTEL", sku: "LATA 269ml" },
+            { brand: "AMSTEL", sku: "LATA 350ml" },
+            { brand: "AMSTEL", sku: "LATA 473ml" },
+            { brand: "AMSTEL", sku: "LONG NECK" },
+            { brand: "AMSTEL", sku: "GARRAFA 600ml" },
+
+            // --- NAB ---
             // FYS
             { brand: "FYS", sku: "LIMÃO SICILIANO 350ml" },
             { brand: "FYS", sku: "LIMÃO SICILIANO ZERO 350ml" },
@@ -2585,7 +2633,21 @@
              // CLASH'D
             { brand: "CLASHD", sku: "LIMÃO, MORANGO E GENGIBRE 269ml" },
             { brand: "CLASHD", sku: "FRUTAS VERMELHAS E HIBISCO 269ml" },
-            { brand: "CLASHD", sku: "MAÇÃ, CANELA E BAUNILHA 269ml" }
+            { brand: "CLASHD", sku: "MAÇÃ, CANELA E BAUNILHA 269ml" },
+
+            // MAMBA WATER
+            { brand: "MAMBA WATER", sku: "LATA 350ml" },
+            { brand: "MAMBA WATER", sku: "LATA 350ml COM GÁS" },
+
+            // BAER-MATE
+            { brand: "BAER-MATE", sku: "LATA 350ml" },
+            { brand: "BAER-MATE", sku: "LATA 269ml" },
+            { brand: "BAER-MATCHA", sku: "LATA 350ml" },
+
+            // --- RTD ---
+            // AMSTEL VIBES
+            { brand: "AMSTEL VIBES", sku: "LEMON (LIMÃO) 269ml" },
+            { brand: "AMSTEL VIBES", sku: "STRAWMELLON 269ml" }
         ];
 
         const SKU_TO_SCORE_GROUP = {
@@ -2714,15 +2776,33 @@
         };
 
         const ValidadeView = ({ data, onChange, onDownload, onDownloadPNG }) => {
+            const [searchTerm, setSearchTerm] = useState('');
+
+            const filteredList = VALIDITY_DATA_LIST.filter(item => {
+                const searchLower = searchTerm.toLowerCase();
+                const fullText = `${item.brand} ${item.sku}`.toLowerCase();
+                return fullText.includes(searchLower);
+            });
+
             return (
                 <div className="space-y-6">
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 flex-wrap">
                             <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                                 <RefreshCw className="text-blue-500" />
                                 Controle de Validade
                             </h2>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 w-full md:w-auto">
+                                <div className="relative flex-1 md:w-64">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Buscar produto..." 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                                    />
+                                    <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
+                                </div>
                                 <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-sm text-xs"
@@ -2739,7 +2819,7 @@
                         </div>
 
                         <div className="grid grid-cols-1 gap-3">
-                            {VALIDITY_DATA_LIST.map((item, idx) => {
+                            {filteredList.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const itemData = data[key] || {};
                                 const expirationDate = itemData.date || '';
@@ -2887,6 +2967,14 @@
         };
 
         const PriceRulerView = ({ data, rulerData, onChange, onDownload, onDownloadPNG }) => {
+            const [searchTerm, setSearchTerm] = useState('');
+
+            const filteredRulerData = rulerData.filter(item => {
+                const searchLower = searchTerm.toLowerCase();
+                const fullText = `${item.brand} ${item.sku}`.toLowerCase();
+                return fullText.includes(searchLower);
+            });
+
             const formatCurrency = (value) => {
                 if (!value) return '';
                 return parseFloat(value).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -2905,12 +2993,22 @@
             return (
                 <div className="space-y-6">
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <div className="flex justify-between items-center mb-4">
+                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 flex-wrap">
                             <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                                 <Tag className="text-green-600" />
                                 Régua de Preço
                             </h2>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 w-full md:w-auto">
+                                <div className="relative flex-1 md:w-64">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Buscar produto..." 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-green-500 outline-none"
+                                    />
+                                    <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
+                                </div>
                                 <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors shadow-sm text-xs"
@@ -2927,7 +3025,7 @@
                         </div>
 
                         <div className="grid grid-cols-1 gap-3">
-                            {rulerData.map((item, idx) => {
+                            {filteredRulerData.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
                                 const entry = data[key] || {};
                                 
@@ -3067,15 +3165,10 @@
                             const product = `${item.brand} ${item.sku}`;
                             const status = data[product] || 'ok';
                             
-                            // Filter out OK items
-                            if (status === 'ok') return null;
-
-                            const scoreGroup = getScoreGroup(product);
-                            const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
-                            const potentialPoints = currentScores.gondola + currentScores.gelada;
-                            
                             // Calculate if points are actually lost for this specific item
+                            const scoreGroup = getScoreGroup(product);
                             let isLost = false;
+                            
                             if ((status === 'ruptura' || status === 'n_cadastrado') && scoreGroup) {
                                 // Check if any other item in the same group is AVAILABLE (not ruptura AND not n_cadastrado)
                                 const groupSkus = VALIDITY_DATA_LIST.filter(i => getScoreGroup(`${i.brand} ${i.sku}`) === scoreGroup);
@@ -3088,6 +3181,13 @@
                                 isLost = !anyAvailable;
                             }
 
+                            // Filter out OK items and Not Registered items
+                            if (status === 'ok' || status === 'n_cadastrado') return null;
+
+
+
+                            const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
+                            const potentialPoints = currentScores.gondola + currentScores.gelada;
                             const lostPoints = isLost ? potentialPoints : 0;
 
                             let statusColor = "bg-green-100 text-green-800 border-green-200";
@@ -3131,15 +3231,33 @@
         };
 
         const RupturasView = ({ storeType, data, onChange, onDownload, onDownloadPNG }) => {
+            const [searchTerm, setSearchTerm] = useState('');
+
+            const filteredList = VALIDITY_DATA_LIST.filter(item => {
+                const searchLower = searchTerm.toLowerCase();
+                const fullText = `${item.brand} ${item.sku}`.toLowerCase();
+                return fullText.includes(searchLower);
+            });
+
             return (
                 <div className="space-y-6">
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                         <div className="flex justify-between items-center mb-4">
+                         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 flex-wrap">
                             <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                                 <AlertTriangle className="text-red-500" />
                                 Controle de Rupturas
                             </h2>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 w-full md:w-auto">
+                                <div className="relative flex-1 md:w-64">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Buscar produto..." 
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 outline-none"
+                                    />
+                                    <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
+                                </div>
                                 <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm text-xs"
@@ -3156,7 +3274,7 @@
                         </div>
 
                         <div className="grid grid-cols-1 gap-3">
-                            {VALIDITY_DATA_LIST.map((item) => {
+                            {filteredList.map((item) => {
                                 const product = `${item.brand} ${item.sku}`;
                                 const scoreGroup = getScoreGroup(product);
                                 const currentScores = (scoreGroup && SCORES_PRESENCA[scoreGroup] && SCORES_PRESENCA[scoreGroup][storeType]) || { gondola: 0, gelada: 0 };
@@ -3241,6 +3359,47 @@
             }, [key, value]);
             return [value, setValue];
         }
+
+        // Scroll To Top Component
+        const ScrollToTopButton = () => {
+            const [isVisible, setIsVisible] = React.useState(false);
+
+            React.useEffect(() => {
+                const toggleVisibility = () => {
+                    if (window.pageYOffset > 300) {
+                        setIsVisible(true);
+                    } else {
+                        setIsVisible(false);
+                    }
+                };
+
+                window.addEventListener("scroll", toggleVisibility);
+
+                return () => window.removeEventListener("scroll", toggleVisibility);
+            }, []);
+
+            const scrollToTop = () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            };
+
+            if (!isVisible) {
+                return null;
+            }
+
+            return (
+                <button
+                    onClick={scrollToTop}
+                    className="fixed bottom-24 right-4 bg-gray-600 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-all z-50 opacity-80 hover:opacity-100 flex items-center justify-center w-12 h-12"
+                    aria-label="Voltar ao topo"
+                    style={{ bottom: '80px' }} // Adjusted to not overlap with bottom bar if present
+                >
+                    <ChevronUp size={24} />
+                </button>
+            );
+        };
 
         const App = () => {
             const [allData, setAllData] = useStickyState({
@@ -3969,6 +4128,7 @@
                         {activeView === 'treinamento' && (
                             <TreinamentoApp onNavigateBack={() => setActiveView('simulador')} />
                         )}
+                        <ScrollToTopButton />
                     </main>
 
                     {/* Hidden Report for Capture */}

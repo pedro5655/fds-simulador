@@ -5,363 +5,351 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apresentação Novas Funcionalidades - Simulador FDS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .slide-container {
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-        }
-        .slide {
-            scroll-snap-align: start;
-            height: 100vh;
-            width: 100%;
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #111827; 
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            position: relative;
+            height: 100vh;
+            margin: 0;
             overflow: hidden;
         }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .animate-entry {
-            opacity: 0;
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-500 { animation-delay: 0.5s; }
 
-        @media print {
-            .slide-container { height: auto; overflow: visible; }
-            .slide { height: 100vh; break-after: page; }
-            .no-print { display: none !important; }
-            .animate-entry { opacity: 1 !important; animation: none !important; }
+        /* Fixed Aspect Ratio Stage */
+        #stage {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+            background: #000;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            transform-origin: center;
         }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 10;
+        }
+
+        /* Full Bleed Backgrounds */
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4); /* Darken for text readability */
+            transition: transform 10s ease-out;
+        }
+        
+        .slide.active .bg-image {
+            transform: scale(1.05); /* Slow zoom effect */
+        }
+
+        /* Vibrant Palette */
+        .text-vibrant-orange { color: #FF6B00; }
+        .bg-vibrant-orange { background-color: #FF6B00; }
+        .text-vibrant-turquoise { color: #00C4B4; }
+        .bg-vibrant-turquoise { background-color: #00C4B4; }
+        .text-vibrant-yellow { color: #FFD600; }
+        .bg-vibrant-yellow { background-color: #FFD600; }
+
+        /* Didactic Elements */
+        .arrow-box {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 300px;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .arrow-line {
+            position: absolute;
+            height: 2px;
+            background: #FFD600;
+            transform-origin: left center;
+        }
+
+        .arrow-head {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FFD600;
+            transform: rotate(45deg);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes slideInLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .animate-text {
+            animation: slideInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        
+        /* Navigation Controls */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 50;
+        }
+        
+        .btn-nav {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-nav:hover {
+            background: #FF6B00;
+            border-color: #FF6B00;
+            transform: scale(1.1);
+        }
+
+        /* Glassmorphism Panel */
+        .glass-panel {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
     </style>
 </head>
-<body class="bg-black text-white">
+<body>
 
-    <!-- Controls -->
-    <div class="fixed top-6 right-6 z-50 no-print flex gap-4">
-        <button onclick="generatePPTX()" class="bg-[#008200] hover:bg-[#006000] text-white px-8 py-3 rounded-full font-bold shadow-lg transition-all flex items-center gap-3 transform hover:scale-105 animate-entry delay-500">
-            <span class="text-xl">📊</span>
-            Baixar PowerPoint (.pptx)
-        </button>
-    </div>
-
-    <div id="slides-root" class="slide-container">
-        <!-- Slides will be injected here via JS -->
-    </div>
-
-    <script>
-        // --- CONTENT DATA SOURCE ---
-        const presentationData = [
-            {
-                id: "cover",
-                bg: "bg-[#008200]",
-                text: "text-white",
-                layout: "cover",
-                title: "Simulador FDS 2.0",
-                subtitle: "Novas Funcionalidades e Inteligência de Dados",
-                footer: "Heineken Brasil • Trade Marketing • Desenvolvido por Gustavo Nascimento e Pedro Lameirão",
-                icon: "shield"
-            },
-            {
-                id: "context",
-                bg: "bg-white",
-                text: "text-gray-900",
-                layout: "split",
-                title: "Evolução Contínua",
-                highlight: "O Que Mudou?",
-                content: [
-                    "O mercado é dinâmico e nossa ferramenta também precisa ser.",
-                    "Identificamos novas oportunidades para refinar a precisão da auditoria.",
-                    "Foco total em eliminar ruídos e mostrar apenas o que importa."
-                ],
-                visual: "risk"
-            },
-            {
-                id: "features",
-                bg: "bg-gray-100",
-                text: "text-gray-900",
-                layout: "feature-list",
-                title: "Novas Funcionalidades",
-                features: [
-                    { title: "Gestão de N/Cadastrado", desc: "Controle preciso de itens não cadastrados na loja." },
-                    { title: "Relatórios Inteligentes", desc: "Filtros automáticos que escondem itens 'OK'." },
-                    { title: "Régua de Preço Dinâmica", desc: "Foco total nas divergências de preço." }
-                ]
-            },
-            {
-                id: "rupturas_new",
-                bg: "bg-white",
-                text: "text-gray-900",
-                layout: "split",
-                title: "Gestão de Rupturas 2.0",
-                highlight: "Visibilidade Total",
-                content: [
-                    "Nova opção 'N/Cadastrado': Item não cadastrado agora conta como perda de pontos.",
-                    "Pontuação Ajustada: Se todos os itens do grupo forem Ruptura ou N/Cadastrado, a pontuação é zerada.",
-                    "Interface Responsiva: Botões ajustados para qualquer tamanho de tela."
-                ],
-                visual: "risk" 
-            },
-            {
-                id: "smart_reports",
-                bg: "bg-[#008200]",
-                text: "text-white",
-                layout: "split-image",
-                title: "Relatórios Inteligentes",
-                content: [
-                    "Foco na Ação: Itens 'OK' são removidos automaticamente do relatório.",
-                    "Régua de Preço: Apenas itens com divergência de preço são listados.",
-                    "Leitura Limpa: O gestor vê apenas o que precisa ser corrigido."
-                ],
-                visual: "report"
-            },
-            {
-                id: "closing",
-                bg: "bg-white",
-                text: "text-gray-900",
-                layout: "center",
-                title: "Simulador FDS 2.0",
-                subtitle: "Mais precisão, menos ruído. A ferramenta definitiva para o Promotor de Alta Performance.",
-                cta: "ATUALIZAR AGORA"
-            }
-        ];
-
-        // --- RENDERER ---
-        const root = document.getElementById('slides-root');
-
-        presentationData.forEach((slide, index) => {
-            const el = document.createElement('div');
-            el.className = `slide ${slide.bg} ${slide.text}`;
+    <div id="stage">
+        
+        <!-- SLIDE 1: HOME -->
+        <div class="slide active" id="slide-1">
+            <div class="bg-image" style="background-image: url('print_home.png');"></div>
             
-            let contentHtml = '';
+            <div class="absolute inset-0 flex">
+                <div class="w-1/3 glass-panel h-full flex flex-col justify-center px-12 z-10">
+                    <span class="text-vibrant-turquoise text-lg font-bold uppercase tracking-widest mb-4 animate-text" style="animation-delay: 0.1s">01 // Início</span>
+                    <h1 class="text-6xl text-white font-black leading-tight mb-6 animate-text" style="animation-delay: 0.2s">
+                        Sua Jornada <br>
+                        <span class="text-vibrant-orange">Começa Aqui</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed animate-text" style="animation-delay: 0.3s">
+                        Uma interface limpa e intuitiva para você focar no que importa: a execução perfeita na loja.
+                    </p>
+                </div>
 
-            if (slide.layout === 'cover') {
-                contentHtml = `
-                    <div class="text-center z-10 animate-entry">
-                        <div class="mb-8 inline-block p-6 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-                            <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        </div>
-                        <h1 class="text-7xl font-black uppercase tracking-tighter mb-4 leading-tight delay-100 animate-entry">${slide.title}</h1>
-                        <p class="text-2xl font-light tracking-widest opacity-90 uppercase delay-200 animate-entry">${slide.subtitle}</p>
-                        <div class="mt-12 flex flex-col items-center opacity-80 animate-entry delay-300">
-                            <span class="text-xs uppercase tracking-widest mb-2 font-light">Desenvolvido por</span>
-                            <div class="flex gap-6 font-bold text-lg">
-                                <span>Gustavo Nascimento</span>
-                                <span class="opacity-50">•</span>
-                                <span>Pedro Lameirão</span>
-                            </div>
-                        </div>
+                <div class="flex-1 relative">
+                    <!-- POINTER TO STORE DATA -->
+                    <div class="arrow-box top-32 left-32">
+                        <h3 class="text-vibrant-yellow font-bold text-xl mb-1">Dados da Loja</h3>
+                        <p class="text-white text-sm">Preenchimento rápido e inteligente. O sistema lembra suas preferências.</p>
                     </div>
-                `;
-            } else if (slide.layout === 'split') {
-                contentHtml = `
-                    <div class="max-w-6xl w-full grid grid-cols-2 gap-16 items-center px-12">
-                        <div class="animate-entry">
-                            <h2 class="text-6xl font-black mb-2 leading-tight">${slide.title}</h2>
-                            <h3 class="text-3xl font-bold text-red-600 mb-8">${slide.highlight}</h3>
-                            <ul class="space-y-6 text-xl font-light leading-relaxed opacity-80">
-                                ${slide.content.map((c, i) => `<li class="flex gap-4 animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s"><span class="text-red-600 font-bold">➤</span> ${c}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="flex justify-center animate-entry delay-300">
-                            <div class="w-80 h-80 bg-gray-100 rounded-full flex items-center justify-center relative shadow-2xl">
-                                <span class="text-9xl">🚀</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (slide.layout === 'cards') {
-                contentHtml = `
-                    <div class="max-w-6xl w-full text-center px-12">
-                        <h2 class="text-5xl font-black mb-4 animate-entry">${slide.title}</h2>
-                        <p class="text-xl opacity-60 mb-16 uppercase tracking-widest animate-entry delay-100">${slide.subtitle}</p>
-                        <div class="grid grid-cols-3 gap-8">
-                            ${slide.cards.map((card, i) => `
-                                <div class="bg-white/5 p-8 rounded-3xl border border-white/10 hover:bg-white/10 transition-all animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s">
-                                    <div class="text-5xl mb-6">${card.icon}</div>
-                                    <h3 class="text-2xl font-bold mb-3 text-[#008200]">${card.title}</h3>
-                                    <p class="text-gray-400 leading-relaxed">${card.desc}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (slide.layout === 'feature-list') {
-                contentHtml = `
-                    <div class="max-w-5xl w-full px-12">
-                        <h2 class="text-6xl font-black mb-16 text-[#008200] animate-entry">${slide.title}</h2>
-                        <div class="space-y-8">
-                            ${slide.features.map((feat, i) => `
-                                <div class="flex items-start gap-8 p-6 hover:bg-gray-50 rounded-2xl transition-colors border-l-4 border-transparent hover:border-[#008200] animate-entry" style="animation-delay: ${0.1 + (i*0.1)}s">
-                                    <span class="text-4xl font-black text-gray-200">0${i+1}</span>
-                                    <div>
-                                        <h3 class="text-2xl font-bold mb-2 text-gray-800">${feat.title}</h3>
-                                        <p class="text-gray-500 text-lg">${feat.desc}</p>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (slide.layout === 'impact') {
-                contentHtml = `
-                    <div class="max-w-6xl w-full text-center px-12">
-                        <h2 class="text-6xl font-black mb-20 animate-entry">${slide.title}</h2>
-                        <div class="grid grid-cols-3 gap-12">
-                            ${slide.stats.map((stat, i) => `
-                                <div class="animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s">
-                                    <div class="text-8xl font-black mb-4 tracking-tighter">${stat.value}</div>
-                                    <div class="text-xl font-bold uppercase tracking-widest opacity-80 border-t border-white/30 pt-4 inline-block">${stat.label}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-            } else if (slide.layout === 'split-image') {
-                contentHtml = `
-                    <div class="max-w-6xl w-full grid grid-cols-2 gap-16 items-center px-12">
-                        <div class="animate-entry">
-                            <h2 class="text-5xl font-black mb-8 text-[#008200]">${slide.title}</h2>
-                            <ul class="space-y-6 text-xl text-gray-600 leading-relaxed">
-                                ${slide.content.map((c, i) => `<li class="flex gap-4 animate-entry" style="animation-delay: ${0.2 + (i*0.1)}s"><span class="text-[#008200] font-bold">✓</span> ${c}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="bg-white p-8 rounded-2xl shadow-2xl border border-gray-200 transform rotate-2 animate-entry delay-300">
-                            <div class="h-4 w-1/3 bg-gray-200 rounded mb-6"></div>
-                            <div class="space-y-3 mb-8">
-                                <div class="h-3 w-full bg-gray-100 rounded"></div>
-                                <div class="h-3 w-5/6 bg-gray-100 rounded"></div>
-                            </div>
-                            <div class="flex gap-4">
-                                <div class="h-24 w-1/2 bg-green-50 rounded border border-green-100 flex items-center justify-center text-green-700 font-bold">PDF</div>
-                                <div class="h-24 w-1/2 bg-blue-50 rounded border border-blue-100 flex items-center justify-center text-blue-700 font-bold">IMG</div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (slide.layout === 'center') {
-                contentHtml = `
-                    <div class="max-w-4xl w-full text-center px-12">
-                        <h2 class="text-6xl font-black mb-8 text-gray-900 leading-tight animate-entry">${slide.title}</h2>
-                        <p class="text-2xl text-gray-500 mb-12 font-light animate-entry delay-100">${slide.subtitle}</p>
-                        <div class="inline-block bg-[#008200] text-white px-12 py-4 rounded-full font-bold text-xl shadow-xl uppercase tracking-widest animate-entry delay-200">
-                            ${slide.cta}
-                        </div>
-                    </div>
-                `;
-            }
+                </div>
+            </div>
+        </div>
 
-            el.innerHTML = contentHtml;
-            root.appendChild(el);
-        });
+        <!-- SLIDE 2: AUDITORIA -->
+        <div class="slide" id="slide-2">
+            <div class="bg-image" style="background-image: url('print_auditoria.png');"></div>
+            
+            <div class="absolute inset-0 flex">
+                <div class="w-1/3 glass-panel h-full flex flex-col justify-center px-12 z-10">
+                    <span class="text-vibrant-turquoise text-lg font-bold uppercase tracking-widest mb-4 animate-text">02 // Auditoria</span>
+                    <h1 class="text-6xl text-white font-black leading-tight mb-6 animate-text">
+                        Domine a <br>
+                        <span class="text-vibrant-yellow">Execução</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed animate-text">
+                        Feedback imediato dos 4 Pilares. Acompanhe sua nota em tempo real enquanto audita.
+                    </p>
+                </div>
 
-        // --- PPTX GENERATOR ---
-        function generatePPTX() {
-            const pptx = new PptxGenJS();
-            pptx.layout = 'LAYOUT_16x9'; // 10 x 5.625 inches
-            pptx.author = 'Pedro Lameirão';
-            pptx.company = 'Trade Marketing';
-            pptx.title = 'Simulador FDS 2.0 - Novas Funcionalidades';
+                <div class="flex-1 relative">
+                    <!-- POINTER TO SCORE -->
+                    <div class="arrow-box top-20 right-20 text-right">
+                        <h3 class="text-vibrant-orange font-bold text-xl mb-1">Score em Tempo Real</h3>
+                        <p class="text-white text-sm">Sua nota atualiza a cada checkbox marcado. Visibilidade total da meta.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            presentationData.forEach(slide => {
-                const s = pptx.addSlide();
-                s.transition = { type: "fade", duration: 1000 }; // Add Fade Transition
-                
-                // Background
-                if (slide.bg.includes('bg-[#008200]')) s.background = { color: "008200" };
-                else if (slide.bg.includes('bg-gray-900') || slide.bg.includes('bg-black')) s.background = { color: "111827" };
-                else if (slide.bg.includes('bg-gray-100')) s.background = { color: "F3F4F6" };
-                else s.background = { color: "FFFFFF" };
+        <!-- SLIDE 3: RUPTURAS -->
+        <div class="slide" id="slide-3">
+            <div class="bg-image" style="background-image: url('print_rupturas.png');"></div>
+            
+            <div class="absolute inset-0 flex">
+                <div class="w-1/3 glass-panel h-full flex flex-col justify-center px-12 z-10">
+                    <span class="text-vibrant-turquoise text-lg font-bold uppercase tracking-widest mb-4 animate-text">03 // Rupturas</span>
+                    <h1 class="text-6xl text-white font-black leading-tight mb-6 animate-text">
+                        Ruptura <br>
+                        <span class="text-red-500">Zero</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed animate-text">
+                        Não perca vendas. Identifique rapidamente itens faltantes ou não cadastrados.
+                    </p>
+                </div>
 
-                // Text Color Logic
-                const titleColor = slide.text.includes('text-white') ? "FFFFFF" : "008200";
-                const bodyColor = slide.text.includes('text-white') ? "E5E7EB" : "374151";
+                <div class="flex-1 relative">
+                     <div class="arrow-box bottom-32 right-32">
+                        <h3 class="text-vibrant-turquoise font-bold text-xl mb-1">Controle Preciso</h3>
+                        <p class="text-white text-sm">Botões grandes e claros para registrar Ruptura, Baixo Volume ou N/Cadastrado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                if (slide.layout === 'cover') {
-                    // Adjusted for 16x9 (Height 5.625)
-                    s.addText(slide.title.toUpperCase(), { x: 0.5, y: 1.5, w: '90%', fontSize: 44, fontFace: 'Arial Black', color: titleColor, align: 'center' });
-                    s.addText(slide.subtitle.toUpperCase(), { x: 0.5, y: 3.0, w: '90%', fontSize: 18, color: "FFFFFF", align: 'center', transparency: 10 });
-                    s.addText(slide.footer.toUpperCase(), { x: 0.5, y: 5.0, w: '90%', fontSize: 12, color: "FFFFFF", align: 'center', transparency: 40, charSpacing: 3 });
-                }
-                else if (slide.layout === 'split') {
-                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "111827" });
-                    s.addText(slide.highlight, { x: 0.5, y: 1.2, fontSize: 24, fontFace: 'Arial', color: "DC2626", bold: true });
-                    
-                    slide.content.forEach((point, i) => {
-                        s.addText(point, { x: 0.5, y: 2.0 + (i * 0.6), w: '50%', fontSize: 14, color: "374151", bullet: { type: 'number', color: 'DC2626' } });
+        <!-- SLIDE 4: VALIDADE -->
+        <div class="slide" id="slide-4">
+            <div class="bg-image" style="background-image: url('print_validade.png');"></div>
+            
+            <div class="absolute inset-0 flex">
+                <div class="w-1/3 glass-panel h-full flex flex-col justify-center px-12 z-10">
+                    <span class="text-vibrant-turquoise text-lg font-bold uppercase tracking-widest mb-4 animate-text">04 // Validade</span>
+                    <h1 class="text-6xl text-white font-black leading-tight mb-6 animate-text">
+                        Qualidade <br>
+                        <span class="text-vibrant-turquoise">Garantida</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed animate-text">
+                        Gestão proativa de vencimentos. Evite perdas e garanta o frescor do produto.
+                    </p>
+                </div>
+
+                <div class="flex-1 relative">
+                    <div class="arrow-box top-40 left-32">
+                        <h3 class="text-vibrant-yellow font-bold text-xl mb-1">Datas Críticas</h3>
+                        <p class="text-white text-sm">Input fácil de data e quantidade para itens próximos do vencimento.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: PREÇO -->
+        <div class="slide" id="slide-5">
+            <div class="bg-image" style="background-image: url('print_preco.png');"></div>
+            
+            <div class="absolute inset-0 flex">
+                <div class="w-1/3 glass-panel h-full flex flex-col justify-center px-12 z-10">
+                    <span class="text-vibrant-turquoise text-lg font-bold uppercase tracking-widest mb-4 animate-text">05 // Preço</span>
+                    <h1 class="text-6xl text-white font-black leading-tight mb-6 animate-text">
+                        Estratégia <br>
+                        <span class="text-vibrant-yellow">No Ponto</span>
+                    </h1>
+                    <p class="text-gray-300 text-lg leading-relaxed animate-text">
+                        Monitore a competitividade. compare preço de gôndola vs. preço promocional.
+                    </p>
+                </div>
+
+                <div class="flex-1 relative">
+                    <div class="arrow-box bottom-40 left-40">
+                        <h3 class="text-vibrant-orange font-bold text-xl mb-1">Régua de Preço</h3>
+                        <p class="text-white text-sm">Identifique divergências num piscar de olhos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- NAVIGATION -->
+        <div class="controls">
+            <div class="btn-nav" onclick="prevSlide()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+            </div>
+            <div class="btn-nav" onclick="nextSlide()">
+                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- RESIZER SCRIPT -->
+    <script>
+        // Fit 1280x720 stage to flexible viewport
+        function resizeStage() {
+            const stage = document.getElementById('stage');
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const scaleX = windowWidth / 1280;
+            const scaleY = windowHeight / 720;
+            const scale = Math.min(scaleX, scaleY) * 0.95; // 95% margin
+
+            stage.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', resizeStage);
+        resizeStage();
+
+        // Slide Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                    // Reset text animations
+                    const texts = slide.querySelectorAll('.animate-text');
+                    texts.forEach(el => {
+                        el.style.animation = 'none';
+                        el.offsetHeight; /* trigger reflow */
+                        el.style.animation = null; 
                     });
-                    
-                    s.addShape(pptx.ShapeType.ellipse, { x: 6.5, y: 1.5, w: 3, h: 3, fill: { color: "F3F4F6" } });
-                    s.addText("🚀", { x: 6.5, y: 1.5, w: 3, h: 3, fontSize: 60, align: 'center', color: "D1D5DB" });
-                }
-                else if (slide.layout === 'cards') {
-                    s.addText(slide.title, { x: 0.5, y: 0.4, w: '90%', fontSize: 36, fontFace: 'Arial Black', color: titleColor, align: 'center' });
-                    s.addText(slide.subtitle.toUpperCase(), { x: 0.5, y: 1.0, w: '90%', fontSize: 14, color: "9CA3AF", align: 'center', charSpacing: 3 });
-
-                    slide.cards.forEach((card, i) => {
-                        const xPos = 0.5 + (i * 3.2);
-                        s.addShape(pptx.ShapeType.roundRect, { x: xPos, y: 1.8, w: 2.8, h: 3.2, fill: { color: "1F2937" }, line: { color: "374151" } });
-                        s.addText(card.icon, { x: xPos, y: 2.0, w: 2.8, fontSize: 32, align: 'center' });
-                        s.addText(card.title, { x: xPos, y: 2.8, w: 2.8, fontSize: 18, color: "008200", bold: true, align: 'center' });
-                        s.addText(card.desc, { x: xPos + 0.1, y: 3.3, w: 2.6, fontSize: 12, color: "9CA3AF", align: 'center' });
-                    });
-                }
-                else if (slide.layout === 'feature-list') {
-                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "008200" });
-                    
-                    slide.features.forEach((feat, i) => {
-                        const yPos = 1.8 + (i * 1.2);
-                        s.addText(`0${i+1}`, { x: 0.5, y: yPos, fontSize: 24, fontFace: 'Arial Black', color: "E5E7EB" });
-                        s.addText(feat.title, { x: 1.2, y: yPos, fontSize: 18, bold: true, color: "1F2937" });
-                        s.addText(feat.desc, { x: 1.2, y: yPos + 0.4, fontSize: 14, color: "6B7280" });
-                    });
-                }
-                else if (slide.layout === 'impact') {
-                    s.addText(slide.title, { x: 0.5, y: 0.5, w: '90%', fontSize: 40, fontFace: 'Arial Black', color: titleColor, align: 'center' });
-                    
-                    slide.stats.forEach((stat, i) => {
-                        const xPos = 0.5 + (i * 3.2);
-                        s.addText(stat.value, { x: xPos, y: 2.0, w: 3, fontSize: 48, fontFace: 'Arial Black', color: "FFFFFF", align: 'center' });
-                        s.addText(stat.label.toUpperCase(), { x: xPos, y: 3.2, w: 3, fontSize: 14, color: "FFFFFF", align: 'center', transparency: 20 });
-                        s.addShape(pptx.ShapeType.line, { x: xPos + 0.5, y: 3.0, w: 2, h: 0, line: { color: "FFFFFF", transparency: 50 } });
-                    });
-                }
-                else if (slide.layout === 'split-image') {
-                    s.addText(slide.title, { x: 0.5, y: 0.5, fontSize: 36, fontFace: 'Arial Black', color: "008200" });
-                    
-                    slide.content.forEach((point, i) => {
-                        s.addText(point, { x: 0.5, y: 1.5 + (i * 0.8), w: '45%', fontSize: 14, color: "4B5563", bullet: { type: 'check', color: '008200' } });
-                    });
-
-                    s.addShape(pptx.ShapeType.rect, { x: 6.0, y: 1.5, w: 3, h: 3, fill: { color: "FFFFFF" }, line: { color: "E5E7EB" }, shadow: { type: 'outer' } });
-                    s.addText("RELATÓRIO", { x: 6.0, y: 2.0, w: 3, fontSize: 12, align: 'center', color: "9CA3AF" });
-                }
-                else if (slide.layout === 'center') {
-                    s.addText(slide.title, { x: 1, y: 1.5, w: '80%', fontSize: 40, fontFace: 'Arial Black', color: "111827", align: 'center' });
-                    s.addText(slide.subtitle, { x: 1, y: 3.0, w: '80%', fontSize: 18, color: "6B7280", align: 'center' });
-                    
-                    s.addShape(pptx.ShapeType.roundRect, { x: 3.5, y: 4.2, w: 3, h: 0.8, fill: { color: "008200" } });
-                    s.addText(slide.cta.toUpperCase(), { x: 3.5, y: 4.2, w: 3, h: 0.8, fontSize: 14, color: "FFFFFF", bold: true, align: 'center' });
                 }
             });
-
-            pptx.writeFile({ fileName: "Apresentacao_Simulador_FDS_2.0.pptx" });
         }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        // Keyboard Nav
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
     </script>
 </body>
 </html>
