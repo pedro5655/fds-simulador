@@ -102,6 +102,7 @@
         const ChevronUp = ({ size = 24, className = "" }) => (
             <IconBase className={className} width={size} height={size}><polyline points="18 15 12 9 6 15"></polyline></IconBase>
         );
+
         const CheckCircle = ({ size = 24, className = "" }) => (
             <IconBase className={className} width={size} height={size}>
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
@@ -276,17 +277,76 @@
         ];
 
          const ROUTINE_STEPS = [
-          "Registre sua entrada (Check-in)",
-          "Faça-se Presente (Cumprimente a equipe)",
-          "Organize a Gôndola (Espaço primário)",
-          "Verifique as demais áreas da loja",
-          "Prepare o abastecimento (Estoque organizado)",
-          "Faça o abastecimento (PEPS)",
-          "Confira Preços (Tudo precificado)",
-          "Aplique o Merchandising",
-          "Conquiste Novos Espaços",
-          "Realize atividades no App Execução",
-          "Fechamento da Visita e Valorização"
+          {
+              title: "PREPARE-SE PARA A VISITA E REGISTRE SUA ENTRADA.",
+              desc: [
+                  "Esteja com as tarefas do dia pré-definidas e faça o check-in no App Execução."
+              ]
+          },
+          {
+              title: "FAÇA-SE PRESENTE.",
+              desc: [
+                  "Cumprimente o cliente e a equipe da loja. Colete o encarte/tabloide vigente e veja promoções dos nossos produtos e da concorrência.",
+                  "Verifique se está com todos os EPIs."
+              ]
+          },
+          {
+              title: "ORGANIZE A GÔNDOLA.",
+              desc: [
+                  "Puxe os produtos disponíveis para frente, garantindo nosso espaço primário.",
+                  "Observe se todos os produtos estão precificados, de acordo com a política de preços, e verifique a validade dos itens."
+              ]
+          },
+          {
+              title: "VERIFIQUE AS DEMAIS ÁREAS DA LOJA.",
+              desc: [
+                  "Observe a situação dos refrigeradores, pontos extras e displays para planejar o abastecimento. Veja se todos os produtos estão precificados e dentro da régua de preços."
+              ]
+          },
+          {
+              title: "PREPARE O ABASTECIMENTO E MANTENHA O ESTOQUE ORGANIZADO.",
+              desc: [
+                  "Separe os produtos para abastecimento respeitando a regra de “Primeiro que vence, primeiro que sai.”",
+                  "Organize o estoque e verifique possíveis estoques virtuais."
+              ]
+          },
+          {
+              title: "FAÇA O ABASTECIMENTO DE TODAS AS ÁREAS DA LOJA",
+              desc: [
+                  "Siga a seguinte ordem: área primária, refrigerador, ilha, ponta de gôndola, displays, cross e correlatos"
+              ]
+          },
+          {
+              title: "CONFIRA OS PREÇOS E GARANTA A PRECIFICAÇÃO EM TODOS OS PRODUTOS",
+              desc: [
+                  "Emita as etiquetas de preço dos itens que foram corrigidos e daqueles que estão sem preço.",
+                  "Solicite SPLASH/cartaz para produtos promocionados ou em pontos extras."
+              ]
+          },
+          {
+              title: "APLIQUE O MERCHANDISING.",
+              desc: [
+                  "Aplique os materiais de merchandising disponíveis e específicos para o canal, através da orientação da FDS."
+              ]
+          },
+          {
+              title: "CONQUISTE NOVOS ESPAÇOS.",
+              desc: [
+                  "Tenha bom relacionamento com os funcionários da loja para conquistar espaços adicionais sem que isso implique em custo adicional."
+              ]
+          },
+          {
+              title: "REALIZE AS ATIVIDADES PRESENTES NO APLICATIVO DE EXECUÇÃO.",
+              desc: [
+                  "Pesquisas, avaliações, tarefas, calendários de ações, contratos e Report de Riscos."
+              ]
+          },
+          {
+              title: "FAÇA O FECHAMENTO DA VISITA, VALORIZANDO O TRABALHO REALIZADO.",
+              desc: [
+                  "Comunique para o encarregado da loja todo o trabalho executado e sugira um pedido de produtos, de acordo com a necessidade."
+              ]
+          }
         ];
 
          const VISIT_SCRIPT_STEPS = [
@@ -490,7 +550,7 @@
              answer: "Rotineiramente: Preço, Share (SOVI), Ruptura, Validade e Pontos Extras. É crucial saber os dias específicos da sua grade de pesquisas."
           }
         ];
-
+        
         // --- TREINAMENTO MODULE COMPONENTS ---
         const ModuleSafety = () => {
           const [activeTab, setActiveTab] = useState('safety');
@@ -522,7 +582,7 @@
                     <p className="text-gray-600 mt-2">Segurança em primeiro lugar. Essas atitudes são inegociáveis.</p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-4">
                     {SAFETY_ATTITUDES.map((item) => (
                       <div key={item.id} className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
                         <div className="flex items-start gap-3">
@@ -558,13 +618,22 @@
                     <p className="text-gray-600 mt-2">Siga o trajeto definido e cumpra a rotina perfeita.</p>
                   </div>
 
-                  <div className="relative border-l-2 border-gray-200 ml-4 space-y-8 my-8">
+                  <div className="flex flex-col gap-4 my-8">
                     {ROUTINE_STEPS.map((step, index) => (
-                      <div key={index} className="relative pl-8">
-                        <span className="absolute -left-[9px] top-1 bg-heineken-green text-white w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ring-4 ring-white">
-                          {index + 1}
-                        </span>
-                        <h3 className="font-bold text-gray-800 text-lg">{step}</h3>
+                      <div key={index} className="bg-white p-4 rounded-lg shadow hover:shadow-md transition-shadow">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-green-100 text-heineken-green font-bold rounded-full w-8 h-8 flex items-center justify-center flex-shrink-0">
+                            {index + 1}
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-gray-800">{step.title}</h3>
+                            <div className="text-sm text-gray-600 mt-1 space-y-1">
+                              {step.desc.map((d, i) => (
+                                <p key={i}>{d}</p>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1221,22 +1290,82 @@
         };
         
         const CategoryTabs = ({ categories, activeCategory, onSelect }) => {
+            const [startIndex, setStartIndex] = useState(0);
+            const ITEMS_PER_PAGE = 2;
+            
+            // Sync startIndex with activeCategory to ensure visibility
+            useEffect(() => {
+                const keys = Object.keys(categories);
+                const activeIndex = keys.indexOf(activeCategory);
+                if (activeIndex !== -1) {
+                    if (activeIndex < startIndex) {
+                        setStartIndex(activeIndex);
+                    } else if (activeIndex >= startIndex + ITEMS_PER_PAGE) {
+                        setStartIndex(activeIndex - ITEMS_PER_PAGE + 1);
+                    }
+                }
+            }, [activeCategory, startIndex, categories]);
+
+            const entries = Object.entries(categories);
+            const visibleEntries = entries.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+            
+            const keys = Object.keys(categories);
+            const activeIndex = keys.indexOf(activeCategory);
+            const hasPrev = activeIndex > 0;
+            const hasNext = activeIndex < keys.length - 1;
+
+            const handlePrev = () => {
+                if (hasPrev) onSelect(keys[activeIndex - 1]);
+            };
+
+            const handleNext = () => {
+                if (hasNext) onSelect(keys[activeIndex + 1]);
+            };
+
             return (
-                <div className="flex overflow-x-auto gap-2 p-1 mb-4 pb-2">
-                    {Object.entries(categories).map(([key, config]) => (
-                        <button
-                            key={key}
-                            onClick={() => onSelect(key)}
-                            className={`
-                                whitespace-nowrap px-4 py-2 rounded-full text-sm font-bold transition-all shadow-sm border
-                                ${activeCategory === key 
-                                    ? `${config.headerColor} border-transparent scale-105 ring-2 ring-offset-1 ring-gray-200` 
-                                    : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}
-                            `}
-                        >
-                            {config.title}
-                        </button>
-                    ))}
+                <div className="flex items-center justify-between gap-2 mb-4">
+                    <button 
+                        onClick={handlePrev}
+                        disabled={!hasPrev}
+                        className={`p-2 rounded-full transition-all ${
+                            hasPrev 
+                                ? 'text-[#008200] hover:bg-green-50' 
+                                : 'text-gray-200 cursor-not-allowed'
+                        }`}
+                        aria-label="Anterior"
+                    >
+                        <ChevronLeft size={24} />
+                    </button>
+
+                    <div className="flex-1 flex gap-2 justify-center">
+                        {visibleEntries.map(([key, config]) => (
+                            <button
+                                key={key}
+                                onClick={() => onSelect(key)}
+                                className={`
+                                    flex-1 py-2 px-1 rounded-lg text-xs md:text-sm font-bold transition-all shadow-sm border truncate
+                                    ${activeCategory === key 
+                                        ? `${config.headerColor} border-transparent ring-2 ring-offset-1 ring-gray-200` 
+                                        : 'bg-white text-gray-500 border-gray-200 hover:bg-gray-50'}
+                                `}
+                            >
+                                {config.title}
+                            </button>
+                        ))}
+                    </div>
+
+                     <button 
+                        onClick={handleNext}
+                        disabled={!hasNext}
+                        className={`p-2 rounded-full transition-all ${
+                            hasNext 
+                                ? 'text-[#008200] hover:bg-green-50' 
+                                : 'text-gray-200 cursor-not-allowed'
+                        }`}
+                        aria-label="Próximo"
+                    >
+                        <ChevronRight size={24} />
+                    </button>
                 </div>
             );
         };
@@ -1476,6 +1605,17 @@
                 </div>
             );
         };
+
+        const DownloadHelperCard = () => (
+            <div className="mb-4">
+                <div className="inline-flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
+                    <Download className="h-3 w-3 text-blue-400" />
+                    <p className="text-[10px] text-blue-600 font-medium">
+                        Para baixar PDF ou PNG, use os botões no topo.
+                    </p>
+                </div>
+            </div>
+        );
 
         const ScoreRules = () => (
             <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
@@ -1835,8 +1975,8 @@
 
                     {/* Calculator Section */}
                     <div>
-                        <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
-                            <Globe size={20} className="text-[#008200]" />
+                        <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center justify-center gap-2">
+                            <TrendingUp size={24} className="text-[#008200]" />
                             Calculadora de Share
                         </h2>
 
@@ -2818,6 +2958,8 @@ const PRICE_RULER_DATA_VAREJO = [
                             </div>
                         </div>
 
+                        <DownloadHelperCard />
+
                         <div className="grid grid-cols-1 gap-3">
                             {filteredList.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
@@ -3024,6 +3166,17 @@ const PRICE_RULER_DATA_VAREJO = [
                             </div>
                         </div>
 
+                        <DownloadHelperCard />
+
+                        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r shadow-sm">
+                            <div className="flex items-center">
+                                <Info className="h-5 w-5 text-blue-500 mr-2" />
+                                <p className="text-sm text-blue-700 font-bold">
+                                    Só preencher o preço promocional caso esteja.
+                                </p>
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-1 gap-3">
                             {filteredRulerData.map((item, idx) => {
                                 const key = `${item.brand} - ${item.sku}`;
@@ -3046,9 +3199,9 @@ const PRICE_RULER_DATA_VAREJO = [
                                                 </div>
                                             </div>
                                             
-                                            <div className="flex gap-4">
-                                                <div className="flex-1">
-                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Preço Loja</label>
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">PREÇO LOJA</label>
                                                     <input
                                                         type="text"
                                                         inputMode="numeric"
@@ -3059,8 +3212,8 @@ const PRICE_RULER_DATA_VAREJO = [
                                                     />
                                                     {isStorePriceWrong && <span className="text-[10px] text-red-500 font-bold">Fora da Régua</span>}
                                                 </div>
-                                                <div className="flex-1">
-                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">Preço Promo (Caso esteja)</label>
+                                                <div>
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1">PROMO LOJA</label>
                                                     <input
                                                         type="text"
                                                         inputMode="numeric"
@@ -3273,6 +3426,17 @@ const PRICE_RULER_DATA_VAREJO = [
                             </div>
                         </div>
 
+                        <DownloadHelperCard />
+
+                        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r shadow-sm">
+                            <div className="flex items-center">
+                                <AlertTriangle className="h-5 w-5 text-amber-500 mr-2" />
+                                <p className="text-sm text-amber-700 font-bold">
+                                    Atenção ao preencher, não colocar itens não cadastrados na rede como ruptura
+                                </p>
+                            </div>
+                        </div>
+
                         <div className="grid grid-cols-1 gap-3">
                             {filteredList.map((item) => {
                                 const product = `${item.brand} ${item.sku}`;
@@ -3291,7 +3455,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                         <div className="flex flex-col gap-3">
                                             <div>
                                                 <span className="font-bold text-gray-800 block uppercase text-sm leading-tight break-words">{product}</span>
-                                                <span className="text-[10px] text-gray-500 mt-1 block font-medium">Impacto: {potentialPoints} pts</span>
+
                                             </div>
                                             
                                             <div className="grid grid-cols-4 gap-2">
@@ -3961,57 +4125,31 @@ const PRICE_RULER_DATA_VAREJO = [
                     )}
                     <main className="max-w-md mx-auto p-4">
                         {/* Navigation Bar */}
-                        <div className="bg-white p-1 rounded-xl shadow-sm border border-gray-100 mb-6 flex gap-1">
-                            <button
-                                onClick={() => setActiveView('simulador')}
-                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                                    activeView === 'simulador'
-                                        ? 'bg-[#008200] text-white shadow-md'
-                                        : 'text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                Simulador
-                            </button>
-                            <button
-                                onClick={() => setActiveView('rupturas')}
-                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                                    activeView === 'rupturas'
-                                        ? 'bg-red-600 text-white shadow-md'
-                                        : 'text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                Rupturas
-                            </button>
-                            <button
-                                onClick={() => setActiveView('validade')}
-                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                                    activeView === 'validade'
-                                        ? 'bg-blue-600 text-white shadow-md'
-                                        : 'text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                Validade
-                            </button>
-                            <button
-                                onClick={() => setActiveView('regua')}
-                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                                    activeView === 'regua'
-                                        ? 'bg-green-600 text-white shadow-md'
-                                        : 'text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                Preço
-                            </button>
-                            <button
-                                onClick={() => setActiveView('treinamento')}
-                                className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-                                    activeView === 'treinamento'
-                                        ? 'bg-purple-600 text-white shadow-md'
-                                        : 'text-gray-500 hover:bg-gray-50'
-                                }`}
-                            >
-                                Treinamento
-                            </button>
+                        {/* Enhanced Navigation Bar */}
+                        {/* Enhanced Navigation Bar */}
+                        <div className="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 mb-6 grid grid-cols-4 gap-2">
+                            {[
+                                { id: 'simulador', label: 'Simulador', icon: LayoutGrid, color: 'bg-[#008200]', activeColor: 'ring-[#008200]' },
+                                { id: 'rupturas', label: 'Rupturas', icon: AlertTriangle, color: 'bg-red-600', activeColor: 'ring-red-600' },
+                                { id: 'validade', label: 'Validade', icon: Calendar, color: 'bg-blue-600', activeColor: 'ring-blue-600' },
+                                { id: 'regua', label: 'Preço', icon: Tag, color: 'bg-green-600', activeColor: 'ring-green-600' },
+                                { id: 'treinamento', label: 'Treinamento', icon: Presentation, color: 'bg-purple-600', activeColor: 'ring-purple-600' }
+                            ].map(tab => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => setActiveView(tab.id)}
+                                    className={`
+                                        py-3 px-1 rounded-xl text-[10px] md:text-sm font-bold transition-all flex flex-col items-center justify-center gap-2 truncate
+                                        ${tab.id === 'simulador' ? 'col-span-4 text-base py-4 px-2' : ''}
+                                        ${activeView === tab.id
+                                            ? `${tab.color} text-white shadow-lg scale-105 ring-2 ring-offset-2 ${tab.activeColor}`
+                                            : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:scale-105'}
+                                    `}
+                                >
+                                    <tab.icon size={tab.id === 'simulador' ? 24 : 18} className={activeView === tab.id ? 'animate-bounce' : ''} />
+                                    {tab.label}
+                                </button>
+                            ))}
                         </div>
 
                         {activeView !== 'treinamento' && (
