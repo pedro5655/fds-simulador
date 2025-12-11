@@ -4127,6 +4127,78 @@ const PRICE_RULER_DATA_VAREJO = [
                             </div>
                         </div>
                     )}
+
+                    {/* Install/Tutorial Modal */}
+                    {showInstallModal && (
+                        <div className="fixed inset-0 bg-black/50 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                            <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden transform transition-all scale-100">
+                                <div className="bg-[#008200] p-6 text-center relative">
+                                    <button 
+                                        onClick={() => setShowInstallModal(false)}
+                                        className="absolute top-4 right-4 text-white/70 hover:text-white"
+                                    >
+                                        <IconBase width={24} height={24}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></IconBase>
+                                    </button>
+                                    <h2 className="text-2xl font-black text-white tracking-tight">INSTALAR APP</h2>
+                                    <p className="text-green-100 text-sm font-medium">Adicione à sua tela inicial</p>
+                                </div>
+                                
+                                <div className="p-6 space-y-6">
+                                    {installPlatform === 'ios' ? (
+                                        <>
+                                            <div className="flex items-start gap-4">
+                                                <div className="bg-gray-100 p-2 rounded-lg shrink-0">
+                                                    <img src="tutorial_install_1.jpg" className="w-8 h-8 object-contain" alt="Compartilhar" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-gray-800">1. Toque em Compartilhar</p>
+                                                    <p className="text-sm text-gray-500">Na barra inferior do navegador.</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <div className="bg-gray-100 p-2 rounded-lg shrink-0">
+                                                    <img src="tutorial_install_2.jpg" className="w-8 h-8 object-contain" alt="Adicionar" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-gray-800">2. Adicionar à Tela de Início</p>
+                                                    <p className="text-sm text-gray-500">Role para baixo e selecione esta opção.</p>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <>
+                                             <div className="flex items-start gap-4">
+                                                <div className="bg-gray-100 p-2 rounded-lg shrink-0 flex items-center justify-center w-12 h-12">
+                                                    <IconBase className="text-gray-600"><circle cx="12" cy="5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle><circle cx="12" cy="19" r="1.5"></circle></IconBase>
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-gray-800">1. Abra o Menu</p>
+                                                    <p className="text-sm text-gray-500">Toque nos três pontinhos do navegador.</p>
+                                                </div>
+                                            </div>
+                                            <div className="flex items-start gap-4">
+                                                <div className="bg-gray-100 p-2 rounded-lg shrink-0 flex items-center justify-center w-12 h-12">
+                                                    <IconBase className="text-gray-600"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></IconBase>
+                                                </div>
+                                                <div>
+                                                    <p className="font-bold text-gray-800">2. Instalar Aplicativo</p>
+                                                    <p className="text-sm text-gray-500">Ou "Adicionar à tela inicial".</p>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </div>
+                                <div className="p-6 pt-0">
+                                    <button 
+                                        onClick={() => setShowInstallModal(false)}
+                                        className="w-full py-3 bg-gray-100 font-bold text-gray-600 rounded-xl hover:bg-gray-200 transition-colors"
+                                    >
+                                        Entendi
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <main className="max-w-md mx-auto p-4">
                         {/* Navigation Bar */}
                         {/* Enhanced Navigation Bar */}
