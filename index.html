@@ -65,60 +65,12 @@
 <body class="bg-gray-50">
     <div id="root"></div>
 
-    <script src="js/bridge.bundle.js"></script>
+
     <script type="text/babel">        const { useState, useEffect, useRef } = React;
 
         // --- NATIVE FILE SAVING HELPER ---
         // --- NATIVE FILE SAVING HELPER ---
-        const saveBase64AsFile = async (base64Data, fileName, mimeType) => {
-            // Helper to convert Base64 to Blob
-            const base64ToBlob = (base64, mimeType) => {
-                const byteCharacters = atob(base64.split(',')[1]);
-                const byteArrays = [];
-                for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-                    const slice = byteCharacters.slice(offset, offset + 512);
-                    const byteNumbers = new Array(slice.length);
-                    for (let i = 0; i < slice.length; i++) {
-                        byteNumbers[i] = slice.charCodeAt(i);
-                    }
-                    const byteArray = new Uint8Array(byteNumbers);
-                    byteArrays.push(byteArray);
-                }
-                return new Blob(byteArrays, { type: mimeType });
-            };
 
-            if (window.CapacitorPlugins) {
-                // ... Existing Capacitor Logic ...
-                const { Filesystem, Directory, Share } = window.CapacitorPlugins;
-                try {
-                    const data = base64Data.includes(',') ? base64Data.split(',')[1] : base64Data;
-                    await Filesystem.writeFile({
-                        path: fileName,
-                        data: data,
-                        directory: Directory.Cache
-                    });
-                    const uriResult = await Filesystem.getUri({
-                        directory: Directory.Cache,
-                        path: fileName,
-                    });
-                    await Share.share({
-                        title: fileName,
-                        text: 'Aqui está seu relatório do FDS 2025',
-                        url: uriResult.uri,
-                        dialogTitle: 'Compartilhar Relatório',
-                    });
-                } catch (e) {
-                    console.error('Erro native save', e);
-                    alert('Erro ao salvar/compartilhar arquivo: ' + e.message);
-                }
-            } else {
-                // Browser / PWA Logic: Fallback to direct download
-                const link = document.createElement('a');
-                link.download = fileName;
-                link.href = base64Data;
-                link.click();
-            }
-        };
 
 
 
@@ -3970,8 +3922,7 @@ const PRICE_RULER_DATA_VAREJO = [
                     pdf.addImage(imgData2, 'JPEG', imgX2, 0, imgWidth2, imgHeight2);
                     
                     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
-                    const pdfData = pdf.output('datauristring');
-                    await saveBase64AsFile(pdfData, `RELATORIO_SOVI_HEINEKEN_${dateStr}.pdf`, 'application/pdf');
+                    pdf.save(`RELATORIO_SOVI_HEINEKEN_${dateStr}.pdf`);
                 } catch (err) {
                     console.error(err);
                     alert("Erro ao gerar PDF. Tente novamente.");
@@ -4022,9 +3973,10 @@ const PRICE_RULER_DATA_VAREJO = [
                     });
                     
                     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
-                    const fileName = `${filenamePrefix}_${dateStr}.png`;
-                    const pngData = canvas.toDataURL('image/png');
-                    await saveBase64AsFile(pngData, fileName, 'image/png');
+                    const link = document.createElement('a');
+                    link.download = `${filenamePrefix}_${dateStr}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
                 } catch (err) {
                     console.error(err);
                     alert("Erro ao gerar imagem. Tente novamente.");
@@ -4074,8 +4026,7 @@ const PRICE_RULER_DATA_VAREJO = [
                     pdf.addImage(imgData, 'JPEG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
                     
                     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
-                    const pdfData = pdf.output('datauristring');
-                    await saveBase64AsFile(pdfData, `${filenamePrefix}_${dateStr}.pdf`, 'application/pdf');
+                    pdf.save(`${filenamePrefix}_${dateStr}.pdf`);
                 } catch (err) {
                     console.error(err);
                     alert("Erro ao gerar PDF. Tente novamente.");
@@ -4102,8 +4053,10 @@ const PRICE_RULER_DATA_VAREJO = [
                     });
                     
                     const dateStr = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
-                    const pngData = canvas.toDataURL('image/png');
-                    await saveBase64AsFile(pngData, `RELATORIO_SOVI_HEINEKEN_${dateStr}.png`, 'image/png');
+                    const link = document.createElement('a');
+                    link.download = `RELATORIO_SOVI_HEINEKEN_${dateStr}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
                 } catch (err) {
                     console.error(err);
                     alert("Erro ao gerar imagem. Tente novamente.");
