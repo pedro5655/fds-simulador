@@ -1,6 +1,2 @@
 node_modules/
-android/app/build/
-android/.gradle/
-android/build/
-android/app/src/main/assets/public/*
-!android/app/src/main/assets/public/cordova_plugins.js
+android/
