@@ -112,27 +112,7 @@
                     alert('Erro ao salvar/compartilhar arquivo: ' + e.message);
                 }
             } else {
-                // Browser / PWA Logic
-                try {
-                    if (navigator.share && navigator.canShare) {
-                        const blob = base64ToBlob(base64Data, mimeType);
-                        const file = new File([blob], fileName, { type: mimeType });
-                        const data = {
-                            files: [file],
-                            title: fileName,
-                            text: 'Aqui está seu relatório do FDS 2025'
-                        };
-                        
-                        if (navigator.canShare(data)) {
-                            await navigator.share(data);
-                            return; // Share successful, exit
-                        }
-                    }
-                } catch (err) {
-                    console.warn("Web Share API failed, falling back to download", err);
-                }
-
-                // Fallback to direct download
+                // Browser / PWA Logic: Fallback to direct download
                 const link = document.createElement('a');
                 link.download = fileName;
                 link.href = base64Data;
