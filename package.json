@@ -1,0 +1,29 @@
+{
+  "name": "soviheineken",
+  "version": "1.0.0",
+  "description": "> **Fotografia de Sucesso (FDS)** - Ferramenta de Simulação e Auditoria de Execução no Ponto de Venda.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedro5655/fds-simulador.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/pedro5655/fds-simulador/issues"
+  },
+  "homepage": "https://github.com/pedro5655/fds-simulador#readme",
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/share": "^8.0.0",
+    "esbuild": "^0.27.1"
+  }
+}

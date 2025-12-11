@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador FDS - Heineken Brasil</title>
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="manifest" href="manifest.json">
     
     <!-- Social Media Meta Tags -->
     <meta property="og:image" content="https://pedro5655.github.io/fds-simulador/social-banner.png">
@@ -62,7 +63,7 @@
 }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-900">
     <div id="root"></div>
 
 
@@ -458,22 +459,22 @@
             question: "Quais as metas de Pontos Extras?",
             answer: (
               <div className="w-full overflow-x-auto">
-                <table className="w-full text-[10px] md:text-xs">
+                <table className="w-full text-[9px] table-fixed">
                   <thead>
                     <tr className="bg-green-700 text-white text-center">
-                      <th className="p-1 rounded-tl-lg">SEGMENTO</th>
-                      <th className="p-1">VOL. MÍNIMO (PCTS)</th>
-                      <th className="p-1">ATÉ 5 PEs</th>
-                      <th className="p-1">6 A 10 PEs</th>
-                      <th className="p-1">11 A 15 PEs</th>
-                      <th className="p-1">16 A 20 PEs</th>
-                      <th className="p-1 rounded-tr-lg">&gt;21 PEs</th>
+                      <th className="p-0.5 rounded-tl-lg w-16">SEGMENTO</th>
+                      <th className="p-0.5">VOL. MÍN. (PCTS)</th>
+                      <th className="p-0.5">ATÉ 5 PEs</th>
+                      <th className="p-0.5">6 A 10 PEs</th>
+                      <th className="p-0.5">11 A 15 PEs</th>
+                      <th className="p-0.5">16 A 20 PEs</th>
+                      <th className="p-0.5 rounded-tr-lg">&gt;21 PEs</th>
                     </tr>
                   </thead>
                   <tbody className="text-center font-bold text-gray-800">
                     <tr className="bg-amber-100 border-b border-white">
-                      <td className="bg-amber-800 text-white p-2 text-left">CRAFT</td>
-                      <td className="bg-amber-900 text-white">05</td>
+                      <td className="bg-amber-800 text-white p-1 text-left font-bold">CRAFT</td>
+                      <td className="bg-amber-900 text-white p-0.5">05</td>
                       <td>-</td>
                       <td>1</td>
                       <td>1</td>
@@ -481,8 +482,8 @@
                       <td>1</td>
                     </tr>
                     <tr className="bg-gray-100 border-b border-white">
-                      <td className="bg-black text-white p-2 text-left">PREMIUM</td>
-                      <td className="bg-gray-900 text-white">20</td>
+                      <td className="bg-black text-white p-1 text-left font-bold">PREMIUM</td>
+                      <td className="bg-gray-900 text-white p-0.5">20</td>
                       <td>1</td>
                       <td>2</td>
                       <td>3</td>
@@ -490,8 +491,8 @@
                       <td>6</td>
                     </tr>
                     <tr className="bg-red-100">
-                      <td className="bg-heineken-red text-white p-2 text-left">MAINSTREAM</td>
-                      <td className="bg-red-800 text-white">20</td>
+                      <td className="bg-heineken-red text-white p-1 text-left font-bold">MAINSTREAM</td>
+                      <td className="bg-red-800 text-white p-0.5">20</td>
                       <td>1</td>
                       <td>1</td>
                       <td>2</td>
@@ -561,7 +562,7 @@
           const [activeTab, setActiveTab] = useState('safety');
 
           return (
-            <div className="space-y-6 pb-20">
+            <div className="space-y-6">
               <div className="flex p-1 bg-gray-200 rounded-lg">
                 <button 
                   onClick={() => setActiveTab('safety')}
@@ -672,6 +673,22 @@
                   </div>
                 </div>
               )}
+
+              {/* Bottom Navigation Tabs */}
+              <div className="flex p-1 bg-gray-200 rounded-lg mt-12">
+                <button 
+                  onClick={() => { setActiveTab('safety'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'safety' ? 'bg-white shadow text-heineken-green' : 'text-gray-500'}`}
+                >
+                  Segurança (10 Atitudes)
+                </button>
+                <button 
+                  onClick={() => { setActiveTab('routine'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                  className={`flex-1 py-2 text-sm font-bold rounded-md transition-all ${activeTab === 'routine' ? 'bg-white shadow text-heineken-green' : 'text-gray-500'}`}
+                >
+                  Rotina Diária (11 Passos)
+                </button>
+              </div>
             </div>
           );
         };
@@ -683,7 +700,7 @@
                <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-heineken-green">
                 <h2 className="text-2xl font-bold text-heineken-green flex items-center gap-2">
                   <Presentation className="w-8 h-8" />
-                  Roteiro de Visit
+                  Roteiro de Visita
                 </h2>
                 <p className="text-gray-600 mt-2">O passo a passo para apresentar sua loja durante uma auditoria ou visita do supervisor.</p>
               </div>
@@ -762,10 +779,10 @@
                 <div className="flex flex-col gap-2">
                    <p className="text-sm text-gray-600 mb-2">Ordem de exposição na gôndola (Esquerda para Direita):</p>
                    
-                   <div className="grid grid-cols-2 md:grid-cols-4 gap-1 w-full text-[10px] md:text-sm">
+                   <div className="grid grid-cols-2 gap-1 w-full text-[10px]">
                       <div className="bg-amber-900 text-white py-4 px-1 rounded text-center font-bold flex items-center justify-center break-words leading-tight">CRAFT</div>
                       <div className="bg-heineken-green text-white py-4 px-1 rounded text-center font-bold flex items-center justify-center break-words leading-tight">PREMIUM</div>
-                      <div className="bg-red-600 text-white py-4 px-1 rounded text-center font-bold flex items-center justify-center break-words leading-tight text-[9px] md:text-sm">MAINSTREAM</div>
+                      <div className="bg-red-600 text-white py-4 px-1 rounded text-center font-bold flex items-center justify-center break-words leading-tight text-[9px]">MAINSTREAM</div>
                       <div className="bg-blue-500 text-white py-4 px-1 rounded text-center font-bold flex items-center justify-center break-words leading-tight">ECONOMY</div>
                    </div>
                    
@@ -924,9 +941,9 @@
                     
                     {openIndex === idx && (
                       <div className="px-4 pb-4 pt-0 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <div className="bg-green-50 p-4 rounded-lg border border-green-100 text-gray-700 flex gap-3">
-                          <CheckCircle2 className="w-5 h-5 text-heineken-green flex-shrink-0 mt-0.5" />
-                          <div className="flex-1">{q.answer}</div>
+                        <div className="bg-green-50 p-4 rounded-lg border border-green-100 text-gray-700 flex flex-col gap-2">
+                          <CheckCircle2 className="w-5 h-5 text-heineken-green flex-shrink-0" />
+                          <div className="flex-1 w-full">{q.answer}</div>
                         </div>
                       </div>
                     )}
@@ -1005,7 +1022,7 @@
           );
         };
 
-        const TreinamentoApp = ({ onNavigateBack }) => {
+        const TreinamentoApp = ({ onNavigateBack, deferredPrompt, installPlatform, setShowInstallModal }) => {
           const [currentScreen, setCurrentScreen] = useState('HOME');
           const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -1042,7 +1059,7 @@
               case AppScreen.ROUTINE: return 'Roteiro de Visita';
               case AppScreen.SCORING: return 'Pilares & Pontuação';
               case AppScreen.SOVI: return 'Metas de SOVI';
-              case AppScreen.AUDIT_QUIZ: return 'Simulador Audit';
+              case AppScreen.AUDIT_QUIZ: return 'Simulador de Auditoria';
               case AppScreen.COMPANY: return 'Sobre a Heineken';
               default: return '';
             }
@@ -1161,17 +1178,8 @@
           return (
             <div className="min-h-screen bg-gray-100 font-sans text-gray-900 pb-10">
               {/* Header */}
-              <header className="bg-heineken-green text-white sticky top-0 z-40 shadow-md">
-                <div className={`mx-auto px-4 h-16 flex items-center justify-between transition-all duration-300 ${currentScreen !== 'HOME' && getTitle(currentScreen) !== '' ? 'max-w-5xl' : 'max-w-md'}`}>
-                  <div className="flex items-center gap-3">
-                     <button onClick={() => setIsMenuOpen(true)} className="p-1 hover:bg-green-700 rounded">
-                       <Menu className="w-6 h-6" />
-                     </button>
-                     <h1 className="font-bold text-lg tracking-tight truncate">{getTitle(currentScreen)}</h1>
-                  </div>
-                  <Star className="w-5 h-5 text-heineken-red fill-current" />
-                </div>
-              </header>
+              {/* Header Removed to avoid duplication with Main App Header */}
+
 
               {/* Main Content */}
               <main className={`mx-auto px-4 pt-6 pb-8 transition-all duration-300 ${currentScreen !== 'HOME' && getTitle(currentScreen) !== '' ? 'max-w-5xl' : 'max-w-md'}`}>
@@ -2932,13 +2940,13 @@ const PRICE_RULER_DATA_VAREJO = [
             return (
                 <div className="space-y-6">
                     <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4 flex-wrap">
+                        <div className="flex flex-col justify-between items-center gap-4 mb-4 flex-wrap">
                             <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                                 <RefreshCw className="text-blue-500" />
                                 Controle de Validade
                             </h2>
-                            <div className="flex gap-2 w-full md:w-auto">
-                                <div className="relative flex-1 md:w-64">
+                            <div className="flex gap-2 w-full">
+                                <div className="relative flex-1">
                                     <input 
                                         type="text" 
                                         placeholder="Buscar produto..." 
@@ -2983,7 +2991,7 @@ const PRICE_RULER_DATA_VAREJO = [
 
                                 return (
                                     <div key={idx} className="p-4 rounded-lg border border-gray-200 bg-gray-50">
-                                        <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                                        <div className="flex flex-col justify-between gap-4">
                                             <div className="flex-1 min-w-0">
                                                 <span className="font-bold text-gray-800 block">{item.brand}</span>
                                                 <span className="text-xs text-gray-500 break-words">{item.sku}</span>
@@ -3557,14 +3565,17 @@ const PRICE_RULER_DATA_VAREJO = [
             }
 
             return (
-                <button
-                    onClick={scrollToTop}
-                    className="fixed bottom-24 right-4 bg-gray-600 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-all z-50 opacity-80 hover:opacity-100 flex items-center justify-center w-12 h-12"
-                    aria-label="Voltar ao topo"
-                    style={{ bottom: '80px' }} // Adjusted to not overlap with bottom bar if present
-                >
-                    <ChevronUp size={24} />
-                </button>
+                <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
+                    <div className="w-full max-w-md relative">
+                         <button
+                            onClick={scrollToTop}
+                            className="absolute bottom-20 right-4 bg-gray-600 text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-all opacity-80 hover:opacity-100 flex items-center justify-center w-12 h-12 pointer-events-auto"
+                            aria-label="Voltar ao topo"
+                        >
+                            <ChevronUp size={24} />
+                        </button>
+                    </div>
+                </div>
             );
         };
 
@@ -4071,9 +4082,9 @@ const PRICE_RULER_DATA_VAREJO = [
             const activePriceRulerData = storeType === 'cc' ? PRICE_RULER_DATA_CC : PRICE_RULER_DATA_VAREJO;
 
             return (
-                <div className="min-h-screen pb-20 font-sans text-gray-800">
-                    <header className="bg-[#008200] text-white p-4 shadow-lg sticky top-0 z-50">
-                        <div className="max-w-md mx-auto flex justify-between items-center">
+                <div className="max-w-md mx-auto bg-gray-50 min-h-screen shadow-2xl relative pb-20 font-sans text-gray-800">
+                    <header className="sticky top-0 w-full bg-[#008200] text-white p-4 shadow-lg z-50">
+                        <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <Star className="fill-current text-red-500" />
                                 <h1 className="text-xl font-bold tracking-tighter">SIMULADOR DE FDS</h1>
@@ -4215,7 +4226,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                     key={tab.id}
                                     onClick={() => setActiveView(tab.id)}
                                     className={`
-                                        py-3 px-1 rounded-xl text-[10px] md:text-sm font-bold transition-all flex flex-col items-center justify-center gap-2 truncate
+                                        py-3 px-1 rounded-xl text-[10px] font-bold transition-all flex flex-col items-center justify-center gap-2 truncate
                                         ${tab.id === 'simulador' ? 'col-span-4 text-base py-4 px-2' : ''}
                                         ${activeView === tab.id
                                             ? `${tab.color} text-white shadow-lg scale-105 ring-2 ring-offset-2 ${tab.activeColor}`
@@ -4286,7 +4297,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                     auditoriaScore={auditoriaScore}
                                 />
 
-                                <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
+                                <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-40">
                                     <div className="max-w-md mx-auto flex gap-3">
                                         <div className="flex-1">
                                             <p className="text-xs text-gray-500 font-bold uppercase">Share Cerveja</p>
@@ -4340,7 +4351,12 @@ const PRICE_RULER_DATA_VAREJO = [
                         )}
 
                         {activeView === 'treinamento' && (
-                            <TreinamentoApp onNavigateBack={() => setActiveView('simulador')} />
+                            <TreinamentoApp 
+                                onNavigateBack={() => setActiveView('simulador')} 
+                                deferredPrompt={deferredPrompt}
+                                installPlatform={installPlatform}
+                                setShowInstallModal={setShowInstallModal}
+                            />
                         )}
                         <ScrollToTopButton />
                     </main>
@@ -4405,5 +4421,18 @@ const PRICE_RULER_DATA_VAREJO = [
         root.render(<App />);
     </script>
 
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then((registration) => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch((err) => {
+              console.log('ServiceWorker registration failed: ', err);
+            });
+        });
+      }
+    </script>
 </body>
 </html>

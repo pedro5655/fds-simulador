@@ -58,6 +58,18 @@ A interface foi desenhada pensando primeiramente na experiência em dispositivos
 - Layouts responsivos que se adaptam a diferentes tamanhos de tela.
 - Relatórios PDF formatados especificamente para serem lidos em telas de celular (Layout A4 com fontes ampliadas).
 
+### 🏷️ Estilo & UX Premium (Novo)
+
+- **Header Otimizado**: Novo cabeçalho com design premium, ícone de estrela e controles de fácil acesso (Instalar, Info, Refresh).
+- **Navegação Melhorada**: Botões de acesso rápido duplicados no rodapé do módulo de Segurança para facilitar o fluxo de uso.
+- **Layout Mobile-First**: O app agora simula uma experiência nativa de celular mesmo quando aberto no desktop.
+
+### 📲 Funcionalidade PWA (Progressive Web App)
+
+- **Instalável**: Pode ser adicionado à tela inicial do celular como um aplicativo nativo.
+- **Offline**: Funciona mesmo sem internet após o primeiro acesso (Graças ao Service Worker).
+- **Experiência Nativa**: Roda em tela cheia, sem barras de navegador.
+
 ---
 
 ## 📦 Como Usar
