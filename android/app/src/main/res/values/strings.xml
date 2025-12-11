@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">FDS 2025</string>
-    <string name="title_activity_main">FDS 2025</string>
-    <string name="package_name">com.heineken.fds2025</string>
-    <string name="custom_url_scheme">com.heineken.fds2025</string>
-</resources>
