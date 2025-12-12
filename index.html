@@ -199,6 +199,22 @@
             </IconBase>
         );
 
+        const LogOut = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </IconBase>
+        );
+
+
+
+
+
+
+
+
+
 
 
         // --- ICONS EXTRAS (TREINAMENTO) ---
@@ -258,6 +274,19 @@
             <IconBase className={className} width={size} height={size}>
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </IconBase>
+        );
+
+        const ClipboardCopy = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </IconBase>
+        );
+
+        const Check = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <polyline points="20 6 9 17 4 12"></polyline>
             </IconBase>
         );
 
@@ -1624,7 +1653,7 @@
                 <div className="inline-flex items-center gap-2 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100">
                     <Download className="h-3 w-3 text-blue-400" />
                     <p className="text-[10px] text-blue-600 font-medium">
-                        Para baixar PDF ou PNG, use os botões acima.
+                        Para baixar PDF, PNG ou Copiar a lista, use os botões acima.
                     </p>
                 </div>
             </div>
@@ -1714,12 +1743,12 @@
             );
         };
 
-        const TabPresenca = ({ data, storeType, onChange }) => {
+        const TabPresenca = ({ data = {}, storeType, onChange }) => {
             return (
                 <div className="space-y-3">
                     {Object.entries(SCORES_PRESENCA).map(([product, scores]) => {
                         const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
-                        const productState = data[product] || { gondola: false, gelada: false };
+                        const productState = (data && data[product]) || { gondola: false, gelada: false };
 
                         return (
                             <div key={product} className="bg-gray-50 p-3 rounded-lg border border-gray-200 flex justify-between items-center">
@@ -1766,8 +1795,12 @@
                 if (isTabbed) setIsOpen(true);
             }, [isTabbed, categoryKey]);
 
-            const worldCm = values.world;
-            const productValues = values.products;
+            // Safety checks
+            if (!config) return null;
+            const safeValues = values || { world: '', products: {} };
+
+            const worldCm = safeValues.world;
+            const productValues = safeValues.products || {};
             const totalShelf = parseFloat(worldCm) || 0;
             
             const hnkTotalVal = config.products.reduce((acc, prod) => {
@@ -1921,8 +1954,13 @@
             // Calculate shares for display
             const getCatShare = (catKey) => {
                 const catData = allData[catKey];
+                if (!catData) return 0;
+                
                 const worldCm = parseFloat(catData.world) || 0;
                 const config = CATEGORIES[catKey];
+                
+                if (!config) return 0;
+
                 let catTotalHnk = 0;
                 config.products.forEach(prod => {
                     catTotalHnk += (parseFloat(catData.products[prod]) || 0);
@@ -2182,6 +2220,117 @@
                     <p className="text-center mt-4 font-bold text-gray-600">
                         {data ? '5 Pontos' : '0 Pontos'}
                     </p>
+                </div>
+            );
+        };
+
+        const RegistrationView = ({ 
+            storeName, setStoreName, 
+            fds, setFds, 
+            storeType, setStoreType, 
+            onComplete, onInstall 
+        }) => {
+            const isValid = storeName.trim().length > 0 && fds.trim().length > 0 && storeType;
+
+            return (
+                <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1577908953930-58c0378077c5?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                    
+                    <div className="relative z-10 w-full max-w-sm flex flex-col gap-6 animate-in fade-in zoom-in duration-500">
+                        {/* Logo Area */}
+                        <div className="text-center mb-8">
+                            <div className="flex flex-col items-center justify-center">
+                                <Star className="w-12 h-12 text-white fill-current mb-2" />
+
+                            </div>
+                            <p className="text-gray-300 text-sm mt-2 font-medium">Simulador de FDS</p>
+                        </div>
+
+                        {/* Input Fields */}
+                        <div className="space-y-4">
+                            <div className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-3 flex gap-3 items-start">
+                                <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
+                                <p className="text-amber-200 text-xs font-medium leading-relaxed">
+                                    <strong className="block text-amber-500 mb-0.5 font-bold uppercase">Atenção</strong>
+                                    Preencha os dados corretamente, pois eles definem as metas e resultados da simulação.
+                                </p>
+                            </div>
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 transition-all focus-within:bg-white/20 focus-within:border-white/40">
+                                <label className="block text-xs font-bold text-green-400 mb-1 uppercase tracking-wider">Nome da Loja</label>
+                                <input 
+                                    type="text" 
+                                    value={storeName}
+                                    onChange={(e) => setStoreName(e.target.value)}
+                                    className="w-full bg-transparent text-white placeholder-white/50 outline-none text-lg font-medium"
+                                    placeholder="Ex: Supermercado Pão de Mel"
+                                />
+                            </div>
+
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 transition-all focus-within:bg-white/20 focus-within:border-white/40">
+                                <label className="block text-xs font-bold text-green-400 mb-1 uppercase tracking-wider">Nome do Colaborador</label>
+                                <input 
+                                    type="text" 
+                                    value={fds}
+                                    onChange={(e) => setFds(e.target.value)}
+                                    className="w-full bg-transparent text-white placeholder-white/50 outline-none text-lg font-medium"
+                                    placeholder="Ex: João Silva"
+                                />
+                            </div>
+
+                            {/* Custom Store Selector for Registration with Dark Theme */}
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4">
+                                <label className="block text-xs font-bold text-green-400 mb-3 uppercase tracking-wider">Tipo de Loja</label>
+                                <div className="grid grid-cols-4 gap-2">
+                                    {[
+                                        { id: 'hiper', label: 'Hiper' },
+                                        { id: 'super', label: 'Super' },
+                                        { id: 'mini', label: 'Mini' },
+                                        { id: 'cc', label: 'C&C' }
+                                    ].map(type => (
+                                        <button
+                                            key={type.id}
+                                            onClick={() => setStoreType(type.id)}
+                                            className={`py-2 rounded-lg text-xs font-bold transition-all border ${
+                                                storeType === type.id
+                                                    ? 'bg-[#008200] text-white border-[#008200] shadow-[0_0_15px_rgba(0,130,0,0.5)]'
+                                                    : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
+                                            }`}
+                                        >
+                                            {type.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <button 
+                            type="button"
+                            onClick={onComplete}
+                            disabled={!isValid}
+                            className={`
+                                w-full py-4 rounded-full font-bold text-lg uppercase tracking-wider shadow-lg transition-all transform
+                                ${isValid 
+                                    ? 'bg-[#8bf024] text-[#006900] hover:scale-105 hover:bg-[#9bf53b] hover:shadow-[0_0_20px_rgba(139,240,36,0.4)] cursor-pointer' 
+                                    : 'bg-gray-500/50 text-gray-400 cursor-not-allowed grayscale'}
+                            `}
+                        >
+                            Acessar Simulador
+                        </button>
+
+                        <button 
+                            type="button"
+                            onClick={onInstall}
+                            className="w-full py-3 rounded-full font-bold text-sm uppercase tracking-wider text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                        >
+                            <Download size={20} />
+                            Instalar App
+                        </button>
+
+                        <div className="text-center mt-4">
+                            <p className="text-white/40 text-xs">Desenvolvido por Pedro Lameirão</p>
+                        </div>
+                    </div>
                 </div>
             );
         };
@@ -2499,10 +2648,10 @@
 const PRICE_RULER_DATA_CC = [
             // --- CRAFT ---
             // EISENBAHN ESTILOS
-            { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 6.79, promo: 6.59 },
-            { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 6.79, promo: 6.59 },
-            { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
-            { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 6.79, promo: 6.59 },
+            { brand: "EISENBAHN WEIZENBIER", sku: "LONG NECK", price: 6.79, promo: 6.79 },
+            { brand: "EISENBAHN PALE ALE", sku: "LONG NECK", price: 6.79, promo: 6.79 },
+            { brand: "EISENBAHN IPA", sku: "LONG NECK", price: 6.79, promo: 6.79 },
+            { brand: "EISENBAHN SESSION IPA", sku: "LONG NECK", price: 6.79, promo: 6.79 },
             { brand: "EISENBAHN PALE ALE", sku: "LATA 350", price: 5.69, promo: 5.09 },
             { brand: "EISENBAHN IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
             { brand: "EISENBAHN SESSION IPA", sku: "LATA 350", price: 5.69, promo: 5.09 },
@@ -2521,12 +2670,14 @@ const PRICE_RULER_DATA_CC = [
             { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.19, promo: 14.19 },
 
             // LAGUNITAS
-            { brand: "LAGUNITAS", sku: "LONG NECK", price: 10.99, promo: 10.99 },
             { brand: "LAGUNITAS", sku: "LATA 350", price: 8.99, promo: 6.99 },
+            { brand: "LAGUNITAS", sku: "LONG NECK", price: 10.99, promo: 10.99 },
+            { brand: "LAGUNITAS DAY TIME", sku: "LATA 350", price: 8.99, promo: 6.99 },
+            { brand: "LAGUNITAS DAY TIME", sku: "LONG NECK", price: 10.99, promo: 10.99 },
 
             // BLUE MOON
-            { brand: "BLUE MOON", sku: "LONG NECK", price: 10.99, promo: 10.99 },
             { brand: "BLUE MOON", sku: "LATA 350", price: 8.99, promo: 6.99 },
+            { brand: "BLUE MOON", sku: "LONG NECK", price: 10.99, promo: 10.99 },
 
             // --- PREMIUM ---
             // HEINEKEN
@@ -2542,12 +2693,16 @@ const PRICE_RULER_DATA_CC = [
             { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
             { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.69, promo: 5.29 },
             { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            
+            // HEINEKEN SPRITZ
+            { brand: "HEINEKEN SPRITZ", sku: "LONG NECK", price: 6.99, promo: 6.99 },
 
             // EISENBAHN PILSEN
             { brand: "EISENBAHN PILSEN", sku: "LATA 269", price: 3.09, promo: 3.09 },
             { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 3.99, promo: 3.99 },
             { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 4.79, promo: 4.79 },
             { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.09, promo: 4.19 },
+            { brand: "EISENBAHN PILSEN", sku: "600 ML DESC", price: 10.39, promo: 10.39 },
 
             // EISENBAHN UNFILTERED
             { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 3.99, promo: 3.99 },
@@ -2555,9 +2710,9 @@ const PRICE_RULER_DATA_CC = [
             { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.09, promo: 4.19 },
 
             // SOL PREMIUM
-            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.99, promo: 5.79 },
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.19, promo: 4.79 },
             { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 8.99, promo: 8.99 },
-            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.99, promo: 5.79 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.19, promo: 4.79 },
 
             // AMSTEL ULTRA
             { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 3.99, promo: 3.49 },
@@ -2569,6 +2724,31 @@ const PRICE_RULER_DATA_CC = [
             { brand: "AMSTEL", sku: "LATA 350", price: 3.89, promo: 3.69 },
             { brand: "AMSTEL", sku: "LATA 473", price: 4.89, promo: 4.69 },
             { brand: "AMSTEL", sku: "LONG NECK", price: 4.69, promo: 4.49 },
+            { brand: "AMSTEL", sku: "600 ML DESC", price: 10.09, promo: 10.09 },
+            
+            // DEVASSA
+            { brand: "DEVASSA", sku: "LATA 269", price: 2.79, promo: 2.79 },
+            { brand: "DEVASSA", sku: "LATA 350", price: 3.29, promo: 3.09 },
+            { brand: "DEVASSA", sku: "LATA 473", price: 3.99, promo: 3.79 },
+            
+            // TIGER
+            { brand: "TIGER", sku: "LATA 269", price: 2.95, promo: 2.75 },
+            { brand: "TIGER", sku: "LATA 350", price: 3.49, promo: 3.29 },
+            { brand: "TIGER", sku: "LATA 473", price: 3.99, promo: 3.79 },
+            
+            // ECONOMY
+            { brand: "SCHIN", sku: "LATA 269", price: 2.39, promo: 2.39 },
+            { brand: "SCHIN", sku: "LATA 350", price: 2.85, promo: 2.85 },
+            { brand: "SCHIN", sku: "LATA 473", price: 3.29, promo: 3.29 },
+            
+            { brand: "KAISER", sku: "LATA 350", price: 2.85, promo: 2.85 },
+            { brand: "KAISER", sku: "LATA 473", price: 3.29, promo: 3.29 },
+            
+            { brand: "BAVARIA", sku: "LATA 350", price: 2.69, promo: 2.69 },
+            { brand: "BAVARIA", sku: "LATA 473", price: 3.19, promo: 3.19 },
+            
+            { brand: "GLACIAL", sku: "LATA 350", price: 2.69, promo: 2.69 },
+            { brand: "GLACIAL", sku: "LATA 473", price: 3.19, promo: 3.19 },
 
             // --- NAB ---
             // FYS TÔNICA
@@ -2582,14 +2762,22 @@ const PRICE_RULER_DATA_CC = [
             { brand: "FYS GUARANÁ ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
             { brand: "FYS LARANJA", sku: "LATA 350", price: 2.79, promo: 2.49 },
             { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.79, promo: 2.49 },
+            
+            // ITUBAINA
+            { brand: "ITUBAINA", sku: "LATA 350", price: 2.89, promo: 2.59 },
+            { brand: "ITUBAINA", sku: "LONG NECK", price: 3.39, promo: 3.39 },
+            { brand: "ITUBAINA", sku: "PET 500ML", price: 3.49, promo: 3.19 },
+            
+            // SKINKA
+            { brand: "SKINKA", sku: "PET 450ML", price: 2.99, promo: 2.99 },
 
             // CLASH'D
             { brand: "CLASHD", sku: "LATA 269", price: 4.59, promo: 3.99 },
 
             // --- RTD ---
             // AMSTEL VIBES
-            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.69, promo: 3.79 },
-            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.69, promo: 3.79 }
+            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.69, promo: 4.59 },
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.69, promo: 4.59 }
         ];
 
 const PRICE_RULER_DATA_VAREJO = [
@@ -2617,11 +2805,14 @@ const PRICE_RULER_DATA_VAREJO = [
             { brand: "BADEN BADEN GOLDEN", sku: "600 ML DESC", price: 14.99, promo: 14.99 },
 
             // LAGUNITAS
+            { brand: "LAGUNITAS", sku: "LATA 350", price: 9.49, promo: 7.39 },
             { brand: "LAGUNITAS", sku: "LONG NECK", price: 11.59, promo: 11.59 },
+            { brand: "LAGUNITAS DAY TIME", sku: "LATA 350", price: 9.49, promo: 7.39 },
+            { brand: "LAGUNITAS DAY TIME", sku: "LONG NECK", price: 11.59, promo: 11.59 },
 
             // BLUE MOON
-            { brand: "BLUE MOON", sku: "LONG NECK", price: 11.59, promo: 11.59 },
             { brand: "BLUE MOON", sku: "LATA 350", price: 9.49, promo: 7.39 },
+            { brand: "BLUE MOON", sku: "LONG NECK", price: 11.59, promo: 11.59 },
 
             // --- PREMIUM ---
             // HEINEKEN
@@ -2634,14 +2825,19 @@ const PRICE_RULER_DATA_VAREJO = [
             { brand: "HEINEKEN", sku: "DRAUGHT KEG", price: 119.99, promo: 119.99 },
 
             // HEINEKEN 0.0
-            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.59, promo: 3.99 },
+            { brand: "HEINEKEN 0.0", sku: "LATA 269", price: 4.79, promo: 4.19 },
             { brand: "HEINEKEN 0.0", sku: "LATA 350", price: 5.99, promo: 5.59 },
             { brand: "HEINEKEN 0.0", sku: "LONG NECK", price: 6.99, promo: 6.59 },
+            
+            // HEINEKEN SPRITZ
+            { brand: "HEINEKEN SPRITZ", sku: "LONG NECK", price: 6.99, promo: 6.99 },
 
             // EISENBAHN PILSEN
+            { brand: "EISENBAHN PILSEN", sku: "LATA 269", price: 3.19, promo: 3.19 },
             { brand: "EISENBAHN PILSEN", sku: "LATA 350", price: 4.19, promo: 4.19 },
             { brand: "EISENBAHN PILSEN", sku: "LATA 473", price: 5.29, promo: 5.29 },
             { brand: "EISENBAHN PILSEN", sku: "LONG NECK", price: 5.39, promo: 4.49 },
+            { brand: "EISENBAHN PILSEN", sku: "600 ML DESC", price: 10.39, promo: 10.39 },
 
             // EISENBAHN UNFILTERED
             { brand: "EISENBAHN UNFILTERED", sku: "LATA 350", price: 4.19, promo: 4.19 },
@@ -2649,9 +2845,9 @@ const PRICE_RULER_DATA_VAREJO = [
             { brand: "EISENBAHN UNFILTERED", sku: "LONG NECK", price: 5.39, promo: 4.49 },
 
             // SOL PREMIUM
-            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 6.29, promo: 6.09 },
+            { brand: "SOL PREMIUM", sku: "LONG NECK", price: 5.49, promo: 5.09 },
             { brand: "SOL PREMIUM", sku: "600 ML DESC", price: 9.49, promo: 9.49 },
-            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 6.29, promo: 6.09 },
+            { brand: "SOL PREMIUM 0.0%", sku: "LONG NECK", price: 5.49, promo: 5.09 },
 
             // AMSTEL ULTRA
             { brand: "AMSTEL ULTRA", sku: "LATA 269", price: 4.19, promo: 3.69 },
@@ -2663,9 +2859,31 @@ const PRICE_RULER_DATA_VAREJO = [
             { brand: "AMSTEL", sku: "LATA 350", price: 4.09, promo: 3.89 },
             { brand: "AMSTEL", sku: "LATA 473", price: 5.49, promo: 5.29 },
             { brand: "AMSTEL", sku: "LONG NECK", price: 4.99, promo: 4.79 },
+            { brand: "AMSTEL", sku: "600 ML DESC", price: 10.09, promo: 10.09 },
 
-            // ECONOMY (Included in Mainstream section or right after)
+            // DEVASSA
+            { brand: "DEVASSA", sku: "LATA 269", price: 2.89, promo: 2.89 },
+            { brand: "DEVASSA", sku: "LATA 350", price: 3.49, promo: 3.29 },
+            { brand: "DEVASSA", sku: "LATA 473", price: 4.49, promo: 4.29 },
+            
+            // TIGER
+            { brand: "TIGER", sku: "LATA 269", price: 3.09, promo: 2.89 },
+            { brand: "TIGER", sku: "LATA 350", price: 3.69, promo: 3.49 },
+            { brand: "TIGER", sku: "LATA 473", price: 4.49, promo: 4.29 },
+
+            // ECONOMY
+            { brand: "SCHIN", sku: "LATA 269", price: 2.49, promo: 2.49 },
+            { brand: "SCHIN", sku: "LATA 350", price: 2.99, promo: 2.99 },
             { brand: "SCHIN", sku: "LATA 473", price: 3.69, promo: 3.69 },
+            
+            { brand: "KAISER", sku: "LATA 350", price: 2.99, promo: 2.99 },
+            { brand: "KAISER", sku: "LATA 473", price: 3.69, promo: 3.69 },
+            
+            { brand: "BAVARIA", sku: "LATA 350", price: 2.79, promo: 2.79 },
+            { brand: "BAVARIA", sku: "LATA 473", price: 3.59, promo: 3.59 },
+            
+            { brand: "GLACIAL", sku: "LATA 350", price: 2.79, promo: 2.79 },
+            { brand: "GLACIAL", sku: "LATA 473", price: 3.59, promo: 3.59 },
 
             // --- NAB ---
             // FYS TÔNICA
@@ -2679,14 +2897,22 @@ const PRICE_RULER_DATA_VAREJO = [
             { brand: "FYS GUARANÁ ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
             { brand: "FYS LARANJA", sku: "LATA 350", price: 2.99, promo: 2.59 },
             { brand: "FYS LARANJA ZERO", sku: "LATA 350", price: 2.99, promo: 2.59 },
+            
+            // ITUBAINA
+            { brand: "ITUBAINA", sku: "LATA 350", price: 3.09, promo: 2.69 },
+            { brand: "ITUBAINA", sku: "LONG NECK", price: 3.59, promo: 3.59 },
+            { brand: "ITUBAINA", sku: "PET 500ML", price: 3.69, promo: 3.69 },
+            
+            // SKINKA
+            { brand: "SKINKA", sku: "PET 450ML", price: 3.19, promo: 3.19 },
 
             // CLASH'D
             { brand: "CLASHD", sku: "LATA 269", price: 4.89, promo: 4.29 },
 
             // --- RTD ---
             // AMSTEL VIBES
-            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.99, promo: 3.99 },
-            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.99, promo: 3.99 }
+            { brand: "AMSTEL VIBES LEMON", sku: "LATA 269", price: 5.99, promo: 4.79 },
+            { brand: "AMSTEL VIBES STRAWMELLON", sku: "LATA 269", price: 5.99, promo: 4.79 }
         ];
 
         const VALIDITY_DATA_LIST = [
@@ -2928,7 +3154,7 @@ const PRICE_RULER_DATA_VAREJO = [
             );
         };
 
-        const ValidadeView = ({ data, onChange, onDownload, onDownloadPNG }) => {
+        const ValidadeView = ({ data, onChange, onDownload, onDownloadPNG, onCopyList }) => {
             const [searchTerm, setSearchTerm] = useState('');
 
             const filteredList = VALIDITY_DATA_LIST.filter(item => {
@@ -2957,6 +3183,13 @@ const PRICE_RULER_DATA_VAREJO = [
                                     <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
                                 </div>
                                 <button
+                                    onClick={onCopyList}
+                                    className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-colors shadow-sm text-xs"
+                                    title="Copiar Lista de Validade"
+                                >
+                                    <ClipboardCopy size={16} />
+                                </button>
+                                <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-sm text-xs"
                                 >
@@ -2984,8 +3217,8 @@ const PRICE_RULER_DATA_VAREJO = [
 
                                 if (expirationDate) {
                                     daysRemaining = Math.ceil((new Date(expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
-                                    if (daysRemaining < 0) statusColor = "text-red-600 font-bold";
-                                    else if (daysRemaining <= 30) statusColor = "text-amber-600 font-bold";
+                                    if (daysRemaining < 30) statusColor = "text-red-600 font-bold";
+                                    else if (daysRemaining <= 45) statusColor = "text-amber-600 font-bold";
                                     else statusColor = "text-green-600 font-bold";
                                 }
 
@@ -3003,7 +3236,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                                     </span>
                                                 )}
                                                 <div className="flex flex-col">
-                                                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1">Qtd</label>
+                                                    <label className="text-[10px] font-bold text-gray-500 uppercase mb-1">Qtd (UN)</label>
                                                     <input
                                                         type="number"
                                                         value={quantity}
@@ -3121,7 +3354,7 @@ const PRICE_RULER_DATA_VAREJO = [
             );
         };
 
-        const PriceRulerView = ({ data, rulerData, onChange, onDownload, onDownloadPNG }) => {
+        const PriceRulerView = ({ data, rulerData, onChange, onDownload, onDownloadPNG, onCopyList }) => {
             const [searchTerm, setSearchTerm] = useState('');
 
             const filteredRulerData = rulerData.filter(item => {
@@ -3154,7 +3387,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                 Régua de Preço
                             </h2>
                             <div className="flex gap-2 w-full md:w-auto">
-                                <div className="relative flex-1 md:w-64">
+                                <div className="relative flex-1">
                                     <input 
                                         type="text" 
                                         placeholder="Buscar produto..." 
@@ -3164,6 +3397,13 @@ const PRICE_RULER_DATA_VAREJO = [
                                     />
                                     <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
                                 </div>
+                                <button
+                                    onClick={onCopyList}
+                                    className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-colors shadow-sm text-xs"
+                                    title="Copiar Lista de Divergências"
+                                >
+                                    <ClipboardCopy size={16} />
+                                </button>
                                 <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-green-700 transition-colors shadow-sm text-xs"
@@ -3394,7 +3634,7 @@ const PRICE_RULER_DATA_VAREJO = [
             );
         };
 
-        const RupturasView = ({ storeType, data, onChange, onDownload, onDownloadPNG }) => {
+        const RupturasView = ({ storeType, data, onChange, onDownload, onDownloadPNG, onCopyList }) => {
             const [searchTerm, setSearchTerm] = useState('');
 
             const filteredList = VALIDITY_DATA_LIST.filter(item => {
@@ -3412,7 +3652,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                 Controle de Rupturas
                             </h2>
                             <div className="flex gap-2 w-full md:w-auto">
-                                <div className="relative flex-1 md:w-64">
+                                <div className="relative flex-1">
                                     <input 
                                         type="text" 
                                         placeholder="Buscar produto..." 
@@ -3422,6 +3662,13 @@ const PRICE_RULER_DATA_VAREJO = [
                                     />
                                     <Search className="absolute left-3 top-2.5 text-gray-400 w-4 h-4" />
                                 </div>
+                                <button
+                                    onClick={onCopyList}
+                                    className="flex items-center gap-2 bg-gray-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-gray-700 transition-colors shadow-sm text-xs"
+                                    title="Copiar Lista de Rupturas"
+                                >
+                                    <ClipboardCopy size={16} />
+                                </button>
                                 <button
                                     onClick={onDownload}
                                     className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg font-bold hover:bg-red-700 transition-colors shadow-sm text-xs"
@@ -3524,13 +3771,22 @@ const PRICE_RULER_DATA_VAREJO = [
         // --- HOOKS CUSTOMIZADOS ---
         function useStickyState(defaultValue, key) {
             const [value, setValue] = useState(() => {
-                const stickyValue = window.localStorage.getItem(key);
-                return stickyValue !== null
-                    ? JSON.parse(stickyValue)
-                    : defaultValue;
+                try {
+                    const stickyValue = window.localStorage.getItem(key);
+                    return stickyValue !== null
+                        ? JSON.parse(stickyValue)
+                        : defaultValue;
+                } catch (error) {
+                    console.warn(`Error reading localStorage key "${key}":`, error);
+                    return defaultValue;
+                }
             });
             useEffect(() => {
-                window.localStorage.setItem(key, JSON.stringify(value));
+                try {
+                    window.localStorage.setItem(key, JSON.stringify(value));
+                } catch (error) {
+                    console.warn(`Error writing localStorage key "${key}":`, error);
+                }
             }, [key, value]);
             return [value, setValue];
         }
@@ -3580,6 +3836,7 @@ const PRICE_RULER_DATA_VAREJO = [
         };
 
         const App = () => {
+            // --- DATA STATES (STICKY) ---
             const [allData, setAllData] = useStickyState({
                 ...(() => {
                     const initial = {};
@@ -3590,14 +3847,40 @@ const PRICE_RULER_DATA_VAREJO = [
             
             const [storeName, setStoreName] = useStickyState('', 'sovi_heineken_storeName');
             const [fds, setFds] = useStickyState('', 'sovi_heineken_fds');
+            const [storeType, setStoreType] = useStickyState('mini', 'sovi_heineken_storeType');
             const [activeCategory, setActiveCategory] = useStickyState('premium', 'sovi_heineken_activeCategory');
-            const [activeView, setActiveView] = useStickyState('simulador', 'sovi_heineken_activeView');
+            
+            const [rupturasData, setRupturasData] = useStickyState({}, 'sovi_heineken_rupturasData');
+            const [validityData, setValidityData] = useStickyState({}, 'sovi_heineken_validityData');
+            const [priceRulerData, setPriceRulerData] = useStickyState({}, 'sovi_heineken_priceRulerData');
+
+            // --- UI STATES (NON-STICKY) ---
+            const [activeView, setActiveView] = useState('simulador');
+            const [isRegistered, setIsRegistered] = useState(false); 
             const [showCreditsModal, setShowCreditsModal] = useState(false);
             const [deferredPrompt, setDeferredPrompt] = useState(null);
             const [showInstallModal, setShowInstallModal] = useState(false);
             const [isIOS, setIsIOS] = useState(false);
-            const [installPlatform, setInstallPlatform] = useState('ios'); // 'ios' or 'generic'
+            const [installPlatform, setInstallPlatform] = useState('ios');
 
+            // --- AUDITORIA STATE ---
+            const [activeAuditoriaTab, setActiveAuditoriaTab] = useStickyState('presenca', 'sovi_heineken_activeAuditoriaTab');
+            const [auditoriaData, setAuditoriaData] = useStickyState({
+                presenca: {}, 
+                posicionamentoChecklist: {},
+                visibilidade: {
+                    totalPes: '',
+                    peCraft: '',
+                    pePremium: '',
+                    peMainstream: ''
+                },
+                precificacao: false
+            }, 'sovi_heineken_auditoriaData');
+
+            // Initialize isRegistered based on presence of data? 
+            // The user wants a registration screen. Let's force it to false initially unless we want to auto-login.
+            // For now, simple behavior: Always show on refresh (isRegistered = false default) but inputs will stick.
+            
             useEffect(() => {
                 const handler = (e) => {
                     e.preventDefault();
@@ -3612,6 +3895,57 @@ const PRICE_RULER_DATA_VAREJO = [
                 return () => window.removeEventListener('beforeinstallprompt', handler);
             }, []);
 
+            // --- DATA INTEGRITY CHECK ---
+            useEffect(() => {
+                // 1. Repair allData if keys are missing
+                setAllData(prev => {
+                    if (!prev) return prev;
+                    const next = { ...prev };
+                    let changed = false;
+                    Object.keys(CATEGORIES).forEach(key => {
+                        if (!next[key]) {
+                            next[key] = { world: '', products: {} };
+                            changed = true;
+                        }
+                    });
+                    return changed ? next : prev;
+                });
+
+                // 2. Repair auditoriaData if keys are missing
+                setAuditoriaData(prev => {
+                    const defaultVis = { totalPes: '', peCraft: '', pePremium: '', peMainstream: '' };
+                    if (!prev) return {
+                        presenca: {}, 
+                        posicionamentoChecklist: {},
+                        visibilidade: defaultVis,
+                        precificacao: false
+                    };
+                    
+                    const next = { ...prev };
+                    let changed = false;
+
+                    if (!next.visibilidade) {
+                        next.visibilidade = defaultVis;
+                        changed = true;
+                    }
+                    if (!next.presenca) {
+                        next.presenca = {};
+                        changed = true;
+                    }
+                    if (!next.posicionamentoChecklist) {
+                        next.posicionamentoChecklist = {};
+                        changed = true;
+                    }
+                    
+                    return changed ? next : prev;
+                });
+
+                // 3. Validate activeCategory
+                if (activeCategory && !CATEGORIES[activeCategory]) {
+                     setActiveCategory(Object.keys(CATEGORIES)[0]);
+                }
+            }, []);
+
             const handleInstallClick = async () => {
                 if (deferredPrompt) {
                     deferredPrompt.prompt();
@@ -3622,35 +3956,16 @@ const PRICE_RULER_DATA_VAREJO = [
                     setInstallPlatform('ios');
                     setShowInstallModal(true);
                 } else {
-                   // Fallback for Edge/Chrome when prompt doesn't fire
                    setInstallPlatform('generic');
                    setShowInstallModal(true);
                 }
             };
-            const [rupturasData, setRupturasData] = useStickyState({}, 'sovi_heineken_rupturasData');
-            const [validityData, setValidityData] = useStickyState({}, 'sovi_heineken_validityData');
-            const [priceRulerData, setPriceRulerData] = useStickyState({}, 'sovi_heineken_priceRulerData');
             
             const rupturasReportRef = useRef(null);
             const validityReportRef = useRef(null);
             const priceRulerReportRef = useRef(null);
             const reportPage1Ref = useRef(null);
             const reportPage2Ref = useRef(null);
-
-            // AUDITORIA STATE
-            const [storeType, setStoreType] = useStickyState('hiper', 'sovi_heineken_storeType');
-            const [activeAuditoriaTab, setActiveAuditoriaTab] = useStickyState('presenca', 'sovi_heineken_activeAuditoriaTab');
-            const [auditoriaData, setAuditoriaData] = useStickyState({
-                presenca: {}, // { "Heineken Lata": { gondola: true, gelada: false } }
-                posicionamentoChecklist: {},
-                visibilidade: {
-                    totalPes: '',
-                    peCraft: '',
-                    pePremium: '',
-                    peMainstream: ''
-                },
-                precificacao: false
-            }, 'sovi_heineken_auditoriaData');
 
             const reportRef = useRef(null);
             const [isCapturing, setIsCapturing] = useState(false);
@@ -3760,16 +4075,21 @@ const PRICE_RULER_DATA_VAREJO = [
                 let totalHnk = 0;
                 let totalWorld = 0;
 
+                if (!allData) return { share: '0.0', hnk: 0, world: 0 };
+
                 Object.entries(allData).forEach(([key, data]) => {
                     if (key === 'nab' || key === 'rtd') return;
+                    if (!data) return;
 
                     const worldCm = parseFloat(data.world) || 0;
                     totalWorld += worldCm;
                     
                     const config = CATEGORIES[key];
-                    config.products.forEach(prod => {
-                        totalHnk += (parseFloat(data.products[prod]) || 0);
-                    });
+                    if (config && config.products && data.products) {
+                        config.products.forEach(prod => {
+                            totalHnk += (parseFloat(data.products[prod]) || 0);
+                        });
+                    }
                 });
 
                 const share = totalWorld > 0 ? ((totalHnk / totalWorld) * 100).toFixed(1) : '0.0';
@@ -3779,16 +4099,21 @@ const PRICE_RULER_DATA_VAREJO = [
             const globalData = calculateGlobalShare();
 
             const calculateAuditoriaScore = () => {
+                // 0. Safety Check
+                if (!auditoriaData) return { presenca: 0, posicionamento: 0, visibilidade: 0, precificacao: 0, total: 0 };
+
                 // 1. PRESENÇA
                 let scorePresenca = 0;
-                Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
-                    const productState = auditoriaData.presenca[product];
-                    if (productState) {
-                        const typeScores = scores[storeType] || { gondola: 0, gelada: 0 };
-                        if (productState.gondola) scorePresenca += typeScores.gondola;
-                        if (productState.gelada) scorePresenca += typeScores.gelada;
-                    }
-                });
+                if (auditoriaData.presenca) {
+                    Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
+                        const productState = auditoriaData.presenca[product];
+                        if (productState) {
+                            const typeScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                            if (productState.gondola) scorePresenca += typeScores.gondola;
+                            if (productState.gelada) scorePresenca += typeScores.gelada;
+                        }
+                    });
+                }
 
                 // 2. POSICIONAMENTO (SOVI)
                 let scorePosicionamento = 0;
@@ -3796,8 +4121,13 @@ const PRICE_RULER_DATA_VAREJO = [
                 // Helper to calculate share for a category
                 const getCatShare = (catKey) => {
                     const catData = allData[catKey];
+                    if (!catData || !catData.products) return 0;
+
                     const worldCm = parseFloat(catData.world) || 0;
                     const config = CATEGORIES[catKey];
+                    
+                    if (!config) return 0;
+                    
                     let catTotalHnk = 0;
                     config.products.forEach(prod => {
                         catTotalHnk += (parseFloat(catData.products[prod]) || 0);
@@ -3815,17 +4145,19 @@ const PRICE_RULER_DATA_VAREJO = [
                 if (getCatShare('mainstream') >= 25) scorePosicionamento += 8;
                 
                 // Checklist Score
-                POSICIONAMENTO_CHECKLIST.forEach(item => {
-                    if (auditoriaData.posicionamentoChecklist?.[item.id]) {
-                        scorePosicionamento += item.points;
-                    }
-                });
+                if (auditoriaData.posicionamentoChecklist) {
+                    POSICIONAMENTO_CHECKLIST.forEach(item => {
+                        if (auditoriaData.posicionamentoChecklist[item.id]) {
+                            scorePosicionamento += item.points;
+                        }
+                    });
+                }
 
                 // 3. VISIBILIDADE
                 let scoreVisibilidade = 0;
-                const { totalPes, peCraft, pePremium, peMainstream } = auditoriaData.visibilidade;
+                const { totalPes, peCraft, pePremium, peMainstream } = auditoriaData.visibilidade || {};
                 
-                if (totalPes !== '') {
+                if (totalPes !== '' && totalPes !== undefined) {
                     const totalPesVal = parseInt(totalPes);
 
                     // Determine targets based on Total Feet Range
@@ -4081,24 +4413,517 @@ const PRICE_RULER_DATA_VAREJO = [
             
             const activePriceRulerData = storeType === 'cc' ? PRICE_RULER_DATA_CC : PRICE_RULER_DATA_VAREJO;
 
+            const handleCopyRupturasList = async () => {
+                const rupturas = [];
+                const baixoVolume = [];
+                
+                VALIDITY_DATA_LIST.forEach(item => {
+                    const key = `${item.brand} ${item.sku}`;
+                    const status = rupturasData[key];
+
+                    if (status === 'ruptura') {
+                        rupturas.push(item);
+                    } else if (status === 'baixo_volume') {
+                        baixoVolume.push(item);
+                    }
+                });
+
+                if (rupturas.length === 0 && baixoVolume.length === 0) {
+                    alert("Nenhuma item marcado como ruptura ou baixo volume.");
+                    return;
+                }
+
+                // Calculate Total Lost Points
+                let totalLostPoints = 0;
+                const processedGroups = new Set();
+
+                // Check all items marked as 'ruptura' to find affected groups
+                rupturas.forEach(item => {
+                    const key = `${item.brand} ${item.sku}`;
+                    const scoreGroup = getScoreGroup(key);
+
+                    if (scoreGroup && !processedGroups.has(scoreGroup)) {
+                        // Check if ALL items in this group are missing (ruptura or n_cadastrado)
+                        const groupSkus = VALIDITY_DATA_LIST.filter(i => getScoreGroup(`${i.brand} ${i.sku}`) === scoreGroup);
+                        
+                        // Check if there is ANY available item in the group (not rupture AND not n_cadastrado)
+                        const anyAvailable = groupSkus.some(i => {
+                            const p = `${i.brand} ${i.sku}`;
+                            const s = rupturasData[p];
+                            return s !== 'ruptura' && s !== 'n_cadastrado';
+                        });
+                        
+                        // If NO item is available, the points are lost
+                        if (!anyAvailable) {
+                            const scores = SCORES_PRESENCA[scoreGroup][storeType] || { gondola: 0, gelada: 0 };
+                            totalLostPoints += (scores.gondola + scores.gelada);
+                            processedGroups.add(scoreGroup);
+                        }
+                    }
+                });
+
+                const groupByBrand = (items) => {
+                    return items.reduce((acc, item) => {
+                        let brandGroup = item.brand.split(' ')[0];
+                        if (item.brand.includes('AMSTEL')) brandGroup = 'Amstel';
+                        if (item.brand.includes('HEINEKEN')) brandGroup = 'Heineken';
+                        if (item.brand.includes('EISENBAHN')) brandGroup = 'Eisenbahn';
+                        if (item.brand.includes('BADEN')) brandGroup = 'Baden Baden';
+                        if (item.brand.includes('SOL')) brandGroup = 'Sol';
+                        if (item.brand.includes('LAGUNITAS')) brandGroup = 'Lagunitas';
+                        if (item.brand.includes('BLUE MOON')) brandGroup = 'Blue Moon';
+                        if (item.brand.includes('DEVASSA')) brandGroup = 'Devassa';
+                        if (item.brand.includes('TIGER')) brandGroup = 'Tiger';
+                        if (item.brand.includes('SCHIN')) brandGroup = 'Schin';
+                        if (item.brand.includes('KAISER')) brandGroup = 'Kaiser';
+                        if (item.brand.includes('BAVARIA')) brandGroup = 'Bavaria';
+                        if (item.brand.includes('GLACIAL')) brandGroup = 'Glacial';
+                        if (item.brand.includes('ITUBAINA')) brandGroup = 'Itubaina';
+                        if (item.brand.includes('SKINKA')) brandGroup = 'Skinka';
+                        if (item.brand.includes('CLASHD')) brandGroup = "Clash'd";
+                        if (item.brand.includes('FYS')) brandGroup = 'Fys';
+
+                        if (!acc[brandGroup]) acc[brandGroup] = [];
+                        acc[brandGroup].push(item);
+                        return acc;
+                    }, {});
+                };
+
+                const groupedRupturas = groupByBrand(rupturas);
+                const groupedBaixoVolume = groupByBrand(baixoVolume);
+
+                let text = '';
+
+                // --- SEÇÃO RUPTURAS ---
+                if (rupturas.length > 0) {
+                    text += `🔴 Itens em Ruptura ${storeName || ''} (${rupturas.length} itens)\n`;
+                    text += `Produtos faltando (Ruptura).\n`;
+                    
+                    if (totalLostPoints > 0) {
+                        text += `Pontos perdidos por ausência de item obrigatório: ${totalLostPoints} pts\n`;
+                    }
+                    text += '\n'; // Extra spacing
+
+                    Object.keys(groupedRupturas).forEach(brand => {
+                        text += `${brand}\n`;
+                        groupedRupturas[brand].forEach(item => {
+                            let displayName = `${item.brand} ${item.sku}`;
+                            const brandUpper = brand.toUpperCase();
+                            displayName = displayName.replace(brandUpper, '').trim();
+                            if (!displayName) displayName = item.sku;
+                            displayName = displayName.replace(/\s+/g, ' ');
+
+                            text += ` · ${displayName}\n`;
+                        });
+                    });
+                     text += '\n';
+                }
+
+                // --- SEÇÃO BAIXO VOLUME ---
+                if (baixoVolume.length > 0) {
+                    text += `🟡 Baixo Volume (${baixoVolume.length} itens)\n`;
+                    text += `Produtos com estoque crítico.\n`;
+
+                    Object.keys(groupedBaixoVolume).forEach(brand => {
+                        text += `${brand}\n`;
+                        groupedBaixoVolume[brand].forEach(item => {
+                            let displayName = `${item.brand} ${item.sku}`;
+                            const brandUpper = brand.toUpperCase();
+                            displayName = displayName.replace(brandUpper, '').trim();
+                            if (!displayName) displayName = item.sku;
+                            displayName = displayName.replace(/\s+/g, ' ');
+
+                            text += ` · ${displayName}\n`;
+                        });
+                    });
+                }
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert("Lista copiada com sucesso!");
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    alert("Erro ao copiar.");
+                }
+            };
+
+            const handleCopyValidityList = async () => {
+                const criticos = []; // Red: < 30 days
+                const atencao = [];  // Orange: 30-45 days
+
+                VALIDITY_DATA_LIST.forEach(item => {
+                    const key = `${item.brand} - ${item.sku}`;
+                    const productData = validityData[key] || {};
+                    const expirationDate = productData.date;
+                    const quantity = productData.quantity || '0';
+                    
+                    if (expirationDate) {
+                        const daysRemaining = Math.ceil((new Date(expirationDate) - new Date()) / (1000 * 60 * 60 * 24));
+                        
+                        const itemWithDate = { ...item, daysRemaining, expirationDate, quantity };
+
+                        if (daysRemaining < 30) {
+                            criticos.push(itemWithDate);
+                        } else if (daysRemaining <= 45) {
+                            atencao.push(itemWithDate);
+                        }
+                    }
+                });
+
+                if (criticos.length === 0 && atencao.length === 0) {
+                    alert("Nenhum item com validade crítica (< 30 dias) ou próxima (30-45 dias).");
+                    return;
+                }
+
+                const groupByBrand = (items) => {
+                    return items.reduce((acc, item) => {
+                        let brandGroup = item.brand.split(' ')[0];
+                        if (item.brand.includes('AMSTEL')) brandGroup = 'Amstel';
+                        if (item.brand.includes('HEINEKEN')) brandGroup = 'Heineken';
+                        if (item.brand.includes('EISENBAHN')) brandGroup = 'Eisenbahn';
+                        if (item.brand.includes('BADEN')) brandGroup = 'Baden Baden';
+                        if (item.brand.includes('SOL')) brandGroup = 'Sol';
+                        if (item.brand.includes('LAGUNITAS')) brandGroup = 'Lagunitas';
+                        if (item.brand.includes('BLUE MOON')) brandGroup = 'Blue Moon';
+                        if (item.brand.includes('DEVASSA')) brandGroup = 'Devassa';
+                        if (item.brand.includes('TIGER')) brandGroup = 'Tiger';
+                        if (item.brand.includes('SCHIN')) brandGroup = 'Schin';
+                        if (item.brand.includes('KAISER')) brandGroup = 'Kaiser';
+                        if (item.brand.includes('BAVARIA')) brandGroup = 'Bavaria';
+                        if (item.brand.includes('GLACIAL')) brandGroup = 'Glacial';
+                        if (item.brand.includes('ITUBAINA')) brandGroup = 'Itubaina';
+                        if (item.brand.includes('SKINKA')) brandGroup = 'Skinka';
+                        if (item.brand.includes('CLASHD')) brandGroup = "Clash'd";
+                        if (item.brand.includes('FYS')) brandGroup = 'Fys';
+
+                        if (!acc[brandGroup]) acc[brandGroup] = [];
+                        acc[brandGroup].push(item);
+                        return acc;
+                    }, {});
+                };
+
+                const groupedCriticos = groupByBrand(criticos);
+                const groupedAtencao = groupByBrand(atencao);
+
+                let text = `⚠️ Controle de Validade ${storeName || ''}\n\n`;
+
+                if (criticos.length > 0) {
+                    text += `🔴 Vencimento Crítico (< 30 dias) (${criticos.length} itens)\n`;
+                    Object.keys(groupedCriticos).forEach(brand => {
+                        text += `${brand}\n`;
+                        groupedCriticos[brand].forEach(item => {
+                            let displayName = `${item.brand} ${item.sku}`;
+                            const brandUpper = brand.toUpperCase();
+                            displayName = displayName.replace(brandUpper, '').trim();
+                            if (!displayName) displayName = item.sku;
+                            displayName = displayName.replace(/\s+/g, ' ');
+                            
+                            const dateStr = new Date(item.expirationDate).toLocaleDateString('pt-BR');
+                            text += ` · ${displayName} (Qtd: ${item.quantity} UN.) - Venc: ${dateStr} (${item.daysRemaining} dias)\n`;
+                        });
+                    });
+                    text += '\n';
+                }
+
+                if (atencao.length > 0) {
+                    text += `🟡 Validade Próxima (30-45 dias) (${atencao.length} itens)\n`;
+                    Object.keys(groupedAtencao).forEach(brand => {
+                        text += `${brand}\n`;
+                        groupedAtencao[brand].forEach(item => {
+                            let displayName = `${item.brand} ${item.sku}`;
+                            const brandUpper = brand.toUpperCase();
+                            displayName = displayName.replace(brandUpper, '').trim();
+                            if (!displayName) displayName = item.sku;
+                            displayName = displayName.replace(/\s+/g, ' ');
+
+                            const dateStr = new Date(item.expirationDate).toLocaleDateString('pt-BR');
+                            text += ` · ${displayName} (Qtd: ${item.quantity} UN.) - Venc: ${dateStr} (${item.daysRemaining} dias)\n`;
+                        });
+                    });
+                }
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert("Lista de validade copiada com sucesso!");
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    alert("Erro ao copiar.");
+                }
+            };
+
+            const handleCopyPriceRulerList = async () => {
+                const discrepancies = [];
+                
+                activePriceRulerData.forEach(item => {
+                    const key = `${item.brand} - ${item.sku}`;
+                    const entry = priceRulerData[key] || {};
+                    const priceStore = entry.price;
+                    const pricePromo = entry.promo;
+
+                    if (!priceStore && !pricePromo) return;
+
+                    let hasDiscrepancy = false;
+                    let discrepancyType = [];
+
+                    if (priceStore && parseFloat(priceStore) !== item.price) {
+                        hasDiscrepancy = true;
+                        discrepancyType.push('Reg');
+                    }
+                    if (pricePromo && parseFloat(pricePromo) !== item.promo) {
+                        hasDiscrepancy = true;
+                        discrepancyType.push('Promo');
+                    }
+
+                    if (hasDiscrepancy) {
+                        discrepancies.push({
+                            ...item,
+                            priceStore,
+                            pricePromo,
+                            discrepancyType
+                        });
+                    }
+                });
+
+                if (discrepancies.length === 0) {
+                    alert("Nenhuma divergência encontrada para copiar.");
+                    return;
+                }
+
+                const grouped = discrepancies.reduce((acc, item) => {
+                    let brandGroup = item.brand.split(' ')[0];
+                    if (item.brand.includes('AMSTEL')) brandGroup = 'Amstel';
+                    if (item.brand.includes('HEINEKEN')) brandGroup = 'Heineken';
+                    if (item.brand.includes('EISENBAHN')) brandGroup = 'Eisenbahn';
+                    if (item.brand.includes('BADEN')) brandGroup = 'Baden Baden';
+                    if (item.brand.includes('SOL')) brandGroup = 'Sol';
+                    if (item.brand.includes('LAGUNITAS')) brandGroup = 'Lagunitas';
+                    if (item.brand.includes('BLUE MOON')) brandGroup = 'Blue Moon';
+                    if (item.brand.includes('DEVASSA')) brandGroup = 'Devassa';
+                    if (item.brand.includes('TIGER')) brandGroup = 'Tiger';
+                    if (item.brand.includes('SCHIN')) brandGroup = 'Schin';
+                    if (item.brand.includes('KAISER')) brandGroup = 'Kaiser';
+                    if (item.brand.includes('BAVARIA')) brandGroup = 'Bavaria';
+                    if (item.brand.includes('GLACIAL')) brandGroup = 'Glacial';
+                    if (item.brand.includes('ITUBAINA')) brandGroup = 'Itubaina';
+                    if (item.brand.includes('SKINKA')) brandGroup = 'Skinka';
+                    if (item.brand.includes('CLASHD')) brandGroup = "Clash'd";
+                    if (item.brand.includes('FYS')) brandGroup = 'Fys';
+
+                    if (!acc[brandGroup]) acc[brandGroup] = [];
+                    acc[brandGroup].push(item);
+                    return acc;
+                }, {});
+
+                let text = `⚠️ Loja: ${storeName || 'Loja sem nome'}\n\n$ Itens Fora da Régua (Divergência de Preço)\nComparativo entre o preço sugerido (Régua) e o preço praticado na loja.\n\n`;
+
+                Object.keys(grouped).forEach(brand => {
+                    text += `${brand}\n`;
+                    grouped[brand].forEach(item => {
+                        let displayName = `${item.brand} ${item.sku}`;
+                        const brandUpper = brand.toUpperCase();
+                        displayName = displayName.replace(brandUpper, '').trim();
+                        if (!displayName) displayName = item.sku;
+                        displayName = displayName.replace(/\s+/g, ' ');
+
+                        const formatPrice = (p) => p ? `R$ ${parseFloat(p).toFixed(2).replace('.', ',')}` : '-';
+
+                        if (item.discrepancyType.includes('Reg')) {
+                            // · [SKU]: Preço Loja R$ [Value] (Régua R$ [Value]) — Status: Fora da Régua
+                            text += `· ${displayName}: Preço Loja ${formatPrice(item.priceStore)} (Régua ${formatPrice(item.price)}) — Status: Fora da Régua\n`;
+                        }
+                        if (item.discrepancyType.includes('Promo')) {
+                            // · [SKU]: Preço Loja Promo R$ [Value] (Régua Promo R$ [Value]) — Status: Fora da Régua (Promo)
+                            text += `· ${displayName}: Preço Loja Promo ${formatPrice(item.pricePromo)} (Régua Promo ${formatPrice(item.promo)}) — Status: Fora da Régua (Promo)\n`;
+                        }
+                    });
+                    text += '\n'; 
+                });
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert("Lista de divergências copiada para a área de transferência!");
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    alert("Erro ao copiar. Permissão negada?");
+                }
+            };
+
+            const handleCopySimulatorList = async () => {
+                const getCatShare = (catKey) => {
+                    const catData = allData[catKey];
+                    if (!catData) return 0;
+
+                    const worldCm = parseFloat(catData.world) || 0;
+                    const config = CATEGORIES[catKey];
+
+                    if (!config) return 0;
+                    
+                    let catTotalHnk = 0;
+                    config.products.forEach(prod => {
+                        catTotalHnk += (parseFloat(catData.products[prod]) || 0);
+                    });
+                    return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+                };
+
+                const sharePremium = getCatShare('premium');
+                const shareCraft = getCatShare('craft');
+                const shareMainstream = getCatShare('mainstream');
+
+                let checklistScore = 0;
+                POSICIONAMENTO_CHECKLIST.forEach(item => {
+                    if (auditoriaData.posicionamentoChecklist[item.id]) checklistScore += item.points;
+                });
+
+                let text = `📊 Simulador FDS - ${storeName || 'Loja'}\n`;
+                text += `👤 Colaborador: ${fds || '-'}\n`;
+                text += `🏪 Tipo: ${storeType.toUpperCase()}\n\n`;
+
+                text += `⭐ Placar Geral: ${auditoriaScore.total}/100\n`;
+                text += `(Presença: ${auditoriaScore.presenca}, Posic: ${auditoriaScore.posicionamento}, Promo: ${auditoriaScore.visibilidade}, Preço: ${auditoriaScore.precificacao})\n\n`;
+
+                text += `✅ Presença\n`;
+                Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
+                    const productState = auditoriaData.presenca[product] || { gondola: false, gelada: false };
+                    const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                    
+                    if (productState.gondola || productState.gelada) {
+                        let line = `· ${product}: `;
+                        const parts = [];
+                        if (productState.gondola) parts.push(`[Gôndola +${currentScores.gondola} pts]`);
+                        if (productState.gelada) parts.push(`[Gelada +${currentScores.gelada} pts]`);
+                        line += parts.join(' ') + '\n';
+                        text += line;
+                    }
+                });
+                text += `\n`;
+
+                text += `📏 Posicionamento\n`;
+                const premiumPts = auditoriaScore.posicionamentoScoreParts?.premium || 0;
+                const craftPts = auditoriaScore.posicionamentoScoreParts?.craft || 0;
+                const mainstreamPts = auditoriaScore.posicionamentoScoreParts?.mainstream || 0;
+
+                text += `· Premium: ${premiumPts} pontos ${premiumPts > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${sharePremium.toFixed(1)}% / Meta 57%)\n`;
+                 // List filled items for Premium
+                 CATEGORIES['premium'].products.forEach(prod => {
+                    const val = parseFloat(allData['premium'].products[prod]);
+                    if (val > 0) {
+                        const worldCm = parseFloat(allData['premium'].world) || 1;
+                        const share = ((val / worldCm) * 100).toFixed(1);
+                        text += `  - ${prod}: ${val}cm (${share}%)\n`;
+                    }
+                });
+
+                text += `· Craft: ${craftPts} pontos ${craftPts > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareCraft.toFixed(1)}% / Meta 53%)\n`;
+                // List filled items for Craft
+                CATEGORIES['craft'].products.forEach(prod => {
+                    const val = parseFloat(allData['craft'].products[prod]);
+                    if (val > 0) {
+                        const worldCm = parseFloat(allData['craft'].world) || 1;
+                        const share = ((val / worldCm) * 100).toFixed(1);
+                        text += `  - ${prod}: ${val}cm (${share}%)\n`;
+                    }
+                });
+
+                text += `· Mainstream: ${mainstreamPts} pontos ${mainstreamPts > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareMainstream.toFixed(1)}% / Meta 25%)\n`;
+                // List filled items for Mainstream
+                CATEGORIES['mainstream'].products.forEach(prod => {
+                    const val = parseFloat(allData['mainstream'].products[prod]);
+                    if (val > 0) {
+                        const worldCm = parseFloat(allData['mainstream'].world) || 1;
+                        const share = ((val / worldCm) * 100).toFixed(1);
+                        text += `  - ${prod}: ${val}cm (${share}%)\n`;
+                    }
+                });
+                
+                text += `· Checklist: ${checklistScore} pontos obtidos no checklist\n`;
+                text += `· Share Total: ${globalData.share}%\n\n`;
+
+                text += `👁️ Visibilidade\n`;
+                const visPts = auditoriaData.visibilidadeScores || {}; // Assuming we can calculate or get these
+                // Recalculating visibility points for display if not stored directly
+                // Logic based on TabVisibilidade: Craft=6, Premium=8, Mainstream=6
+                // We need to know IF they met the target.
+                // Re-implementing target logic for display context would be safer
+                const totalPes = parseInt(auditoriaData.visibilidade.totalPes) || 0;
+                let tPremium = 0, tCraft = 0, tMainstream = 0;
+                if(totalPes <= 5) { tPremium=1; tMainstream=1; }
+                else if(totalPes <= 10) { tCraft=1; tPremium=2; tMainstream=1; }
+                else if(totalPes <= 15) { tCraft=1; tPremium=3; tMainstream=2; }
+                else if(totalPes <= 20) { tCraft=1; tPremium=5; tMainstream=2; }
+                else { tCraft=1; tPremium=6; tMainstream=3; }
+                
+                const gotCraft = (parseInt(auditoriaData.visibilidade.peCraft)||0) >= tCraft ? 6 : 0;
+                const gotPremium = (parseInt(auditoriaData.visibilidade.pePremium)||0) >= tPremium ? 8 : 0;
+                const gotMainstream = (parseInt(auditoriaData.visibilidade.peMainstream)||0) >= tMainstream ? 6 : 0;
+
+                text += `· Total Pés: ${totalPes}\n`;
+                text += `· Craft: ${gotCraft} pontos ${gotCraft > 0 ? 'por bater a meta' : 'meta não atingida'} (${auditoriaData.visibilidade.peCraft || 0} PE / Meta ${tCraft})\n`;
+                text += `· Premium: ${gotPremium} pontos ${gotPremium > 0 ? 'por bater a meta' : 'meta não atingida'} (${auditoriaData.visibilidade.pePremium || 0} PE / Meta ${tPremium})\n`;
+                text += `· Mainstream: ${gotMainstream} pontos ${gotMainstream > 0 ? 'por bater a meta' : 'meta não atingida'} (${auditoriaData.visibilidade.peMainstream || 0} PE / Meta ${tMainstream})\n\n`;
+
+                text += `💲 Precificação\n`;
+                text += `· ${auditoriaData.precificacao ? '5 pontos por precificação correta' : '0 pontos (precificação incorreta)'}`;
+
+                try {
+                    await navigator.clipboard.writeText(text);
+                    alert("Resumo do Simulador copiado com sucesso!");
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                    alert("Erro ao copiar.");
+                }
+            };
+
+            if (!isRegistered) {
+                return (
+                    <RegistrationView 
+                        storeName={storeName} 
+                        setStoreName={setStoreName}
+                        fds={fds} 
+                        setFds={setFds}
+                        storeType={storeType} 
+                        setStoreType={setStoreType}
+                        onComplete={(e) => {
+                            if (e) e.preventDefault();
+                            setIsRegistered(true);
+                        }}
+                        onInstall={handleInstallClick}
+                    />
+                );
+            }
+
             return (
                 <div className="max-w-md mx-auto bg-gray-50 min-h-screen shadow-2xl relative pb-20 font-sans text-gray-800">
-                    <header className="sticky top-0 w-full bg-[#008200] text-white p-4 shadow-lg z-50">
-                        <div className="flex justify-between items-center">
+                    <header className="sticky top-0 w-full bg-[#008200]/95 backdrop-blur-md text-white px-4 py-3 shadow-lg z-50">
+                        <div className="flex justify-between items-center max-w-md mx-auto">
                             <div className="flex items-center gap-2">
-                                <Star className="fill-current text-red-500" />
-                                <h1 className="text-xl font-bold tracking-tighter">SIMULADOR DE FDS</h1>
+                                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center shadow-inner">
+                                    <Star className="fill-current text-white" size={16} />
+                                </div>
                             </div>
-                            <div className="flex gap-2">
-                                    <button onClick={handleInstallClick} className="bg-white/20 hover:bg-white/30 text-white px-3 py-1 rounded-full text-xs font-bold transition-colors flex items-center gap-1">
-                                        <Download size={16} />
-                                        Instalar
-                                    </button>
-                                <button onClick={() => setShowCreditsModal(true)} className="text-white/80 hover:text-white transition-colors">
-                                    <Info size={20} />
+                            
+                            <div className="flex bg-black/20 rounded-full p-1 backdrop-blur-sm border border-white/10 shadow-inner">
+                                <button 
+                                    onClick={() => setIsRegistered(false)} 
+                                    className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-95" 
+                                    title="Sair / Alterar Loja"
+                                >
+                                    <LogOut size={16} />
                                 </button>
-                                <button onClick={handleReset} className="text-white/80 hover:text-white transition-colors">
-                                    <RefreshCw size={20} />
+                                <div className="w-px bg-white/20 mx-0.5 my-1.5"></div>
+                                <button 
+                                    onClick={() => setShowCreditsModal(true)} 
+                                    className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-95" 
+                                    title="Sobre"
+                                >
+                                    <Info size={16} />
+                                </button>
+                                <div className="w-px bg-white/20 mx-0.5 my-1.5"></div>
+                                <button 
+                                    onClick={handleReset} 
+                                    className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-95" 
+                                    title="Reiniciar"
+                                >
+                                    <RefreshCw size={16} />
                                 </button>
                             </div>
                         </div>
@@ -4214,6 +5039,8 @@ const PRICE_RULER_DATA_VAREJO = [
                         {/* Navigation Bar */}
                         {/* Enhanced Navigation Bar */}
                         {/* Enhanced Navigation Bar */}
+
+                        {/* Enhanced Navigation Bar */}
                         <div className="bg-white p-2 rounded-2xl shadow-lg border border-gray-100 mb-6 grid grid-cols-4 gap-2">
                             {[
                                 { id: 'simulador', label: 'Simulador', icon: LayoutGrid, color: 'bg-[#008200]', activeColor: 'ring-[#008200]' },
@@ -4239,37 +5066,7 @@ const PRICE_RULER_DATA_VAREJO = [
                             ))}
                         </div>
 
-                        {activeView !== 'treinamento' && (
-                            <>
-                                <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6">
-                                    <h2 className="text-sm font-bold text-gray-400 uppercase mb-3">Dados da Loja</h2>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 mb-1">NOME DA LOJA</label>
-                                            <input 
-                                                type="text" 
-                                                value={storeName}
-                                                onChange={(e) => setStoreName(e.target.value)}
-                                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#008200] transition-all"
-                                                placeholder="EX: Supermercado Pão de Mel"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs font-bold text-gray-500 mb-1">NOME DO COLABORADOR</label>
-                                            <input 
-                                                type="text" 
-                                                value={fds}
-                                                onChange={(e) => setFds(e.target.value)}
-                                                className="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-[#008200] transition-all"
-                                                placeholder="Ex: João Silva"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <StoreTypeSelector selected={storeType} onSelect={setStoreType} />
-                            </>
-                        )}
 
                         {/* Restored Simulador View */}
                         {activeView === 'simulador' && (
@@ -4279,20 +5076,20 @@ const PRICE_RULER_DATA_VAREJO = [
                                 <AuditoriaTabs 
                                     activeTab={activeAuditoriaTab} 
                                     onTabChange={setActiveAuditoriaTab}
-                                    presencaData={auditoriaData.presenca}
+                                    presencaData={auditoriaData?.presenca || {}}
                                     onPresencaChange={handleUpdateAuditoriaPresenca}
                                     storeType={storeType}
-                                    allData={allData}
+                                    allData={allData || {}}
                                     CATEGORIES={CATEGORIES}
                                     activeCategory={activeCategory}
                                     onSelectCategory={setActiveCategory}
                                     onUpdateWorld={handleUpdateWorld}
                                     onUpdateProduct={handleUpdateProduct}
-                                    checklistData={auditoriaData.posicionamentoChecklist || {}}
+                                    checklistData={auditoriaData?.posicionamentoChecklist || {}}
                                     onChecklistChange={handleUpdateAuditoriaPosicionamentoChecklist}
-                                    visibilidadeData={auditoriaData.visibilidade}
+                                    visibilidadeData={auditoriaData?.visibilidade || {}}
                                     onVisibilidadeChange={handleUpdateAuditoriaVisibilidade}
-                                    precificacaoData={auditoriaData.precificacao}
+                                    precificacaoData={auditoriaData?.precificacao || false}
                                     onPrecificacaoChange={handleUpdateAuditoriaPrecificacao}
                                     auditoriaScore={auditoriaScore}
                                 />
@@ -4304,9 +5101,16 @@ const PRICE_RULER_DATA_VAREJO = [
                                             <p className="text-3xl font-bold text-[#008200]">{globalData.share}%</p>
                                         </div>
                                         <div className="flex items-center gap-2 text-sm font-bold text-gray-500">
-                                            Baixe o seu relatório <ArrowRight size={16} />
+                                            Baixe ou Copie o Resumo <ArrowRight size={16} />
                                         </div>
                                         <div className="flex gap-2">
+                                            <button 
+                                                onClick={handleCopySimulatorList}
+                                                className="bg-gray-600 text-white px-4 py-2 rounded-lg font-bold shadow-lg active:scale-95 transition-all flex flex-col items-center justify-center"
+                                                title="Copiar Resumo"
+                                            >
+                                                <ClipboardCopy size={16} />
+                                            </button>
 
                                             <button 
                                                 onClick={handleDownloadPDF}
@@ -4328,6 +5132,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                 onChange={handleRupturasChange}
                                 onDownload={handleDownloadRupturasReport}
                                 onDownloadPNG={handleDownloadRupturasPNG}
+                                onCopyList={handleCopyRupturasList}
                             />
                         )}
 
@@ -4337,6 +5142,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                 onChange={handleValidityChange}
                                 onDownload={handleDownloadValidityReport}
                                 onDownloadPNG={handleDownloadValidityPNG}
+                                onCopyList={handleCopyValidityList}
                             />
                         )}
 
@@ -4347,6 +5153,7 @@ const PRICE_RULER_DATA_VAREJO = [
                                 onChange={handlePriceRulerChange}
                                 onDownload={handleDownloadPriceRulerReport}
                                 onDownloadPNG={handleDownloadPriceRulerPNG}
+                                onCopyList={handleCopyPriceRulerList}
                             />
                         )}
 
