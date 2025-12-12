@@ -290,6 +290,15 @@
             </IconBase>
         );
 
+        const Trash2 = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2-2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </IconBase>
+        );
+
         // --- TREINAMENTO CONSTANTS ---
          const COMPANY_DATA = {
           values: ["Respeito e Cuidado", "Paixão", "Diversão", "Coragem"],
@@ -2233,30 +2242,41 @@
             const isValid = storeName.trim().length > 0 && fds.trim().length > 0 && storeType;
 
             return (
-                <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-6 bg-[url('https://images.unsplash.com/photo-1577908953930-58c0378077c5?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center">
+                <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4 bg-[url('https://images.unsplash.com/photo-1577908953930-58c0378077c5?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center">
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
                     
-                    <div className="relative z-10 w-full max-w-sm flex flex-col gap-6 animate-in fade-in zoom-in duration-500">
+                    <div className="relative z-10 w-full max-w-sm flex flex-col gap-5 animate-in fade-in zoom-in duration-500">
+                        <button
+                            onClick={() => {
+                                setStoreName('');
+                                setFds('');
+                                setStoreType(null);
+                            }}
+                            className="absolute top-2 right-2 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 backdrop-blur-sm transition-all duration-300 hover:bg-red-900/30 hover:border-red-500/50 hover:text-red-400 hover:shadow-[0_0_15px_rgba(248,113,113,0.3)] hover:scale-110 z-50 group"
+                            title="Limpar dados"
+                        >
+                            <Trash2 size={24} className="transition-transform duration-300 group-hover:rotate-12" />
+                        </button>
                         {/* Logo Area */}
-                        <div className="text-center mb-8">
+                        <div className="text-center mb-2">
                             <div className="flex flex-col items-center justify-center">
-                                <Star className="w-12 h-12 text-white fill-current mb-2" />
+                                <Star className="w-12 h-12 text-white fill-current mb-0.5" />
 
                             </div>
-                            <p className="text-gray-300 text-sm mt-2 font-medium">Simulador de FDS</p>
+                            <p className="text-gray-300 text-sm mt-0.5 font-medium">Simulador de FDS</p>
                         </div>
 
                         {/* Input Fields */}
                         <div className="space-y-4">
-                            <div className="bg-amber-500/20 border border-amber-500/50 rounded-xl p-3 flex gap-3 items-start">
-                                <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={20} />
-                                <p className="text-amber-200 text-xs font-medium leading-relaxed">
+                            <div className="bg-amber-500/20 border border-amber-500/50 rounded-lg p-2.5 flex gap-2 items-start">
+                                <AlertTriangle className="text-amber-500 shrink-0 mt-0.5" size={18} />
+                                <p className="text-amber-200 text-xs font-medium leading-tight">
                                     <strong className="block text-amber-500 mb-0.5 font-bold uppercase">Atenção</strong>
                                     Preencha os dados corretamente, pois eles definem as metas e resultados da simulação.
                                 </p>
                             </div>
-                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 transition-all focus-within:bg-white/20 focus-within:border-white/40">
-                                <label className="block text-xs font-bold text-green-400 mb-1 uppercase tracking-wider">Nome da Loja</label>
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-3.5 transition-all focus-within:bg-white/20 focus-within:border-white/40">
+                                <label className="block text-xs font-bold text-green-400 mb-0.5 uppercase tracking-wider">Nome da Loja</label>
                                 <input 
                                     type="text" 
                                     value={storeName}
@@ -2266,8 +2286,8 @@
                                 />
                             </div>
 
-                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4 transition-all focus-within:bg-white/20 focus-within:border-white/40">
-                                <label className="block text-xs font-bold text-green-400 mb-1 uppercase tracking-wider">Nome do Colaborador</label>
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-3.5 transition-all focus-within:bg-white/20 focus-within:border-white/40">
+                                <label className="block text-xs font-bold text-green-400 mb-0.5 uppercase tracking-wider">Nome do Colaborador</label>
                                 <input 
                                     type="text" 
                                     value={fds}
@@ -2278,8 +2298,8 @@
                             </div>
 
                             {/* Custom Store Selector for Registration with Dark Theme */}
-                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-4">
-                                <label className="block text-xs font-bold text-green-400 mb-3 uppercase tracking-wider">Tipo de Loja</label>
+                            <div className="bg-white/10 backdrop-blur border border-white/20 rounded-xl p-3.5">
+                                <label className="block text-xs font-bold text-green-400 mb-2 uppercase tracking-wider">Tipo de Loja</label>
                                 <div className="grid grid-cols-4 gap-2">
                                     {[
                                         { id: 'hiper', label: 'Hiper' },
@@ -2290,7 +2310,7 @@
                                         <button
                                             key={type.id}
                                             onClick={() => setStoreType(type.id)}
-                                            className={`py-2 rounded-lg text-xs font-bold transition-all border ${
+                                            className={`py-2.5 rounded-lg text-xs font-bold transition-all border ${
                                                 storeType === type.id
                                                     ? 'bg-[#008200] text-white border-[#008200] shadow-[0_0_15px_rgba(0,130,0,0.5)]'
                                                     : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
@@ -2321,14 +2341,14 @@
                         <button 
                             type="button"
                             onClick={onInstall}
-                            className="w-full py-3 rounded-full font-bold text-sm uppercase tracking-wider text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                            className="w-full py-2.5 rounded-full font-bold text-sm uppercase tracking-wider text-white/70 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2"
                         >
-                            <Download size={20} />
+                            <Download size={18} />
                             Instalar App
                         </button>
 
-                        <div className="text-center mt-4">
-                            <p className="text-white/40 text-xs">Desenvolvido por Pedro Lameirão</p>
+                        <div className="text-center mt-1">
+                            <p className="text-white/40 text-[10px]">Desenvolvido por Pedro Lameirão</p>
                         </div>
                     </div>
                 </div>
