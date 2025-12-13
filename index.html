@@ -2041,7 +2041,7 @@
             </div>
         );
 
-        const AuditoriaScorecard = ({ scores, totalScore, activeTab, onCopyList, onDownloadPDF, isCapturing }) => {
+        const AuditoriaScorecard = ({ scores, totalScore, activeTab, activeCalculatorMode, onCopyList, onDownloadPDF, isCapturing }) => {
             let scoreColor = "text-red-500";
             let starColor = "text-red-500";
             
@@ -2072,7 +2072,7 @@
                                 </div>
                                 <div className="bg-gray-50 p-2 rounded border border-gray-100">
                                     <span className="block text-[10px] font-bold text-gray-400 uppercase">
-                                        Posic. {activeTab === 'ri' ? '(RI)' : activeTab === 'share' ? '(Manual)' : ''}
+                                        Posic. {activeCalculatorMode === 'ri' ? '(RI)' : '(Manual)'}
                                     </span>
                                     <span className="block text-lg font-bold text-gray-800">{scores.posicionamento}</span>
                                 </div>
@@ -2347,7 +2347,7 @@
 
         const TabPosicionamento = ({ 
             allData, riData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct, onUpdateRiWorld, onUpdateRiProduct,
-            activeSubTab, setActiveSubTab, // New Props
+            activeSubTab, setActiveSubTab, activeCalculatorMode, // New Prop
             checklistData, onChecklistChange, auditoriaScore,
             onCopyList, onDownloadPDF, isCapturing
         }) => {
@@ -2419,7 +2419,7 @@
             // If RI tab is active, use RI scores. IF Manual or Checklist, default to Manual?
             // User requested: "Cenário B (Usuário clica/usa Calculadora RI): Pontuação Final = Pontos do Checklist + Pontos da Calculadora RI"
             // This implies logic depends on activeSubTab.
-            if (activeSubTab === 'ri') {
+            if (activeCalculatorMode === 'ri') {
                 activeScorePremium = scoreRiPremium;
                 activeScoreCraft = scoreRiCraft;
                 activeScoreMainstream = scoreRiMainstream;
@@ -2443,7 +2443,7 @@
                             <div className={`p-3 rounded border ${activeScorePremium > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
                                 <span className="text-xs text-gray-500 block">Premium (Meta 57%)</span>
                                 <span className="font-bold text-lg">
-                                    {activeSubTab === 'ri' ? shareRiPremium.toFixed(1) : sharePremium.toFixed(1)}%
+                                    {activeCalculatorMode === 'ri' ? shareRiPremium.toFixed(1) : sharePremium.toFixed(1)}%
                                 </span>
                                 <span className={`text-xs font-bold block ${activeScorePremium > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
                                     +{activeScorePremium} pts
@@ -2452,7 +2452,7 @@
                             <div className={`p-3 rounded border ${activeScoreCraft > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
                                 <span className="text-xs text-gray-500 block">Craft (Meta 53%)</span>
                                 <span className="font-bold text-lg">
-                                    {activeSubTab === 'ri' ? shareRiCraft.toFixed(1) : shareCraft.toFixed(1)}%
+                                    {activeCalculatorMode === 'ri' ? shareRiCraft.toFixed(1) : shareCraft.toFixed(1)}%
                                 </span>
                                 <span className={`text-xs font-bold block ${activeScoreCraft > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
                                     +{activeScoreCraft} pts
@@ -2461,7 +2461,7 @@
                             <div className={`p-3 rounded border ${activeScoreMainstream > 0 ? 'bg-green-50 border-green-200' : 'bg-white border-gray-200'}`}>
                                 <span className="text-xs text-gray-500 block">Mainstream (Meta 25%)</span>
                                 <span className="font-bold text-lg">
-                                    {activeSubTab === 'ri' ? shareRiMainstream.toFixed(1) : shareMainstream.toFixed(1)}%
+                                    {activeCalculatorMode === 'ri' ? shareRiMainstream.toFixed(1) : shareMainstream.toFixed(1)}%
                                 </span>
                                 <span className={`text-xs font-bold block ${activeScoreMainstream > 0 ? 'text-[#008200]' : 'text-gray-400'}`}>
                                     +{activeScoreMainstream} pts
@@ -3067,7 +3067,7 @@
             activeTab, onTabChange, 
             presencaData, onPresencaChange, storeType,
             allData, riData, CATEGORIES, activeCategory, onSelectCategory, onUpdateWorld, onUpdateProduct, onUpdateRiWorld, onUpdateRiProduct,
-            activePosicionamentoTab, setActivePosicionamentoTab, // New Props
+            activePosicionamentoTab, setActivePosicionamentoTab, activeCalculatorMode, // New Prop
             checklistData, onChecklistChange,
             visibilidadeData, onVisibilidadeChange,
             precificacaoData, onPrecificacaoChange,
@@ -3124,6 +3124,7 @@
                                 onUpdateRiProduct={onUpdateRiProduct}
                                 activeSubTab={activePosicionamentoTab}
                                 setActiveSubTab={setActivePosicionamentoTab}
+                                activeCalculatorMode={activeCalculatorMode}
                                 checklistData={checklistData}
                                 onChecklistChange={onChecklistChange}
                                 auditoriaScore={auditoriaScore}
@@ -4826,6 +4827,16 @@ const PRICE_RULER_DATA_VAREJO = [
             // --- AUDITORIA STATE ---
             const [activeAuditoriaTab, setActiveAuditoriaTab] = useStickyState('presenca', 'sovi_heineken_activeAuditoriaTab');
             const [activePosicionamentoTab, setActivePosicionamentoTab] = useStickyState('checklist', 'sovi_heineken_activePosicionamentoTab');
+            const [activeCalculatorMode, setActiveCalculatorMode] = useStickyState('manual', 'sovi_heineken_activeCalculatorMode'); // New State
+
+            const handlePosicionamentoTabChange = (tab) => {
+                setActivePosicionamentoTab(tab);
+                if (tab === 'share' || tab === 'ri') {
+                     // Set to 'manual' if 'share' is selected, else 'ri'
+                    setActiveCalculatorMode(tab === 'share' ? 'manual' : 'ri');
+                }
+            };
+
             const [auditoriaData, setAuditoriaData] = useStickyState({
                 presenca: {}, 
                 posicionamentoChecklist: {},
@@ -5087,7 +5098,7 @@ const PRICE_RULER_DATA_VAREJO = [
                 const getCatShare = (catKey) => {
                     // Decide which data source to use based on active tab
                     // If in RI tab, use RI data. Otherwise (Checklist/Manual), use Manual data.
-                    const dataSource = activePosicionamentoTab === 'ri' ? riData : allData;
+                    const dataSource = activeCalculatorMode === 'ri' ? riData : allData;
                     const catData = dataSource[catKey];
 
                     if (!catData || !catData.products) return 0;
@@ -5098,7 +5109,7 @@ const PRICE_RULER_DATA_VAREJO = [
                     if (!config) return 0;
                     
                     let catTotalHnk = 0;
-                    if (activePosicionamentoTab === 'ri') {
+                    if (activeCalculatorMode === 'ri') {
                          config.products.forEach(brand => {
                             const skus = RI_SKU_MAPPING[brand] || [];
                             skus.forEach(sku => {
@@ -5734,12 +5745,12 @@ const PRICE_RULER_DATA_VAREJO = [
             };
 
             const handleCopySimulatorList = async () => {
-                const calculatorName = activePosicionamentoTab === 'ri' ? 'Calculadora RI' : 'Calculadora Manual';
+                const calculatorName = activeCalculatorMode === 'ri' ? 'Calculadora RI' : 'Calculadora Manual';
                 if (!window.confirm(`Você está prestes a copiar o resumo usando a ${calculatorName}. Deseja continuar?`)) {
                     return;
                 }
 
-                const dataSource = activePosicionamentoTab === 'ri' ? riData : allData;
+                const dataSource = activeCalculatorMode === 'ri' ? riData : allData;
 
                 const getCatShare = (catKey) => {
                     const catData = dataSource[catKey];
@@ -5751,7 +5762,7 @@ const PRICE_RULER_DATA_VAREJO = [
                     
                     let catTotalHnk = 0;
                     
-                    if (activePosicionamentoTab === 'ri') {
+                    if (activeCalculatorMode === 'ri') {
                          // RI Mode: Sum from SKUs via Brand Mapping
                         if (config.products) {
                             config.products.forEach(brand => {
@@ -5785,7 +5796,7 @@ const PRICE_RULER_DATA_VAREJO = [
                 }
 
                 // Header
-                let text = `📊 Simulador FDS - ${storeName || 'Loja'} ${activePosicionamentoTab === 'ri' ? '(Calculadora RI)' : '(Calculadora Manual)'}\n`;
+                let text = `📊 Simulador FDS - ${storeName || 'Loja'} ${activeCalculatorMode === 'ri' ? '(Calculadora RI)' : '(Calculadora Manual)'}\n`;
                 text += `👤 Colaborador: ${fds || '-'}\n`;
                 text += `🏪 Tipo: ${storeType ? storeType.toUpperCase() : '-'}\n\n`;
 
@@ -5826,7 +5837,7 @@ const PRICE_RULER_DATA_VAREJO = [
                 text += `· Premium: ${ptsPremium} pontos ${ptsPremium > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${sharePremium.toFixed(1)}% / Meta 57%)\n`;
                 // List filled items for Premium
                 // List filled items for Premium
-                if (activePosicionamentoTab === 'ri') {
+                if (activeCalculatorMode === 'ri') {
                      CATEGORIES['premium'].products.forEach(brand => {
                         let brandHasValue = false;
                         const skus = RI_SKU_MAPPING[brand] || [];
@@ -5860,7 +5871,7 @@ const PRICE_RULER_DATA_VAREJO = [
 
                 text += `· Craft: ${ptsCraft} pontos ${ptsCraft > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareCraft.toFixed(1)}% / Meta 53%)\n`;
                 // List filled items for Craft
-                if (activePosicionamentoTab === 'ri') {
+                if (activeCalculatorMode === 'ri') {
                      CATEGORIES['craft'].products.forEach(brand => {
                         let brandHasValue = false;
                         const skus = RI_SKU_MAPPING[brand] || [];
@@ -5894,7 +5905,7 @@ const PRICE_RULER_DATA_VAREJO = [
 
                 text += `· Mainstream: ${ptsMainstream} pontos ${ptsMainstream > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareMainstream.toFixed(1)}% / Meta 25%)\n`;
                 // List filled items for Mainstream
-                if (activePosicionamentoTab === 'ri') {
+                if (activeCalculatorMode === 'ri') {
                      CATEGORIES['mainstream'].products.forEach(brand => {
                         let brandHasValue = false;
                         const skus = RI_SKU_MAPPING[brand] || [];
@@ -5992,23 +6003,24 @@ const PRICE_RULER_DATA_VAREJO = [
                             </div>
                             
                             {/* Mode Toggle Button */}
+                            {/* Mode Toggle Button */}
                             <button
                                 onClick={() => {
-                                    const newMode = activePosicionamentoTab === 'share' ? 'ri' : 'share';
-                                    setActivePosicionamentoTab(newMode);
+                                    const newMode = activeCalculatorMode === 'manual' ? 'ri' : 'share';
+                                    handlePosicionamentoTabChange(newMode);
                                     if (activeAuditoriaTab !== 'posicionamento') {
                                         setActiveAuditoriaTab('posicionamento');
                                     }
                                 }}
                                 className={`
                                     px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transform transition-all duration-300 active:scale-95
-                                    ${activePosicionamentoTab === 'share' 
+                                    ${activeCalculatorMode === 'manual' 
                                         ? 'bg-white text-[#008200] ring-2 ring-[#006000]/20' 
                                         : 'bg-blue-600 text-white ring-2 ring-blue-400/50'
                                     }
                                 `}
                             >
-                                {activePosicionamentoTab === 'share' ? 'Manual' : 'RI'}
+                                {activeCalculatorMode === 'manual' ? 'Manual' : 'RI'}
                             </button>
                             
                             <div className="flex bg-black/20 rounded-full p-1 backdrop-blur-sm border border-white/10 shadow-inner">
@@ -6185,9 +6197,11 @@ const PRICE_RULER_DATA_VAREJO = [
                                 scores={auditoriaScore} 
                                 totalScore={auditoriaScore.total}
                                 activeTab={activePosicionamentoTab}
+                                activeCalculatorMode={activeCalculatorMode}
                                 onCopyList={handleCopySimulatorList}
                                 onDownloadPDF={handleDownloadPDF}
                                 isCapturing={isCapturing}
+                                setActivePosicionamentoTab={handlePosicionamentoTabChange} 
                             />
 
                                 <AuditoriaTabs 
@@ -6206,7 +6220,8 @@ const PRICE_RULER_DATA_VAREJO = [
                                     onUpdateRiWorld={handleUpdateRiWorld}
                                     onUpdateRiProduct={handleUpdateRiProduct}
                                     activePosicionamentoTab={activePosicionamentoTab}
-                                    setActivePosicionamentoTab={setActivePosicionamentoTab}
+                                    setActivePosicionamentoTab={handlePosicionamentoTabChange}
+                                    activeCalculatorMode={activeCalculatorMode}
 
                                     checklistData={auditoriaData?.posicionamentoChecklist || {}}
                                     onChecklistChange={handleUpdateAuditoriaPosicionamentoChecklist}
@@ -6305,9 +6320,9 @@ const PRICE_RULER_DATA_VAREJO = [
                                     auditoriaScore={auditoriaScore}
                                     storeType={storeType}
                                     auditoriaData={auditoriaData}
-                                    allData={activePosicionamentoTab === 'ri' ? riData : allData} 
-                                    globalData={activePosicionamentoTab === 'ri' ? riGlobalData : globalData}
-                                    isRiMode={activePosicionamentoTab === 'ri'}
+                                    allData={activeCalculatorMode === 'ri' ? riData : allData} 
+                                    globalData={activeCalculatorMode === 'ri' ? riGlobalData : globalData}
+                                    isRiMode={activeCalculatorMode === 'ri'}
                                 />
                             </div>
                         <div ref={reportPage2Ref}>
