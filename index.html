@@ -115,6 +115,12 @@
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </IconBase>
         );
+        const CopyIcon = ({ size = 24, className = "" }) => (
+            <IconBase className={className} width={size} height={size}>
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </IconBase>
+        );
         const AlertCircle = ({ size = 24, className = "" }) => (
             <IconBase className={className} width={size} height={size}>
                 <circle cx="12" cy="12" r="10"></circle>
@@ -1754,13 +1760,7 @@
                 mini: { gondola: 2.0, gelada: 0.5 },
                 cc: { gondola: 2.0, gelada: 0 }
             },
-            "Blue Moon Witbier Lata 350ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 1.5, gelada: 0.5 },
-                cc: { gondola: 1.0, gelada: 0 }
-            },
-            "Blue Moon Witbier Vidro 355ml": {
+            "Blue Moon Lata 350ml ou Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
@@ -1778,13 +1778,7 @@
                 mini: { gondola: 1.0, gelada: 0.5 },
                 cc: { gondola: 1.0, gelada: 0 }
             },
-            "Eisenbahn Session Ipa Lata 350ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 0, gelada: 0 }
-            },
-            "Eisenbahn Session Ipa Vidro 355ml": {
+            "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0, gelada: 0 },
@@ -1796,37 +1790,19 @@
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Lagunitas IPA Lata 350ml": {
+            "Lagunitas IPA Lata 350ml OU Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
                 cc: { gondola: 1.0, gelada: 0 }
             },
-            "Lagunitas IPA Vidro 355ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 1.5, gelada: 0.5 },
-                cc: { gondola: 1.0, gelada: 0 }
-            },
-            "Praya Classica 355ml": {
+            "Praya Classica 355ml OU Classica 600ml": {
                 hiper: { gondola: 0.5, gelada: 0 },
                 super: { gondola: 0.5, gelada: 0 },
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-             "Praya Classica 600ml": {
-                hiper: { gondola: 0.5, gelada: 0 },
-                super: { gondola: 0.5, gelada: 0 },
-                mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 0.5, gelada: 0 }
-            },
-            "Eisenbahn Pilsen Vidro 355ml": {
-                hiper: { gondola: 1.5, gelada: 0.5 },
-                super: { gondola: 1.5, gelada: 0.5 },
-                mini: { gondola: 1.5, gelada: 0.5 },
-                cc: { gondola: 2.5, gelada: 0 }
-            },
-            "Eisenbahn Unfiltered 355ml": {
+            "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
                 super: { gondola: 1.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
@@ -1838,13 +1814,7 @@
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 3.0, gelada: 0 }
             },
-            "Heineken Lager Vidro 250ml": {
-                hiper: { gondola: 1.5, gelada: 1.0 },
-                super: { gondola: 2.0, gelada: 1.0 },
-                mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 3.0, gelada: 0 }
-            },
-            "Heineken Lata 269ml": {
+            "Heineken Lager Vidro 250ml OU Lata 269ml": {
                 hiper: { gondola: 1.5, gelada: 1.0 },
                 super: { gondola: 2.0, gelada: 1.0 },
                 mini: { gondola: 0, gelada: 0 },
@@ -1856,13 +1826,7 @@
                 mini: { gondola: 3.0, gelada: 1.0 },
                 cc: { gondola: 3.0, gelada: 0 }
             },
-            "Heineken Pilsen Zero Lata 350ml": {
-                hiper: { gondola: 1.5, gelada: 0.5 },
-                super: { gondola: 2.0, gelada: 1.0 },
-                mini: { gondola: 2.5, gelada: 1.0 },
-                cc: { gondola: 2.5, gelada: 0 }
-            },
-            "Heineken Pilsen Zero Lata 269ml": {
+            "Heineken Pilsen Zero Lata 350ml OU 269ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
                 super: { gondola: 2.0, gelada: 1.0 },
                 mini: { gondola: 2.5, gelada: 1.0 },
@@ -1886,25 +1850,13 @@
                 mini: { gondola: 0.5, gelada: 0.5 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Amstel Ultra Vidro 275ml": {
+            "Amstel Ultra Vidro 275ml OU Lata 269ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 1.0, gelada: 0.5 },
-                mini: { gondola: 2.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Amstel Ultra Lata 269ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 1.0, gelada: 0.5 },
-                mini: { gondola: 2.5, gelada: 0.5 },
-                cc: { gondola: 0.5, gelada: 0 }
-            },
-            "Eisenbahn Pilsen Lata 473ml": {
-                hiper: { gondola: 1.5, gelada: 0.5 },
-                super: { gondola: 1.5, gelada: 0.5 },
-                mini: { gondola: 1.5, gelada: 0.5 },
-                cc: { gondola: 2.5, gelada: 0 }
-            },
-            "Eisenbahn Unfiltered 350ml": {
+            "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
                 super: { gondola: 1.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
@@ -1917,15 +1869,15 @@
                 cc: { gondola: 3.0, gelada: 0 }
             },
             "Amstel Lager Lata 269ml": {
-                hiper: { gondola: 1.5, gelada: 1.0 },
-                super: { gondola: 1.5, gelada: 1.0 },
-                mini: { gondola: 1.5, gelada: 1.0 },
-                cc: { gondola: 2.0, gelada: 0 }
+                hiper: { gondola: 0, gelada: 0 },
+                super: { gondola: 0, gelada: 0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0.5, gelada: 0 }
             },
             "Amstel Lager Lata 350ml": {
-                hiper: { gondola: 1.5, gelada: 1.0 },
-                super: { gondola: 1.5, gelada: 1.0 },
-                mini: { gondola: 1.5, gelada: 1.0 },
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 1.0, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 2.0, gelada: 0 }
             },
             "Amstel Lager Lata 473ml": {
@@ -2071,8 +2023,8 @@
                                     <span className="block text-lg font-bold text-gray-800">{scores.presenca}</span>
                                 </div>
                                 <div className="bg-gray-50 p-2 rounded border border-gray-100">
-                                    <span className="block text-[10px] font-bold text-gray-400 uppercase">
-                                        Posic. {activeCalculatorMode === 'ri' ? '(RI)' : '(Manual)'}
+                                    <span className="block text-[9px] font-bold text-gray-400 uppercase whitespace-nowrap tracking-tighter">
+                                        Posic. {activeCalculatorMode === 'ri' ? '(RI)' : '(Man)'}
                                     </span>
                                     <span className="block text-lg font-bold text-gray-800">{scores.posicionamento}</span>
                                 </div>
@@ -2218,7 +2170,7 @@
                                     <input
                                         type="tel"
                                         value={worldCm}
-                                        onChange={(e) => onUpdateWorld(e.target.value)}
+                                        onChange={(e) => onUpdateWorld(categoryKey, e.target.value)}
                                         placeholder="Total gôndola"
                                         className="w-full p-3 text-base md:text-lg bg-white border border-blue-200 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none placeholder-gray-400"
                                     />
@@ -2238,7 +2190,7 @@
                                                 key={idx}
                                                 name={prod}
                                                 value={productValues[prod] || ''}
-                                                onChange={(val) => onUpdateProduct(prod, val)}
+                                                onChange={(val) => onUpdateProduct(categoryKey, prod, val)}
                                                 share={share}
                                                 totalShelf={totalShelf}
                                             />
@@ -2553,7 +2505,7 @@
                                                     key={key}
                                                     config={config}
                                                     products={allData[key]?.products || {}}
-                                                    onUpdateProduct={(prod, val) => onUpdateProduct(prod, val)}
+                                                    onUpdateProduct={(prod, val) => onUpdateProduct('outros', prod, val)}
                                                 />
                                             );
                                         }
@@ -4788,6 +4740,84 @@ const PRICE_RULER_DATA_VAREJO = [
              );
         };
 
+        const CopyOptionsModal = ({ isOpen, onClose, onConfirm, options, setOptions, activeMode }) => {
+            if (!isOpen) return null;
+
+            const toggleOption = (key) => {
+                setOptions(prev => ({ ...prev, [key]: !prev[key] }));
+            };
+
+            const pillars = [
+                { id: 'presenca', label: 'Presença' },
+                { id: 'posicionamento', label: 'Posicionamento' },
+                { id: 'visibilidade', label: 'Visibilidade (Promo)' },
+                { id: 'precificacao', label: 'Precificação' }
+            ];
+
+            return (
+                <div className="fixed inset-0 bg-black/60 z-[70] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden transform transition-all scale-100">
+                        <div className="bg-[#008200] p-4 text-center relative">
+                            <h2 className="text-lg font-bold text-white tracking-tight">Copiar Resumo</h2>
+                            <p className="text-green-100 text-xs mt-1">Selecione o que deseja copiar</p>
+                        </div>
+                        
+                        <div className="bg-amber-50 border-l-4 border-amber-500 p-3 mx-4 mt-4 mb-2 rounded-r-lg flex items-center gap-3 shadow-sm">
+                            <div className="p-2 bg-amber-100 rounded-full text-amber-600 shrink-0">
+                                <AlertTriangle size={18} />
+                            </div>
+                            <div>
+                                <p className="text-[10px] uppercase font-bold text-amber-800 tracking-wider leading-none mb-0.5">
+                                    Calculadora Ativa
+                                </p>
+                                <p className="text-sm font-bold text-amber-900 leading-tight">
+                                    {activeMode === 'ri' ? 'CALCULADORA RI' : 'CALCULADORA MANUAL'}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="px-4 pb-4 pt-2 space-y-3">
+                            {pillars.map(pillar => (
+                                <button
+                                    key={pillar.id}
+                                    onClick={() => toggleOption(pillar.id)}
+                                    className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all ${
+                                        options[pillar.id] 
+                                            ? 'bg-blue-50 border-blue-200 shadow-sm' 
+                                            : 'bg-gray-50 border-gray-100 text-gray-400'
+                                    }`}
+                                >
+                                    <span className={`font-bold text-sm ${options[pillar.id] ? 'text-blue-800' : 'text-gray-500'}`}>
+                                        {pillar.label}
+                                    </span>
+                                    <div className={`w-5 h-5 rounded-md flex items-center justify-center border ${
+                                        options[pillar.id] ? 'bg-blue-500 border-blue-500' : 'bg-white border-gray-300'
+                                    }`}>
+                                        {options[pillar.id] && <Check size={12} className="text-white" />}
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-4 pt-0 flex gap-3">
+                            <button 
+                                onClick={onClose}
+                                className="flex-1 py-3 bg-gray-100 font-bold text-gray-600 rounded-xl hover:bg-gray-200 transition-colors text-sm"
+                            >
+                                Cancelar
+                            </button>
+                            <button 
+                                onClick={onConfirm}
+                                className="flex-1 py-3 bg-[#008200] font-bold text-white rounded-xl hover:bg-[#006000] transition-colors shadow-lg shadow-green-900/20 text-sm flex items-center justify-center gap-2"
+                            >
+                                <CopyIcon size={16} />
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const App = () => {
             // --- DATA STATES (STICKY) ---
             const [allData, setAllData] = useStickyState({
@@ -4828,6 +4858,15 @@ const PRICE_RULER_DATA_VAREJO = [
             const [activeAuditoriaTab, setActiveAuditoriaTab] = useStickyState('presenca', 'sovi_heineken_activeAuditoriaTab');
             const [activePosicionamentoTab, setActivePosicionamentoTab] = useStickyState('checklist', 'sovi_heineken_activePosicionamentoTab');
             const [activeCalculatorMode, setActiveCalculatorMode] = useStickyState('manual', 'sovi_heineken_activeCalculatorMode'); // New State
+            
+            // --- COPY MODAL STATE ---
+            const [showCopyModal, setShowCopyModal] = useState(false);
+            const [copyOptions, setCopyOptions] = useState({
+                presenca: true,
+                posicionamento: true,
+                visibilidade: true,
+                precificacao: true
+            });
 
             const handlePosicionamentoTabChange = (tab) => {
                 setActivePosicionamentoTab(tab);
@@ -5723,12 +5762,14 @@ const PRICE_RULER_DATA_VAREJO = [
 
                         const formatPrice = (p) => p ? `R$ ${parseFloat(p).toFixed(2).replace('.', ',')}` : '-';
 
-                        if (item.discrepancyType.includes('Reg')) {
-                            // · [SKU]: Preço Loja R$ [Value] (Régua R$ [Value]) — Status: Fora da Régua
+                        const hasReg = item.discrepancyType.includes('Reg');
+                        const hasPromo = item.discrepancyType.includes('Promo');
+
+                        if (hasReg && hasPromo) {
+                             text += `· ${displayName}: Preço Loja ${formatPrice(item.priceStore)} (Régua ${formatPrice(item.price)}) | Promo ${formatPrice(item.pricePromo)} (Régua ${formatPrice(item.promo)}) — Status: Divergência Total\n`;
+                        } else if (hasReg) {
                             text += `· ${displayName}: Preço Loja ${formatPrice(item.priceStore)} (Régua ${formatPrice(item.price)}) — Status: Fora da Régua\n`;
-                        }
-                        if (item.discrepancyType.includes('Promo')) {
-                            // · [SKU]: Preço Loja Promo R$ [Value] (Régua Promo R$ [Value]) — Status: Fora da Régua (Promo)
+                        } else if (hasPromo) {
                             text += `· ${displayName}: Preço Loja Promo ${formatPrice(item.pricePromo)} (Régua Promo ${formatPrice(item.promo)}) — Status: Fora da Régua (Promo)\n`;
                         }
                     });
@@ -5744,12 +5785,11 @@ const PRICE_RULER_DATA_VAREJO = [
                 }
             };
 
-            const handleCopySimulatorList = async () => {
-                const calculatorName = activeCalculatorMode === 'ri' ? 'Calculadora RI' : 'Calculadora Manual';
-                if (!window.confirm(`Você está prestes a copiar o resumo usando a ${calculatorName}. Deseja continuar?`)) {
-                    return;
-                }
+            const handleOpenCopyModal = () => {
+                setShowCopyModal(true);
+            };
 
+            const executeCopy = async () => {
                 const dataSource = activeCalculatorMode === 'ri' ? riData : allData;
 
                 const getCatShare = (catKey) => {
@@ -5806,173 +5846,152 @@ const PRICE_RULER_DATA_VAREJO = [
                 text += `(Presença: ${parts.presenca}, Posic: ${parts.posicionamento}, Promo: ${parts.visibilidade}, Preço: ${parts.precificacao})\n\n`;
 
                 // Presença
-                text += `✅ Presença\n`;
-                if (auditoriaData.presenca) {
-                    Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
-                        const productState = auditoriaData.presenca[product] || { gondola: false, gelada: false };
-                        const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
-                        
-                        if (productState.gondola || productState.gelada) {
-                            let line = `· ${product}: `;
-                            const p = [];
-                            if (productState.gondola) p.push(`Gôndola (+${currentScores.gondola})`);
-                            if (productState.gelada) p.push(`Gelada (+${currentScores.gelada})`);
-                            line += p.join(' / ') + '\n';
-                            text += line;
-                        }
-                    });
+                if (copyOptions.presenca) {
+                    text += `✅ Presença\n`;
+                    if (auditoriaData.presenca) {
+                        Object.entries(SCORES_PRESENCA).forEach(([product, scores]) => {
+                            const productState = auditoriaData.presenca[product] || { gondola: false, gelada: false };
+                            const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                            
+                            if (productState.gondola || productState.gelada) {
+                                let line = `· ${product}: `;
+                                const p = [];
+                                if (productState.gondola) p.push(`Gôndola (+${currentScores.gondola})`);
+                                if (productState.gelada) p.push(`Gelada (+${currentScores.gelada})`);
+                                line += p.join(' / ') + '\n';
+                                text += line;
+                            }
+                        });
+                    }
+                    text += `\n`;
                 }
-                text += `\n`;
 
                 // Posicionamento
-                text += `📏 Posicionamento\n`;
-                // Recalculate points for display reference (or use logic if simple)
-                // We know the rules: Premium>=57 -> 9, Craft>=53 -> 8, Mainstream>=25 -> 8
-                const ptsPremium = sharePremium >= 57 ? 9 : 0;
-                const ptsCraft = shareCraft >= 53 ? 8 : 0;
-                const ptsMainstream = shareMainstream >= 25 ? 8 : 0;
+                if (copyOptions.posicionamento) {
+                    text += `📏 Posicionamento\n`;
+                    // Recalculate points for display reference (or use logic if simple)
+                    // We know the rules: Premium>=57 -> 9, Craft>=53 -> 8, Mainstream>=25 -> 8
+                    const ptsPremium = sharePremium >= 57 ? 9 : 0;
+                    const ptsCraft = shareCraft >= 53 ? 8 : 0;
+                    const ptsMainstream = shareMainstream >= 25 ? 8 : 0;
 
+                    const categoriesToReport = [
+                        { key: 'premium', label: 'PREMIUM', target: 57, points: 9 },
+                        { key: 'craft', label: 'CRAFT', target: 53, points: 8 },
+                        { key: 'mainstream', label: 'MAINSTREAM', target: 25, points: 8 }
+                    ];
 
-
-                text += `· Premium: ${ptsPremium} pontos ${ptsPremium > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${sharePremium.toFixed(1)}% / Meta 57%)\n`;
-                // List filled items for Premium
-                // List filled items for Premium
-                if (activeCalculatorMode === 'ri') {
-                     CATEGORIES['premium'].products.forEach(brand => {
-                        let brandHasValue = false;
-                        const skus = RI_SKU_MAPPING[brand] || [];
-                        const skuDetails = [];
-
-                        skus.forEach(sku => {
-                             const val = parseFloat((dataSource['premium']?.skus || {})[sku]) || 0;
-                             if (val > 0) {
-                                 brandHasValue = true;
-                                 const worldCm = parseFloat(dataSource['premium'].world) || 1;
-                                 const share = ((val / worldCm) * 100).toFixed(1);
-                                 skuDetails.push(`   - ${sku}: ${val}cm (${share}%)`);
-                             }
-                        });
+                    categoriesToReport.forEach(cat => {
+                        const share = getCatShare(cat.key);
+                        const isTargetMet = share >= cat.target;
+                        const points = isTargetMet ? cat.points : 0;
                         
-                        if (brandHasValue) {
-                            text += `  - ${brand}:\n`;
-                            skuDetails.forEach(detail => text += `${detail}\n`);
-                        }
-                    });
-                } else if (dataSource['premium'] && dataSource['premium'].products) {
-                    CATEGORIES['premium'].products.forEach(prod => {
-                        const val = parseFloat(dataSource['premium'].products[prod]);
-                        if (val > 0) {
-                            const worldCm = parseFloat(dataSource['premium'].world) || 1;
-                            const share = ((val / worldCm) * 100).toFixed(1);
-                            text += `  - ${prod}: ${val}cm (${share}%)\n`;
-                        }
-                    });
-                }
-
-                text += `· Craft: ${ptsCraft} pontos ${ptsCraft > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareCraft.toFixed(1)}% / Meta 53%)\n`;
-                // List filled items for Craft
-                if (activeCalculatorMode === 'ri') {
-                     CATEGORIES['craft'].products.forEach(brand => {
-                        let brandHasValue = false;
-                        const skus = RI_SKU_MAPPING[brand] || [];
-                        const skuDetails = [];
-
-                        skus.forEach(sku => {
-                             const val = parseFloat((dataSource['craft']?.skus || {})[sku]) || 0;
-                             if (val > 0) {
-                                 brandHasValue = true;
-                                 const worldCm = parseFloat(dataSource['craft'].world) || 1;
-                                 const share = ((val / worldCm) * 100).toFixed(1);
-                                 skuDetails.push(`   - ${sku}: ${val}cm (${share}%)`);
-                             }
-                        });
+                        // Header with spacing
+                        text += `\n=========================\n`;
+                        text += `📌 ${cat.label}\n`;
+                        text += `=========================\n`;
                         
-                        if (brandHasValue) {
-                            text += `  - ${brand}:\n`;
-                            skuDetails.forEach(detail => text += `${detail}\n`);
-                        }
-                    });
-                } else if (dataSource['craft'] && dataSource['craft'].products) {
-                    CATEGORIES['craft'].products.forEach(prod => {
-                        const val = parseFloat(dataSource['craft'].products[prod]);
-                        if (val > 0) {
-                            const worldCm = parseFloat(dataSource['craft'].world) || 1;
-                            const share = ((val / worldCm) * 100).toFixed(1);
-                            text += `  - ${prod}: ${val}cm (${share}%)\n`;
-                        }
-                    });
-                }
+                        // Main Status Line
+                        text += `· Pontuação: ${points} pts ${isTargetMet ? '✅ (Meta Batida)' : '❌ (Meta não atingida)'}\n`;
+                        text += `· Share Atual: ${share.toFixed(1)}% / Meta: ${cat.target}%\n`;
 
-                text += `· Mainstream: ${ptsMainstream} pontos ${ptsMainstream > 0 ? 'por bater a meta' : 'meta não atingida'} (Share: ${shareMainstream.toFixed(1)}% / Meta 25%)\n`;
-                // List filled items for Mainstream
-                if (activeCalculatorMode === 'ri') {
-                     CATEGORIES['mainstream'].products.forEach(brand => {
-                        let brandHasValue = false;
-                        const skus = RI_SKU_MAPPING[brand] || [];
-                        const skuDetails = [];
+                        // Calculate Missing Info if not met
+                        if (!isTargetMet) {
+                            const catData = dataSource[cat.key];
+                            const worldCm = catData ? (parseFloat(catData.world) || 0) : 0;
+                            if (worldCm > 0) {
+                                const currentCm = (share / 100) * worldCm;
+                                const targetCm = (cat.target / 100) * worldCm;
+                                const missingCm = targetCm - currentCm;
+                                const missingShare = cat.target - share;
+                                
+                                text += `⚠️ FALTAM: ${missingCm.toFixed(1)} cm (${missingShare.toFixed(1)}%)\n`;
+                            }
+                        }
 
-                        skus.forEach(sku => {
-                             const val = parseFloat((dataSource['mainstream']?.skus || {})[sku]) || 0;
-                             if (val > 0) {
-                                 brandHasValue = true;
-                                 const worldCm = parseFloat(dataSource['mainstream'].world) || 1;
-                                 const share = ((val / worldCm) * 100).toFixed(1);
-                                 skuDetails.push(`   - ${sku}: ${val}cm (${share}%)`);
-                             }
+                        // List Items
+                        if (activeCalculatorMode === 'ri') {
+                            CATEGORIES[cat.key].products.forEach(brand => {
+                           let brandHasValue = false;
+                           let brandTotalCm = 0;
+                           const skus = RI_SKU_MAPPING[brand] || [];
+                           const skuDetails = [];
+
+                           skus.forEach(sku => {
+                                const val = parseFloat((dataSource[cat.key]?.skus || {})[sku]) || 0;
+                                if (val > 0) {
+                                    brandHasValue = true;
+                                    brandTotalCm += val;
+                                    const worldCm = parseFloat(dataSource[cat.key].world) || 1;
+                                    const shareSku = ((val / worldCm) * 100).toFixed(1);
+                                    skuDetails.push(`   - ${sku}: ${val}cm (${shareSku}%)`);
+                                }
+                           });
+                           
+                           if (brandHasValue) {
+                               const worldCm = parseFloat(dataSource[cat.key].world) || 1;
+                               const brandShare = ((brandTotalCm / worldCm) * 100).toFixed(1);
+                               text += `  - ${brand}: (Total: ${brandTotalCm} cm - ${brandShare}%)\n`;
+                               skuDetails.forEach(detail => text += `${detail}\n`);
+                           }
+                       });
+                    } else if (dataSource[cat.key] && dataSource[cat.key].products) {
+                        CATEGORIES[cat.key].products.forEach(prod => {
+                            const val = parseFloat(dataSource[cat.key].products[prod]);
+                            if (val > 0) {
+                                const worldCm = parseFloat(dataSource[cat.key].world) || 1;
+                                const shareSku = ((val / worldCm) * 100).toFixed(1);
+                                text += `  - ${prod}: ${val}cm (${shareSku}%)\n`;
+                            }
                         });
-                        
-                        if (brandHasValue) {
-                            text += `  - ${brand}:\n`;
-                            skuDetails.forEach(detail => text += `${detail}\n`);
-                        }
+                    }
+                    text += `\n`;
                     });
-                } else if (dataSource['mainstream'] && dataSource['mainstream'].products) {
-                    CATEGORIES['mainstream'].products.forEach(prod => {
-                        const val = parseFloat(dataSource['mainstream'].products[prod]);
-                        if (val > 0) {
-                            const worldCm = parseFloat(dataSource['mainstream'].world) || 1;
-                            const share = ((val / worldCm) * 100).toFixed(1);
-                            text += `  - ${prod}: ${val}cm (${share}%)\n`;
-                        }
-                    });
+                    const finalShare = activePosicionamentoTab === 'ri' ? riGlobalData.share : globalData.share;
+                    text += `\n🍺 Share Total Cerveja: ${finalShare}%\n`;
+                    text += `· Checklist: ${checklistScore} pts\n\n`;
                 }
-                const finalShare = activePosicionamentoTab === 'ri' ? riGlobalData.share : globalData.share;
-                text += `\n🍺 Share Total Cerveja: ${finalShare}%\n`;
-                text += `· Checklist: ${checklistScore} pts\n\n`;
 
                 // Visibilidade
-                text += `👁️ Visibilidade\n`;
-                const visData = auditoriaData.visibilidade || {};
-                const totalPes = parseInt(visData.totalPes) || 0;
-                // Determine targets (logic duplicated for display context)
-                let tPremium=0, tCraft=0, tMainstream=0;
-                if(totalPes<=5){ tPremium=1; tMainstream=1; }
-                else if(totalPes<=10){ tCraft=1; tPremium=2; tMainstream=1; }
-                else if(totalPes<=15){ tCraft=1; tPremium=3; tMainstream=2; }
-                else if(totalPes<=20){ tCraft=1; tPremium=5; tMainstream=2; }
-                else { tCraft=1; tPremium=6; tMainstream=3; }
+                if (copyOptions.visibilidade) {
+                    text += `👁️ Visibilidade\n`;
+                    const visData = auditoriaData.visibilidade || {};
+                    const totalPes = parseInt(visData.totalPes) || 0;
+                    // Determine targets (logic duplicated for display context)
+                    let tPremium=0, tCraft=0, tMainstream=0;
+                    if(totalPes<=5){ tPremium=1; tMainstream=1; }
+                    else if(totalPes<=10){ tCraft=1; tPremium=2; tMainstream=1; }
+                    else if(totalPes<=15){ tCraft=1; tPremium=3; tMainstream=2; }
+                    else if(totalPes<=20){ tCraft=1; tPremium=5; tMainstream=2; }
+                    else { tCraft=1; tPremium=6; tMainstream=3; }
 
-                const peCraft = parseInt(visData.peCraft) || 0;
-                const pePrem = parseInt(visData.pePremium) || 0;
-                const peMain = parseInt(visData.peMainstream) || 0;
+                    const peCraft = parseInt(visData.peCraft) || 0;
+                    const pePrem = parseInt(visData.pePremium) || 0;
+                    const peMain = parseInt(visData.peMainstream) || 0;
 
-                text += `· Total Pés: ${totalPes}\n`;
-                text += `· Craft: ${peCraft >= tCraft && tCraft > 0 ? 6 : 0} pts (${peCraft} PE / Meta ${tCraft})\n`;
-                text += `· Premium: ${pePrem >= tPremium && tPremium > 0 ? 8 : 0} pts (${pePrem} PE / Meta ${tPremium})\n`;
-                text += `· Mainstream: ${peMain >= tMainstream && tMainstream > 0 ? 6 : 0} pts (${peMain} PE / Meta ${tMainstream})\n\n`;
+                    text += `· Total Pés: ${totalPes}\n`;
+                    text += `· Craft: ${peCraft >= tCraft && tCraft > 0 ? 6 : 0} pts (${peCraft} PE / Meta ${tCraft})\n`;
+                    text += `· Premium: ${pePrem >= tPremium && tPremium > 0 ? 8 : 0} pts (${pePrem} PE / Meta ${tPremium})\n`;
+                    text += `· Mainstream: ${peMain >= tMainstream && tMainstream > 0 ? 6 : 0} pts (${peMain} PE / Meta ${tMainstream})\n\n`;
+                }
 
                 // Precificação
-                text += `💲 Precificação\n`;
-                text += `· ${auditoriaData.precificacao ? 'Correta (+5 pts)' : 'Incorreta (0 pts)'}`;
+                if (copyOptions.precificacao) {
+                    text += `💲 Precificação\n`;
+                    text += `· ${auditoriaData.precificacao ? 'Correta (+5 pts)' : 'Incorreta (0 pts)'}`;
+                }
 
                 try {
                     await navigator.clipboard.writeText(text);
                     alert("Resumo copiado com sucesso!");
+                    setShowCopyModal(false);
                 } catch (err) {
                     console.error('Failed to copy: ', err);
                     alert("Erro ao copiar.");
                 }
             };
+
+            const handleCopySimulatorList = handleOpenCopyModal;
 
             if (!isRegistered) {
                 return (
@@ -6203,6 +6222,15 @@ const PRICE_RULER_DATA_VAREJO = [
                                 isCapturing={isCapturing}
                                 setActivePosicionamentoTab={handlePosicionamentoTabChange} 
                             />
+
+                                <CopyOptionsModal 
+                                    isOpen={showCopyModal} 
+                                    onClose={() => setShowCopyModal(false)} 
+                                    onConfirm={executeCopy}
+                                    options={copyOptions}
+                                    setOptions={setCopyOptions}
+                                    activeMode={activeCalculatorMode}
+                                />
 
                                 <AuditoriaTabs 
                                     activeTab={activeAuditoriaTab} 
