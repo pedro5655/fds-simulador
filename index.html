@@ -2320,7 +2320,7 @@
                 config.products.forEach(prod => {
                     catTotalHnk += (parseFloat(catData.products[prod]) || 0);
                 });
-                return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+                return worldCm > 0 ? parseFloat(((catTotalHnk / worldCm) * 100).toFixed(1)) : 0;
             };
 
             // Calculate shares for RI Calculator
@@ -2337,7 +2337,7 @@
                 config.products.forEach(prod => {
                     catTotalHnk += (parseFloat(catData.products[prod]) || 0);
                 });
-                return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+                return worldCm > 0 ? parseFloat(((catTotalHnk / worldCm) * 100).toFixed(1)) : 0;
             };
 
             // Manual Scores
@@ -5161,7 +5161,7 @@ const PRICE_RULER_DATA_VAREJO = [
                         });
                     }
                     
-                    return worldCm > 0 ? (catTotalHnk / worldCm) * 100 : 0;
+                    return worldCm > 0 ? parseFloat(((catTotalHnk / worldCm) * 100).toFixed(1)) : 0;
                 };
 
                 // Premium Rule: >= 57% -> +9 pts
