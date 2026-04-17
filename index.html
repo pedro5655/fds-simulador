@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -33,17 +33,47 @@
     <!-- Recharts Dependencies -->
     <script src="https://unpkg.com/prop-types/prop-types.min.js"></script>
     <script src="https://unpkg.com/recharts@2.10.3/umd/Recharts.js"></script>
+    
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
                     colors: {
                         heineken: {
                             green: '#008200',
                             dark: '#005500',
                             red: '#FF0000',
                             silver: '#C3C3C3',
+                            glow: '#00ff00',
+                        },
+                        ui: {
+                            dark: '#0a0f0d',
+                            glass: 'rgba(20, 25, 22, 0.65)',
+                            glassHover: 'rgba(30, 38, 33, 0.85)',
+                            border: 'rgba(255, 255, 255, 0.08)'
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
                         }
                     }
                 }
@@ -51,16 +81,51 @@
         }
     </script>
 
-    <style>body {
-  -webkit-font-smoothing: antialiased;
-}
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            background-color: #0a0f0d;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Custom Premium Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0f0d; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2923; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2b3a31; 
+        }
+
+        /* Glass Windows Utilities */
+        .glass-panel {
+            background: rgba(15, 20, 18, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glow-green {
+            box-shadow: 0 0 15px rgba(0, 130, 0, 0.3);
+        }
     </style>
 </head>
 <body class="bg-gray-900">
@@ -68,6 +133,7 @@
 
 
     <script type="text/babel">        const { useState, useEffect, useRef } = React;
+        const { motion, AnimatePresence } = window.Motion;
 
         // --- NATIVE FILE SAVING HELPER ---
         // --- NATIVE FILE SAVING HELPER ---
@@ -807,7 +873,7 @@
                   </div>
                   <div className="text-right">
                      <span className="text-xs uppercase tracking-wider opacity-75">Fotografia de Sucesso</span>
-                     <div className="text-2xl font-bold">2025</div>
+                     <div className="text-2xl font-bold">2026</div>
                   </div>
                 </div>
               </div>
@@ -866,41 +932,44 @@
         const ChartCard = ({ title, data, wrapped = true }) => {
             if (!PieChart || !ResponsiveContainer) {
                 return (
-                    <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center justify-center p-8 text-red-500 border border-red-200">
-                        <AlertTriangle size={32} className="mb-2" />
+                    <div className="bg-ui-glass p-4 rounded-2xl shadow-sm flex flex-col items-center justify-center p-8 text-red-500 border border-red-900/50">
+                        <AlertTriangle size={32} className="mb-2 text-heineken-red" />
                         <span className="font-bold text-center">Gráfico não disponível</span>
-                        <span className="text-xs text-center mt-1">Falha ao carregar biblioteca Recharts</span>
+                        <span className="text-xs text-center mt-1 text-gray-400">Falha ao carregar biblioteca Recharts</span>
                     </div>
                 );
             }
 
             const content = (
               <div className="flex flex-col items-center w-full">
-                <h3 className="font-bold text-gray-800 mb-2">{title}</h3>
-                <div className="h-64 w-full">
+                <h3 className="font-bold text-gray-200 mb-2 tracking-wide uppercase text-xs">{title}</h3>
+                <div className="h-64 w-full relative">
+                  {/* Subtle chart glow behind the pie */}
+                  <div className="absolute inset-0 bg-heineken-green/5 rounded-full blur-[40px] pointer-events-none"></div>
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={data}
                         cx="50%"
                         cy="50%"
-                        innerRadius="60%"
-                        outerRadius="80%"
+                        innerRadius="65%"
+                        outerRadius="85%"
                         paddingAngle={5}
                         dataKey="value"
+                        stroke="rgba(0,0,0,0.2)"
                       >
                         {data.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.fill} />
+                          <Cell key={`cell-${index}`} fill={entry.fill} style={{ filter: 'drop-shadow(0px 4px 6px rgba(0,0,0,0.5))' }} />
                         ))}
                       </Pie>
-                      <RechartsTooltip />
-                      <Legend iconSize={8} wrapperStyle={{ fontSize: '12px' }} />
+                      <RechartsTooltip contentStyle={{ backgroundColor: 'rgba(10,15,13,0.9)', borderColor: 'rgba(255,255,255,0.1)', color: '#fff', borderRadius: '8px' }} itemStyle={{ color: '#fff' }} />
+                      <Legend iconSize={8} wrapperStyle={{ fontSize: '11px', color: '#ccc' }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <div className="text-center mt-[-10px]">
-                  <span className="text-3xl font-bold text-heineken-green">{data[0].value}%</span>
-                  <p className="text-xs text-gray-500">Meta HEINEKEN</p>
+                <div className="text-center mt-[-10px] relative z-10 bg-ui-dark/50 backdrop-blur px-4 py-2 rounded-xl border border-ui-border">
+                  <span className="text-3xl font-bold text-heineken-glow drop-shadow-[0_0_8px_rgba(0,255,0,0.4)]">{data[0].value}%</span>
+                  <p className="text-[10px] uppercase font-bold text-gray-400 mt-1">Meta HEINEKEN</p>
                 </div>
               </div>
             );
@@ -908,9 +977,12 @@
             if (!wrapped) return content;
 
             return (
-              <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col items-center">
+              <motion.div 
+                whileHover={{ scale: 1.01 }}
+                className="glass-panel p-5 rounded-2xl flex flex-col items-center border border-white/5"
+              >
                 {content}
-              </div>
+              </motion.div>
             );
           };
 
@@ -920,7 +992,7 @@
               <div className="bg-white p-6 rounded-xl shadow-sm border-l-4 border-heineken-green">
                 <h2 className="text-2xl font-bold text-heineken-green flex items-center gap-2">
                   <TrendingUp className="w-8 h-8" />
-                  Metas de SOVI 2025
+                  Metas de SOVI 2026
                 </h2>
                 <p className="text-gray-600 mt-2">Memorize estes números! Eles serão perguntados na auditoria.</p>
               </div>
@@ -1134,45 +1206,59 @@
             switch (currentScreen) {
               case AppScreen.HOME:
                 return (
-                  <div className="space-y-6 animate-in fade-in duration-500 pb-20">
-                     <div className="bg-white rounded-2xl p-8 text-center shadow-sm mt-4">
-                        <Star className="w-16 h-16 text-heineken-red mx-auto mb-4 fill-current" />
-                        <h1 className="text-3xl font-bold text-gray-900 mb-2">Fotografia de Sucesso 2025</h1>
-                        <p className="text-gray-500 mb-8">Treinamento oficial para promotores e preparação para auditoria.</p>
-                        
-                        <button 
-                          onClick={() => navigateTo(AppScreen.AUDIT_QUIZ)}
-                          className="w-full bg-heineken-green text-white py-4 rounded-xl font-bold shadow-lg shadow-green-200 hover:bg-heineken-dark transition-colors flex items-center justify-center gap-2 mb-4"
-                        >
-                          <MessageCircleQuestion />
-                          Iniciar Simulador de Auditoria
-                        </button>
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="space-y-6 pb-20 relative z-10"
+                  >
+                     <div className="glass-panel rounded-3xl p-8 text-center mt-4 relative overflow-hidden">
+                        {/* Decorative background glow */}
+                        <div className="absolute -top-20 -left-20 w-64 h-64 bg-heineken-green/20 rounded-full blur-[80px] pointer-events-none"></div>
+                        <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-heineken-dark/30 rounded-full blur-[80px] pointer-events-none"></div>
 
-                        <p className="text-xs text-gray-400 uppercase tracking-widest mt-8">Módulos de Estudo</p>
-                        <div className="grid grid-cols-2 gap-3 mt-4">
-                           <button onClick={() => navigateTo(AppScreen.COMPANY)} className="bg-gray-50 p-4 rounded-xl border border-gray-100 hover:border-green-500 transition-colors">
-                              <Users className="w-6 h-6 text-gray-700 mx-auto mb-2" />
-                              <span className="text-sm font-semibold text-gray-700">Sobre a Heineken</span>
-                           </button>
-                           <button onClick={() => navigateTo(AppScreen.ROUTINE)} className="bg-gray-50 p-4 rounded-xl border border-gray-100 hover:border-green-500 transition-colors">
-                              <ClipboardList className="w-6 h-6 text-gray-700 mx-auto mb-2" />
-                              <span className="text-sm font-semibold text-gray-700">Roteiro de Visita</span>
-                           </button>
-                           <button onClick={() => navigateTo(AppScreen.SOVI)} className="bg-gray-50 p-4 rounded-xl border border-gray-100 hover:border-green-500 transition-colors">
-                              <TrendingUp className="w-6 h-6 text-gray-700 mx-auto mb-2" />
-                              <span className="text-sm font-semibold text-gray-700">Metas SOVI</span>
-                           </button>
-                           <button onClick={() => navigateTo(AppScreen.SAFETY)} className="bg-gray-50 p-4 rounded-xl border border-gray-100 hover:border-green-500 transition-colors">
-                              <ShieldCheck className="w-6 h-6 text-gray-700 mx-auto mb-2" />
-                              <span className="text-sm font-semibold text-gray-700">Segurança & Rotina</span>
-                           </button>
-                           <button onClick={() => navigateTo(AppScreen.SCORING)} className="col-span-2 bg-gray-50 p-4 rounded-xl border border-gray-100 hover:border-green-500 transition-colors flex flex-col items-center">
-                              <Award className="w-6 h-6 text-gray-700 mb-2" />
-                              <span className="text-sm font-semibold text-gray-700">4 Pilares e Pontuação</span>
-                           </button>
+                        <div className="relative z-10">
+                            <Star className="w-16 h-16 text-heineken-glow mx-auto mb-4 fill-current drop-shadow-[0_0_15px_rgba(0,255,0,0.5)] animate-pulse" />
+                            <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">FDS <span className="text-heineken-glow font-light">2026</span></h1>
+                            <p className="text-gray-400 mb-8 font-light text-sm">Treinamento oficial para promotores e preparação para auditoria.</p>
+                            
+                            <motion.button 
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => navigateTo(AppScreen.AUDIT_QUIZ)}
+                              className="w-full bg-gradient-to-r from-heineken-green to-heineken-dark text-white py-4 rounded-xl font-bold shadow-[0_0_20px_rgba(0,130,0,0.4)] hover:shadow-[0_0_30px_rgba(0,130,0,0.6)] transition-all flex items-center justify-center gap-2 mb-4 border border-heineken-glow/30"
+                            >
+                              <MessageCircleQuestion className="w-5 h-5" />
+                              Iniciar Simulador de Auditoria
+                            </motion.button>
+    
+                            <p className="text-xs text-white/30 font-bold uppercase tracking-widest mt-10 mb-4 border-b border-white/5 pb-2">Módulos de Estudo</p>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                               <motion.button whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.05)' }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo(AppScreen.COMPANY)} className="bg-ui-glass p-5 rounded-2xl border border-ui-border hover:border-heineken-glow/50 transition-all group flex flex-col items-center">
+                                  <Users className="w-7 h-7 text-gray-400 group-hover:text-heineken-glow transition-colors mb-3" />
+                                  <span className="text-sm font-medium text-gray-200">Heineken</span>
+                               </motion.button>
+                               <motion.button whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.05)' }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo(AppScreen.ROUTINE)} className="bg-ui-glass p-5 rounded-2xl border border-ui-border hover:border-heineken-glow/50 transition-all group flex flex-col items-center">
+                                  <ClipboardList className="w-7 h-7 text-gray-400 group-hover:text-heineken-glow transition-colors mb-3" />
+                                  <span className="text-sm font-medium text-gray-200">Roteiro</span>
+                               </motion.button>
+                               <motion.button whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.05)' }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo(AppScreen.SOVI)} className="bg-ui-glass p-5 rounded-2xl border border-ui-border hover:border-heineken-glow/50 transition-all group flex flex-col items-center">
+                                  <TrendingUp className="w-7 h-7 text-gray-400 group-hover:text-heineken-glow transition-colors mb-3" />
+                                  <span className="text-sm font-medium text-gray-200">Metas SOVI</span>
+                               </motion.button>
+                               <motion.button whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.05)' }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo(AppScreen.SAFETY)} className="bg-ui-glass p-5 rounded-2xl border border-ui-border hover:border-heineken-glow/50 transition-all group flex flex-col items-center">
+                                  <ShieldCheck className="w-7 h-7 text-gray-400 group-hover:text-heineken-glow transition-colors mb-3" />
+                                  <span className="text-sm font-medium text-gray-200">Segurança</span>
+                               </motion.button>
+                               <motion.button whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.05)' }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo(AppScreen.SCORING)} className="col-span-2 bg-gradient-to-br from-ui-glass to-[rgba(0,85,0,0.2)] p-5 rounded-2xl border border-ui-border hover:border-heineken-glow/50 transition-all group flex flex-col items-center">
+                                  <Award className="w-7 h-7 text-heineken-green group-hover:text-heineken-glow transition-colors mb-2" />
+                                  <span className="text-sm font-medium text-gray-200">4 Pilares e Pontuação</span>
+                               </motion.button>
+                            </div>
                         </div>
                      </div>
-                  </div>
+                  </motion.div>
                 );
               case AppScreen.SAFETY: return <ModuleSafety />;
               case AppScreen.ROUTINE: return <ModuleVisit />;
@@ -1231,50 +1317,60 @@
           };
 
           const NavButton = ({ icon, label, onClick, active }) => (
-            <button 
+            <motion.button 
+                whileHover={{ scale: 1.02, x: 5 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={onClick}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors border ${
                 active 
-                    ? 'bg-green-50 text-heineken-green' 
-                    : 'text-gray-600 hover:bg-gray-50'
+                    ? 'bg-heineken-green/20 text-heineken-glow border-heineken-glow/30 shadow-[0_0_15px_rgba(0,255,0,0.15)]' 
+                    : 'text-gray-400 border-transparent hover:bg-white/5 hover:text-white'
                 }`}
             >
                 {icon}
                 {label}
-            </button>
+            </motion.button>
           );
 
           return (
-            <div className="min-h-screen bg-gray-100 font-sans text-gray-900 pb-10">
-              {/* Header */}
-              {/* Header Removed to avoid duplication with Main App Header */}
-
+            <div className="min-h-screen bg-ui-dark text-white font-sans pb-10 relative overflow-hidden">
+              {/* Decorative base background glow */}
+              <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-heineken-dark/10 rounded-full blur-[120px] mix-blend-screen animate-blob"></div>
+                 <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-heineken-green/5 rounded-full blur-[150px] mix-blend-screen animate-blob" style={{ animationDelay: '2s' }}></div>
+              </div>
 
               {/* Main Content */}
-              <main className={`mx-auto px-4 pt-6 pb-8 transition-all duration-300 ${currentScreen !== 'HOME' && getTitle(currentScreen) !== '' ? 'max-w-5xl' : 'max-w-md'}`}>
+              <main className={`relative z-10 mx-auto px-4 pt-6 pb-8 transition-all duration-300 ${currentScreen !== 'HOME' && getTitle(currentScreen) !== '' ? 'max-w-7xl' : 'max-w-xl'}`}>
                 {renderScreen()}
                 {getNavigationButtons()}
               </main>
 
               {/* Sidebar Navigation */}
               {isMenuOpen && (
-                <div className="fixed inset-0 z-50 flex">
-                  <div 
-                    className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+                <div className="fixed inset-0 z-[100] flex">
+                  <motion.div 
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm" 
                     onClick={() => setIsMenuOpen(false)}
                   />
-                  <div className="relative bg-white w-64 h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
-                    <div className="p-6 bg-heineken-green text-white flex justify-between items-center">
-                      <span className="font-bold text-xl">Menu</span>
-                      <button onClick={() => setIsMenuOpen(false)}>
+                  <motion.div 
+                    initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                    className="relative bg-ui-dark/90 backdrop-blur-xl w-72 h-full border-r border-ui-border shadow-2xl flex flex-col"
+                  >
+                    <div className="p-6 bg-transparent border-b border-ui-border flex justify-between items-center text-white">
+                      <span className="font-bold text-xl tracking-tight flex items-center gap-2">
+                        <Star className="w-6 h-6 text-heineken-glow fill-current" /> Menu
+                      </span>
+                      <button onClick={() => setIsMenuOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                         <X className="w-6 h-6" />
                       </button>
                     </div>
                     
-                    <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
+                    <nav className="flex-1 p-4 space-y-2 overflow-y-auto no-scrollbar">
                       <NavButton icon={<Home />} label="Início" active={currentScreen === AppScreen.HOME} onClick={() => navigateTo(AppScreen.HOME)} />
                       <NavButton icon={<MessageCircleQuestion />} label="Simulador de Auditoria" active={currentScreen === AppScreen.AUDIT_QUIZ} onClick={() => navigateTo(AppScreen.AUDIT_QUIZ)} />
-                      <div className="h-px bg-gray-200 my-2" />
+                      <div className="h-px bg-ui-border my-4" />
                       <NavButton icon={<Users />} label="Sobre a Heineken" active={currentScreen === AppScreen.COMPANY} onClick={() => navigateTo(AppScreen.COMPANY)} />
                       <NavButton icon={<ClipboardList />} label="Roteiro de Visita" active={currentScreen === AppScreen.ROUTINE} onClick={() => navigateTo(AppScreen.ROUTINE)} />
                       <NavButton icon={<TrendingUp />} label="Metas de SOVI" active={currentScreen === AppScreen.SOVI} onClick={() => navigateTo(AppScreen.SOVI)} />
@@ -1282,10 +1378,11 @@
                       <NavButton icon={<Award />} label="4 Pilares (Pontuação)" active={currentScreen === AppScreen.SCORING} onClick={() => navigateTo(AppScreen.SCORING)} />
                     </nav>
 
-                    <div className="p-4 border-t text-center text-xs text-gray-400">
-                      Heineken Brasil &copy; 2025
+                    <div className="p-6 border-t border-ui-border text-center">
+                      <p className="text-xs text-gray-500 font-medium">TREINAMENTO FDS</p>
+                      <p className="text-[10px] text-gray-600 mt-1">Heineken Brasil &copy; 2026</p>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               )}
             </div>
@@ -1720,45 +1817,51 @@
 
         const ProductInput = ({ name, value, onChange, share, totalShelf }) => {
             return (
-                <div className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                    <div className="w-1/2 pr-2">
-                        <span className="text-sm font-medium text-gray-700 block">{name}</span>
-                        <span className="text-[10px] text-gray-400">
-                            Share: <strong>{totalShelf > 0 ? share : '0.0'}%</strong>
+                <div className="flex items-center justify-between py-3 border-b border-ui-border last:border-0 hover:bg-white/5 transition-colors rounded-lg px-2">
+                    <div className="w-2/3 pr-2">
+                        <span className="text-[11px] md:text-sm font-medium text-gray-300 block leading-tight">{name}</span>
+                        <span className="text-[10px] text-heineken-glow mt-1 block font-bold">
+                            Share: {totalShelf > 0 ? share : '0.0'}%
                         </span>
                     </div>
-                    <div className="w-1/2 flex items-center gap-3 justify-end">
+                    <div className="w-1/3 flex items-center gap-2 justify-end">
                         <input
                             type="number"
                             value={value}
                             onChange={(e) => onChange(e.target.value)}
                             placeholder="0"
-                            className="w-20 p-2 text-right bg-white border border-gray-300 rounded text-sm focus:ring-1 focus:ring-[#008200] focus:border-[#008200] outline-none transition-all"
+                            className="w-16 md:w-20 p-2 text-right bg-white/5 border border-white/10 rounded-xl text-white font-bold text-sm focus:ring-2 focus:ring-heineken-glow outline-none transition-all"
                         />
-                        <span className="text-xs text-gray-400 w-4">cm</span>
+                        <span className="text-[10px] text-gray-500 w-4 font-bold">cm</span>
                     </div>
                 </div>
             );
         };
 
         const SCORES_PRESENCA = {
-            "Baden Baden IPA Lata 350ml OU Vidro 600ml": {
+            "Baden Baden IPA Lata 350ml ou Vidro 600ml": {
                 hiper: { gondola: 1.0, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 2.0, gelada: 0.5 },
-                cc: { gondola: 2.0, gelada: 0 }
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
             },
-            "Baden Baden Pilsen Cristal Lata 350ml OU Vidro 600ml": {
-                hiper: { gondola: 1.0, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 2.0, gelada: 0.5 },
-                cc: { gondola: 2.0, gelada: 0 }
+            "Baden Baden Estilos IPA/Witbier Lata 350ml/473ml ou Vidro 600ml": {
+                hiper: { gondola: 0, gelada: 0 },
+                super: { gondola: 0, gelada: 0 },
+                mini: { gondola: 3.0, gelada: 0.5 },
+                cc: { gondola: 3.0, gelada: 0 }
             },
-            "Baden Baden Witbier Lata 350ml OU Vidro 600ml": {
+            "Baden Baden Pilsen Cristal Lata 350ml ou Vidro 600ml": {
                 hiper: { gondola: 1.0, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 2.0, gelada: 0.5 },
-                cc: { gondola: 2.0, gelada: 0 }
+                mini: { gondola: 3.0, gelada: 1.0 },
+                cc: { gondola: 3.0, gelada: 0 }
+            },
+            "Baden Baden Witbier Lata 350ml ou Vidro 600ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
             },
             "Blue Moon Lata 350ml ou Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
@@ -1766,43 +1869,43 @@
                 mini: { gondola: 1.5, gelada: 0.5 },
                 cc: { gondola: 1.0, gelada: 0 }
             },
-            "Eisenbahn IPA Lata 350ml OU Vidro 355ml": {
+            "Eisenbahn IPA Lata 350ml ou Vidro 355ml": {
                 hiper: { gondola: 1.0, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 1.0, gelada: 0.5 },
-                cc: { gondola: 1.0, gelada: 0 }
-            },
-            "Eisenbahn Pale Ale Lata 350ml OU Vidro 355ml": {
-                hiper: { gondola: 1.0, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 1.0, gelada: 0.5 },
-                cc: { gondola: 1.0, gelada: 0 }
-            },
-            "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0, gelada: 0 }
             },
-            "Eisenbahn Weizenbier Vidro 355ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 0.5, gelada: 0 }
+            "Eisenbahn Estilos IPA/Pale Ale/Weiz) Lata 350ml ou Vidro 355ml": {
+                hiper: { gondola: 0, gelada: 0 },
+                super: { gondola: 0, gelada: 0 },
+                mini: { gondola: 2.0, gelada: 1.0 },
+                cc: { gondola: 2.5, gelada: 0 }
             },
-            "Lagunitas IPA Lata 350ml OU Vidro 355ml": {
+            "Eisenbahn Pale Ale Lata 350ml ou Vidro 355ml": {
+                hiper: { gondola: 1.0, gelada: 1.0 },
+                super: { gondola: 0.5, gelada: 1.0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
+            },
+            "Eisenbahn Weizenbier Vidro 355ml": {
+                hiper: { gondola: 1.0, gelada: 0.5 },
+                super: { gondola: 1.0, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
+            },
+            "Lagunitas IPA Lata 350ml ou Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
                 cc: { gondola: 1.0, gelada: 0 }
             },
-            "Praya Classica 355ml OU Classica 600ml": {
-                hiper: { gondola: 0.5, gelada: 0 },
+            "Praya Classica 355ml ou Classica 600ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0 },
                 mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 0.5, gelada: 0 }
+                cc: { gondola: 0, gelada: 0 }
             },
-            "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml": {
+            "Eisenbahn Pilsen / Unfiltered Pilsen Vidro 355ml ouUnfiltered 355ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
                 super: { gondola: 1.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
@@ -1814,53 +1917,59 @@
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 3.0, gelada: 0 }
             },
-            "Heineken Lager Vidro 250ml OU Lata 269ml": {
+            "Heineken Lager Vidro 250ml ou Lata 269ml": {
                 hiper: { gondola: 1.5, gelada: 1.0 },
                 super: { gondola: 2.0, gelada: 1.0 },
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 3.0, gelada: 0 }
             },
             "Heineken Lager Vidro 330ml": {
-                hiper: { gondola: 1.5, gelada: 0.5 },
+                hiper: { gondola: 1.5, gelada: 1.0 },
                 super: { gondola: 2.0, gelada: 1.0 },
                 mini: { gondola: 3.0, gelada: 1.0 },
                 cc: { gondola: 3.0, gelada: 0 }
             },
-            "Heineken Pilsen Zero Lata 350ml OU 269ml": {
+            "Heineken Pilsen Zero Lata 350ml ou 269ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
-                super: { gondola: 2.0, gelada: 1.0 },
+                super: { gondola: 1.5, gelada: 0.5 },
                 mini: { gondola: 2.5, gelada: 1.0 },
                 cc: { gondola: 2.5, gelada: 0 }
             },
             "Heineken Pilsen Zero Vidro 330ml": {
-                hiper: { gondola: 1.5, gelada: 1.0 },
-                super: { gondola: 0.5, gelada: 1.0 },
+                hiper: { gondola: 1.5, gelada: 0.5 },
+                super: { gondola: 1.5, gelada: 1.0 },
                 mini: { gondola: 2.5, gelada: 1.0 },
                 cc: { gondola: 2.5, gelada: 0 }
             },
-            "Praya Lager 355ml": {
+            "Praya Lager Vidro 355ml ou Lata 350ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0.5, gelada: 0.5 },
+                cc: { gondola: 1.0, gelada: 0 }
+            },
+            "Sol Premium Sol Pilsen Vidro 330ml ou Sol 0.0%": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0.5, gelada: 0.5 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Sol Pilsen Vidro 330ml": {
-                hiper: { gondola: 0.5, gelada: 0.5 },
-                super: { gondola: 0.5, gelada: 0.5 },
-                mini: { gondola: 0.5, gelada: 0.5 },
-                cc: { gondola: 0.5, gelada: 0 }
-            },
-            "Amstel Ultra Vidro 275ml OU Lata 269ml": {
+            "Amstel Ultra Lata 269ml ou Vidro 275ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml": {
+            "Eisenbahn Pilsen / Unfiltered Pilsen Lata 473ml ou Unfiltered 350ml": {
                 hiper: { gondola: 1.5, gelada: 0.5 },
                 super: { gondola: 1.5, gelada: 0.5 },
                 mini: { gondola: 1.5, gelada: 0.5 },
                 cc: { gondola: 2.5, gelada: 0 }
+            },
+            "Eisenbahn Pilsen / Unfiltered Pilsen Lata 350ml ou Unfiltered 350ml": {
+                hiper: { gondola: 0, gelada: 0 },
+                super: { gondola: 1.5, gelada: 0 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
             },
             "Heineken Lager Lata 473ml": {
                 hiper: { gondola: 1.5, gelada: 1.0 },
@@ -1872,19 +1981,25 @@
                 hiper: { gondola: 0, gelada: 0 },
                 super: { gondola: 0, gelada: 0 },
                 mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 0.5, gelada: 0 }
+                cc: { gondola: 0, gelada: 0 }
             },
             "Amstel Lager Lata 350ml": {
                 hiper: { gondola: 1.0, gelada: 0.5 },
                 super: { gondola: 1.0, gelada: 0.5 },
                 mini: { gondola: 0, gelada: 0 },
-                cc: { gondola: 2.0, gelada: 0 }
+                cc: { gondola: 0, gelada: 0 }
             },
             "Amstel Lager Lata 473ml": {
-                hiper: { gondola: 1.5, gelada: 1.0 },
-                super: { gondola: 1.5, gelada: 1.0 },
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0.5, gelada: 0.5 },
+                mini: { gondola: 0, gelada: 0 },
+                cc: { gondola: 0, gelada: 0 }
+            },
+            "Amstel Lager Lata 269ml ou 350ml ou 473ml": {
+                hiper: { gondola: 0.5, gelada: 0.5 },
+                super: { gondola: 0, gelada: 0 },
                 mini: { gondola: 1.5, gelada: 1.0 },
-                cc: { gondola: 2.0, gelada: 0 }
+                cc: { gondola: 4.5, gelada: 0 }
             },
             "Amstel Lager Vidro 355ml": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
@@ -1892,13 +2007,13 @@
                 mini: { gondola: 0, gelada: 0 },
                 cc: { gondola: 0, gelada: 0 }
             },
-            "Fys (Todos sabores/variações, exceto Tônica)": {
+            "FYS Todos os Sabores/Variações Exceto Tônica": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0.5, gelada: 0.5 },
                 cc: { gondola: 0.5, gelada: 0 }
             },
-            "Fys Tônica Lata 350ml (Regular/Zero)": {
+            "FYS Tônica Lata 350ml (Regular/Zero)": {
                 hiper: { gondola: 0.5, gelada: 0.5 },
                 super: { gondola: 0.5, gelada: 0.5 },
                 mini: { gondola: 0.5, gelada: 0.5 },
@@ -1907,21 +2022,21 @@
         };
 
         const POSICIONAMENTO_CHECKLIST = [
-            { id: 'estilos_ordenados', label: 'A exposição dos estilos está ordenada com os líquidos mais escuros para os mais claros?', points: 1.0 },
-            { id: 'baden_colorado', label: 'Baden Baden está exposta próxima a Colorado?', points: 1.0 },
-            { id: 'baden_blue_lagunitas', label: 'Baden Baden, Blue Moon e Lagunitas estão expostas na gôndola de Especiais?', points: 1.0 },
-            { id: 'amstel_planograma', label: 'Na gôndola de Mainstream, Amstel segue a ordem de posicionamento conforme planograma?', points: 1.0 },
-            { id: 'mainstream_70_30', label: 'Na gôndola de Mainstream, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 1.0 },
-            { id: 'heineken_00_dupla', label: 'Heineken 00 tem dupla exposição (na gôndola de Premium ao lado de Heineken Regular e na gôndola de cervejas sem álcool)?', points: 1.0 },
-            { id: 'premium_protecao', label: 'Na gôndola de Premium, ao menos uma marca do nosso portfólio está protegendo a marca Heineken de Spaten?', points: 1.0 },
-            { id: 'premium_planograma', label: 'Na gôndola de Premium, nossas marcas seguem a ordem de posicionamento conforme planograma?', points: 1.0 },
-            { id: 'praya_abrindo', label: 'Na gôndola de Premium, Praya Lager está abrindo o segmento?', points: 0.5 },
-            { id: 'premium_70_30', label: 'Na gôndola de Premium, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 1.0 },
-            { id: 'fys_tonica', label: 'Tônica FYS está posicionada próxima de Schweppes Tônica ou Antarctica Tônica?', points: 0.5 },
-            { id: 'extra_amstel', label: 'Ponto extra de Amstel está posicionado na área de churrasco/açougue (caso tenha)?', points: 0.0 },
-            { id: 'extra_heineken', label: 'Ponto extra de Heineken está posicionado ao lado do ponto extra de Heineken 0.0 (caso tenha)?', points: 0.0 },
-            { id: 'extra_praya', label: 'Ponto extra de Praya Lager está posicionado ao lado do ponto extra de Corona (caso tenha)?', points: 0.0 },
-            { id: 'extra_sol', label: 'Ponto extra de Sol está posicionado ao lado do ponto extra de Corona (caso tenha)?', points: 0.0 }
+            { id: 'craft_estilos_ordem', label: 'A exposição dos estilos está ordenada com os líquidos mais escuros para os mais claros?', points: 1.0 },
+            { id: 'craft_praya_classica', label: 'Praya Clássica é a primeira marca do segmento Craft ou está posicionada antes de Baden Baden?', points: 1.0 },
+            { id: 'craft_lagunitas_bluemoon', label: 'Lagunitas e Bluemoon estão posicionadas na ordem do planograma após Baden Baden?', points: 0.5 },
+            { id: 'craft_eisenbahn_final', label: 'Eisenbahn Estilos está posicionada ao final do segmento Craft?', points: 0.5 },
+            { id: 'premium_praya_sol', label: 'Na gôndola de Premium, Praya Lager ou Sol estão ao lado de Corona?', points: 1.0 },
+            { id: 'premium_hnk_spaten', label: 'Na gôndola de Premium, existe alguma marca separando HNK e Spaten?', points: 1.0 },
+            { id: 'premium_ordem', label: 'Na gôndola de Premium, nossas marcas seguem a ordem de posicionamento conforme planograma? (portfólio HEINEKEN)', points: 1.0 },
+            { id: 'premium_70_30', label: 'Na gôndola de Premium, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 0.5 },
+            { id: 'lono_amstel_ultra', label: 'Na gôndola de Premium/LONO, Amstel ultra está ao lado de Michelob ou Stella Pure Gold?', points: 0.5 },
+            { id: 'lono_hnk_00', label: 'Na gôndola de Premium/LONO, Heineken 0.0% está abrindo o segmento de zero alcool, ou fazendo dupla exposição com Heineken Regular?', points: 0.5 },
+            { id: 'lono_aplicado', label: 'Conseguimos aplicar o LONO nessa loja, conforme o planograma HEINEKEN?', points: 0.0 },
+            { id: 'mainstream_ordem', label: 'Na gôndola de Mainstream, Amstel segue a ordem de posicionamento conforme planograma?', points: 1.0 },
+            { id: 'mainstream_70_30', label: 'Na gôndola de Mainstream, temos 70% dos pacotes fechados nas prateleiras inferiores e 30% expostos em unidades nas prateleiras superiores?', points: 0.5 },
+            { id: 'nab_fys_tonica', label: 'FYS Tônica está posicionada próxima de Schweppes Tônica ou Antarctica Tônica?', points: 0.5 },
+            { id: 'nab_fys_sabores', label: 'FYS Sabores Regular ou Zero está posicionada próximo de Fanta, Guaraná Antarctica ou Sprite?', points: 0.5 }
         ];
 
         const StoreTypeSelector = ({ selected, onSelect }) => {
@@ -2067,6 +2182,8 @@
                 <div className="space-y-3">
                     {Object.entries(SCORES_PRESENCA).map(([product, scores]) => {
                         const currentScores = scores[storeType] || { gondola: 0, gelada: 0 };
+                        if (currentScores.gondola === 0 && currentScores.gelada === 0) return null;
+                        
                         const productState = (data && data[product]) || { gondola: false, gelada: false };
 
                         return (
@@ -2141,46 +2258,49 @@
             const nextCategory = currentIndex !== -1 && currentIndex < allCategories.length - 1 ? allCategories[currentIndex + 1] : null;
 
             return (
-                <div className="mb-6 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
+                <motion.div 
+                    initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                    className="mb-8 glass-panel rounded-3xl shadow-xl border border-ui-border overflow-hidden relative z-10 bg-[#0a0f0d]/80"
+                >
                     <div 
-                        className={`p-4 flex justify-between items-center text-white ${config.headerColor}`}
+                        className={`p-4 md:p-5 flex justify-between items-center text-white relative z-20 shadow-md ${config.headerColor}`}
                     >
                         <div className="flex items-center gap-2">
-                            <Star className="w-5 h-5 text-red-500 fill-current" />
-                            <h2 className="text-lg font-bold uppercase tracking-wider">{config.title}</h2>
+                            <Star className="w-5 h-5 text-yellow-400 fill-current drop-shadow-[0_0_8px_rgba(255,255,0,0.5)]" />
+                            <h2 className="text-lg font-black uppercase tracking-widest">{config.title}</h2>
                         </div>
                         <div className="flex items-center gap-3">
                             {config.target !== null && (
-                                <span className="text-xs font-semibold bg-white/20 px-2 py-1 rounded">
+                                <span className="text-xs font-bold bg-black/30 backdrop-blur px-3 py-1.5 rounded-lg border border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.3)]">
                                     META: {config.target}%
                                 </span>
                             )}
                         </div>
                     </div>
 
-                    <div className="p-4">
-                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-6">
-                                <div className="flex justify-between items-center mb-2">
-                                    <label className="text-[10px] md:text-xs font-bold text-blue-800 uppercase flex items-center gap-1">
-                                        <Globe size={14} />
+                    <div className="p-4 md:p-6 relative z-10">
+                            <div className="bg-heineken-dark/20 p-5 rounded-2xl border border-heineken-green/30 mb-8 shadow-inner">
+                                <div className="flex justify-between items-center mb-3">
+                                    <label className="text-[10px] md:text-xs font-black text-heineken-glow uppercase flex items-center gap-2 tracking-wider">
+                                        <Globe size={16} />
                                         Espaço Total (Mundo)
                                     </label>
                                 </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     <input
                                         type="tel"
                                         value={worldCm}
                                         onChange={(e) => onUpdateWorld(categoryKey, e.target.value)}
                                         placeholder="Total gôndola"
-                                        className="w-full p-3 text-base md:text-lg bg-white border border-blue-200 rounded-lg text-gray-800 focus:ring-2 focus:ring-blue-500 outline-none placeholder-gray-400"
+                                        className="w-full p-4 text-xl md:text-2xl bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-heineken-glow outline-none placeholder-white/30 transition-all font-light"
                                     />
-                                    <span className="font-bold text-blue-300 text-lg">cm</span>
+                                    <span className="font-bold text-gray-500 text-xl">cm</span>
                                 </div>
                             </div>
 
                             <div className="mb-6">
-                                <h3 className="text-xs font-bold text-gray-400 uppercase mb-3 pl-1">Nossos Produtos (cm)</h3>
-                                <div className={`bg-gray-50 rounded-lg p-2 border ${isError ? 'border-red-300' : 'border-gray-200'}`}>
+                                <h3 className="text-[10px] tracking-widest font-bold text-gray-400 uppercase mb-4 pl-1">Nossos Produtos (cm)</h3>
+                                <div className={`bg-ui-glass rounded-2xl p-3 border ${isError ? 'border-red-500 shadow-[0_0_15px_rgba(255,0,0,0.3)]' : 'border-ui-border'}`}>
                                     {config.products.map((prod, idx) => {
                                         const val = parseFloat(productValues[prod]) || 0;
                                         const share = totalShelf > 0 ? ((val / totalShelf) * 100).toFixed(1) : 0;
@@ -2205,31 +2325,31 @@
                                 )}
                             </div>
 
-                            <div className="border-t-2 border-dashed border-gray-200 pt-4">
-                                <div className="flex justify-between items-end">
+                            <div className="mt-8 pt-6 border-t border-white/10 relative">
+                                <div className="flex justify-between items-end mb-4">
                                     <div>
-                                        <span className="text-sm font-bold text-gray-500 block">SHARE TOTAL</span>
-                                        <span className="text-xs text-gray-400">
-                                            (Nossos: {hnkTotalVal}cm / Mundo: {totalShelf}cm)
+                                        <span className="text-[10px] md:text-xs tracking-widest font-bold text-gray-500 block uppercase">Share Total</span>
+                                        <span className="text-sm font-light text-gray-400 mt-1 block">
+                                            Nossos <strong className="text-white">{hnkTotalVal}cm</strong> / Mundo <strong className="text-white">{totalShelf}cm</strong>
                                         </span>
                                     </div>
-                                    <div className={`text-4xl font-bold ${isTargetMet ? 'text-[#008200]' : 'text-red-500'}`}>
+                                    <div className={`text-5xl md:text-6xl font-black tracking-tight drop-shadow-[0_0_10px_rgba(0,0,0,0.5)] ${isTargetMet ? 'text-heineken-glow drop-shadow-[0_0_15px_rgba(0,255,0,0.3)]' : 'text-heineken-red drop-shadow-[0_0_15px_rgba(255,0,0,0.3)]'}`}>
                                         {totalShare}%
                                     </div>
                                 </div>
                                 {config.target && totalShelf > 0 && (
-                                    <div className="space-y-2 mt-3">
-                                        <div className={`p-2 rounded flex items-center justify-center gap-2 text-sm font-bold ${isTargetMet ? 'bg-green-100 text-[#008200]' : 'bg-red-100 text-red-600'}`}>
-                                            {isTargetMet ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
+                                    <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="space-y-3 mt-4">
+                                        <div className={`p-4 rounded-xl flex items-center justify-center gap-3 text-sm font-bold border backdrop-blur-sm ${isTargetMet ? 'bg-heineken-green/20 text-heineken-glow border-heineken-glow/30' : 'bg-red-900/40 text-red-400 border-red-500/50'}`}>
+                                            {isTargetMet ? <CheckCircle size={22} className="animate-pulse" /> : <AlertCircle size={22} />}
                                             {isTargetMet ? `META DE ${config.target}% ATINGIDA` : `ABAIXO DA META DE ${config.target}%`}
                                         </div>
                                         {isMissing && (
-                                            <div className="p-2 rounded flex items-center justify-center gap-2 text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                                                <AlertTriangle size={14} />
+                                            <div className="p-3 rounded-xl flex items-center justify-center gap-2 text-xs font-bold bg-amber-900/30 text-amber-400 border border-amber-500/30 backdrop-blur-sm">
+                                                <AlertTriangle size={16} />
                                                 <span>Faltam {missingCm} cm para atingir a meta</span>
                                             </div>
                                         )}
-                                    </div>
+                                    </motion.div>
                                 )}
                             </div>
 
@@ -2259,41 +2379,44 @@
                             )}
                         </div>
                     {/* )} removed */}
-                </div>
+                </motion.div>
             );
         };
 
         const OutrosSection = ({ config, products, onUpdateProduct }) => {
             return (
-                <div className="mb-6 bg-white rounded-xl shadow-md border border-gray-100 overflow-hidden">
-                    <div className={`p-4 flex justify-between items-center text-white ${config.headerColor}`}>
+                <motion.div 
+                    initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
+                    className="mb-8 glass-panel rounded-3xl shadow-xl border border-ui-border overflow-hidden relative z-10 bg-[#0a0f0d]/80"
+                >
+                    <div className={`p-4 md:p-5 flex justify-between items-center text-white relative z-20 shadow-md ${config.headerColor}`}>
                         <div className="flex items-center gap-2">
-                            <Star className="w-5 h-5 text-white fill-current" />
-                            <h2 className="text-lg font-bold uppercase tracking-wider">{config.title}</h2>
+                            <Star className="w-5 h-5 text-white fill-current drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
+                            <h2 className="text-lg font-black uppercase tracking-widest">{config.title}</h2>
                         </div>
                     </div>
 
-                    <div className="p-4 space-y-4">
+                    <div className="p-4 md:p-6 space-y-6 relative z-10">
                         {config.products.map((item, idx) => (
-                            <div key={idx} className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <label className="text-xs font-bold text-gray-700 uppercase flex items-center gap-1 mb-2">
-                                    <Globe size={14} />
+                            <div key={idx} className="bg-heineken-dark/20 p-5 rounded-2xl border border-white/5 shadow-inner">
+                                <label className="text-[10px] md:text-xs font-black text-gray-300 uppercase flex items-center gap-2 tracking-wider mb-3">
+                                    <Globe size={16} className="text-gray-400" />
                                     Espaço Total da Categoria ({item})
                                 </label>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-3">
                                     <input
                                         type="number"
                                         value={products[item] || ''}
                                         onChange={(e) => onUpdateProduct(item, e.target.value)}
                                         placeholder={`Total de ${item} em cm`}
-                                        className="w-full p-3 text-lg bg-white border border-gray-300 rounded text-gray-800 focus:ring-2 focus:ring-gray-500 outline-none"
+                                        className="w-full p-4 text-xl md:text-2xl bg-white/5 border border-white/10 rounded-xl text-white focus:ring-2 focus:ring-gray-400 outline-none placeholder-white/30 transition-all font-light"
                                     />
-                                    <span className="font-bold text-gray-400">cm</span>
+                                    <span className="font-bold text-gray-500 text-xl">cm</span>
                                 </div>
                             </div>
                         ))}
                     </div>
-                </div>
+                </motion.div>
             );
         };
 
@@ -2979,28 +3102,35 @@
             const isValid = storeName.trim().length > 0 && fds.trim().length > 0 && storeType;
 
             return (
-                <div className="fixed inset-0 z-[100] bg-black/90 flex flex-col items-center justify-center p-4 bg-[url('https://images.unsplash.com/photo-1577908953930-58c0378077c5?q=80&w=2670&auto=format&fit=crop')] bg-cover bg-center">
-                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+                <div className="fixed inset-0 z-[100] bg-ui-dark overflow-hidden flex flex-col items-center justify-center p-4">
+                    {/* Decorative base background glow */}
+                    <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-heineken-dark/10 rounded-full blur-[120px] mix-blend-screen animate-blob pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-heineken-green/5 rounded-full blur-[150px] mix-blend-screen animate-blob pointer-events-none" style={{ animationDelay: '2s' }}></div>
                     
-                    <div className="relative z-10 w-full max-w-sm flex flex-col gap-5 [@media(max-height:700px)]:gap-2 animate-in fade-in zoom-in duration-500">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                        className="relative z-10 w-full max-w-sm flex flex-col gap-5 [@media(max-height:700px)]:gap-2 glass-panel p-6 rounded-3xl"
+                    >
                         <button
                             onClick={() => {
                                 setStoreName('');
                                 setFds('');
                                 setStoreType(null);
                             }}
-                            className="absolute top-2 right-2 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 backdrop-blur-sm transition-all duration-300 hover:bg-red-900/30 hover:border-red-500/50 hover:text-red-400 hover:shadow-[0_0_15px_rgba(248,113,113,0.3)] hover:scale-110 z-50 group"
+                            className="absolute top-4 right-4 p-2 rounded-full bg-white/5 border border-white/10 text-white/40 backdrop-blur-sm transition-all duration-300 hover:bg-red-900/30 hover:border-red-500/50 hover:text-red-400 hover:shadow-[0_0_15px_rgba(248,113,113,0.3)] hover:scale-110 z-50 group"
                             title="Limpar dados"
                         >
                             <Trash2 size={24} className="transition-transform duration-300 group-hover:rotate-12" />
                         </button>
                         {/* Logo Area */}
-                        <div className="text-center mb-2 [@media(max-height:700px)]:mb-0.5">
+                        <div className="text-center mb-2 mt-4 [@media(max-height:700px)]:mb-0.5">
                             <div className="flex flex-col items-center justify-center">
-                                <Star className="w-12 h-12 [@media(max-height:700px)]:w-10 [@media(max-height:700px)]:h-10 text-white fill-current mb-0.5" />
-
+                                <Star className="w-12 h-12 [@media(max-height:700px)]:w-10 [@media(max-height:700px)]:h-10 text-heineken-glow drop-shadow-[0_0_15px_rgba(0,255,0,0.4)] fill-current mb-0.5" />
                             </div>
-                            <p className="text-gray-300 text-sm [@media(max-height:700px)]:text-xs mt-0.5 font-medium">Simulador de FDS</p>
+                            <h1 className="text-2xl font-bold tracking-tight text-white">Bem-vindo(a)</h1>
+                            <p className="text-gray-400 text-sm [@media(max-height:700px)]:text-xs mt-0.5 font-medium">Informe os dados da auditoria</p>
                         </div>
 
                         {/* Input Fields */}
@@ -3047,10 +3177,10 @@
                                         <button
                                             key={type.id}
                                             onClick={() => setStoreType(type.id)}
-                                            className={`py-2.5 [@media(max-height:700px)]:py-1.5 rounded-lg text-xs font-bold transition-all border ${
+                                            className={`py-2.5 [@media(max-height:700px)]:py-1.5 rounded-xl text-xs font-bold transition-all border ${
                                                 storeType === type.id
-                                                    ? 'bg-[#008200] text-white border-[#008200] shadow-[0_0_15px_rgba(0,130,0,0.5)]'
-                                                    : 'bg-white/5 text-gray-400 border-white/10 hover:bg-white/10'
+                                                    ? 'bg-heineken-green/20 text-heineken-glow border-heineken-glow/30 shadow-[0_0_15px_rgba(0,255,0,0.15)]'
+                                                    : 'bg-ui-glass text-gray-400 border-white/10 hover:bg-white/10 hover:text-white'
                                             }`}
                                         >
                                             {type.label}
@@ -3087,7 +3217,7 @@
                         <div className="text-center mt-1 [@media(max-height:700px)]:mt-0">
                             <p className="text-white/40 text-[10px]">Desenvolvido por Pedro Lameirão</p>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             );
         };
@@ -3111,8 +3241,8 @@
             ];
 
             return (
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-                    <div className="bg-gray-100 p-1 rounded-xl flex gap-1 m-2">
+                <div className="glass-panel rounded-2xl shadow-xl border border-ui-border mb-6 overflow-hidden relative z-10 transition-all duration-500 backdrop-blur-md bg-ui-dark/30">
+                    <div className="bg-white/5 p-1 rounded-xl flex gap-1 m-2 border border-white/5 relative z-20">
                         {tabs.map(tab => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -3120,13 +3250,13 @@
                                 <button
                                     key={tab.id}
                                     onClick={() => onTabChange(tab.id)}
-                                    className={`flex-1 flex items-center justify-center gap-1 py-2 rounded-lg text-xs md:text-sm font-bold transition-all ${
+                                    className={`flex-1 flex items-center justify-center gap-1 py-1.5 md:py-2.5 rounded-lg text-[10px] md:text-sm font-bold transition-all ${
                                         isActive
-                                            ? 'bg-white text-[#008200] shadow-sm ring-1 ring-black/5'
-                                            : 'text-gray-500 hover:text-gray-700 hover:bg-gray-200/50'
+                                            ? 'bg-heineken-green/20 text-heineken-glow shadow-[0_0_10px_rgba(0,255,0,0.15)] ring-1 ring-heineken-glow/30'
+                                            : 'text-gray-400 hover:text-white hover:bg-white/5'
                                     }`}
                                 >
-                                    <Icon size={16} />
+                                    <Icon size={16} className="md:w-5 md:h-5 text-current opacity-90" />
                                     {tab.label}
                                 </button>
                             );
@@ -4726,9 +4856,8 @@ const PRICE_RULER_DATA_VAREJO = [
             const [value, setValue] = useState(() => {
                 try {
                     const stickyValue = window.localStorage.getItem(key);
-                    return stickyValue !== null
-                        ? JSON.parse(stickyValue)
-                        : defaultValue;
+                    const parsed = stickyValue !== null ? JSON.parse(stickyValue) : null;
+                    return parsed !== null ? parsed : defaultValue;
                 } catch (error) {
                     console.warn(`Error reading localStorage key "${key}":`, error);
                     return defaultValue;
@@ -6404,3 +6533,4 @@ const PRICE_RULER_DATA_VAREJO = [
     </script>
 </body>
 </html>
+
