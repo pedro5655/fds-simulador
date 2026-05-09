@@ -1,0 +1,65 @@
+
+        const RI_SKU_MAPPING = {
+            "Heineken Original": [
+                "Heineken Lager Lata 350ml",
+                "Heineken Lager Vidro 250ml OU Lata 269ml",
+                "Heineken Lager Vidro 330ml",
+                "Heineken Lager Lata 473ml"
+            ],
+            "Heineken 0.0": [
+                "Heineken Pilsen Zero Lata 350ml OU 269ml",
+                "Heineken Pilsen Zero Vidro 330ml"
+            ],
+            "Eisenbahn Pilsen": [
+                "Eisenbahn Pilsen Lata 350ml",
+                "Eisenbahn Pilsen Lata 473ml OU Unfiltered 350ml",
+                "Eisenbahn Pilsen Vidro 355ml OU Unfiltered 355ml"
+            ],
+            "Eisenbahn Unfiltered": [], 
+            "Amstel Ultra": [
+                "Amstel Ultra Vidro 275ml OU Lata 269ml"
+            ],
+            "Sol": [
+                "Sol Pilsen Vidro 330ml"
+            ],
+            "Sol 0.0": [],
+            "Praya Lager": [
+                "Praya Lager 355ml"
+            ],
+            "Eisenbahn (Estilos)": [
+                "Eisenbahn American Ipa Lata 350ml",
+                "Eisenbahn Pale Ale Lata 350ml",
+                "Eisenbahn Session Ipa Lata 350ml OU Vidro 355ml",
+                "Eisenbahn Weizenbier Vidro 355ml"
+            ],
+            "Baden Baden (Estilos)": [
+                "Baden Baden Cristal Vidro 600ml",
+                "Baden Baden Ipa Vidro 600ml",
+                "Baden Baden Witbier Vidro 600ml",
+                "Baden Baden Golden Vidro 600ml",
+                "Baden Baden Peach Vidro 600ml"
+            ],
+            "Praya Clássica": [
+                "Praya Classica 355ml OU Classica 600ml"
+            ],
+            "Lagunitas": [
+                "Lagunitas IPA Lata 350ml OU Vidro 355ml"
+            ],
+            "Blue Moon": [
+                "Blue Moon Witbier Lata 350ml OU Vidro 355ml"
+            ],
+            "Amstel": [
+                "Amstel Lager Lata 269ml",
+                "Amstel Lager Lata 350ml",
+                "Amstel Lager Lata 473ml",
+                "Amstel Lager Vidro 355ml"
+            ],
+            "Devassa": [
+                "Devassa Puro Malte Lata 269ml",
+                "Devassa Puro Malte Lata 350ml",
+                "Devassa Puro Malte Lata 473ml"
+            ],
+            "Tiger": [
+                "Tiger Pure Malt Lata 350ml"
+            ]
+        };
