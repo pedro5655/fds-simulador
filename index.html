@@ -130,7 +130,6 @@
 
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
-        // Keep the existing motion JSX working without loading Framer Motion from a CDN.
         const motion = new Proxy({}, { get: (_, tag) => tag });
         const AnimatePresence = ({ children }) => children;
 
@@ -6572,13 +6571,8 @@ const PRICE_RULER_DATA_VAREJO = [
             );
         };
 
-        try {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
-        } catch(e) {
-            console.error('REACT RENDER ERROR:', e);
-            document.getElementById('root').innerHTML = '<div style="color:red;padding:20px;font-family:monospace;background:#111;min-height:100vh"><h2>Erro ao carregar o app:</h2><pre>' + e.message + '\n\n' + e.stack + '</pre></div>';
-        }
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 
     <script>
