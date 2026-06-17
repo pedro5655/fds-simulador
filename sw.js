@@ -1,49 +1,77 @@
-const CACHE_NAME = "fds-2025-v2";
-const ASSETS_TO_CACHE = [
+const CACHE_NAME = "fds-2026-v3";
+const APP_SHELL = [
   "./",
   "./index.html",
   "./favicon.png",
   "./manifest.json",
-  "https://unpkg.com/react@18/umd/react.production.min.js",
-  "https://unpkg.com/react-dom@18/umd/react-dom.production.min.js",
-  "https://unpkg.com/@babel/standalone/babel.min.js",
-  "https://cdn.tailwindcss.com",
-  "https://unpkg.com/prop-types/prop-types.min.js",
-  "https://unpkg.com/recharts@2.10.3/umd/Recharts.js",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log("Opened cache");
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
-  );
-});
-
-self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Cache hit - return response
-      if (response) {
-        return response;
-      }
-      return fetch(event.request);
-    })
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(APP_SHELL))
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener("activate", (event) => {
-  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheWhitelist.indexOf(cacheName) === -1) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
-    })
+    Promise.all([
+      caches.keys().then((cacheNames) =>
+        Promise.all(
+          cacheNames
+            .filter((cacheName) => cacheName !== CACHE_NAME)
+            .map((cacheName) => caches.delete(cacheName))
+        )
+      ),
+      self.clients.claim(),
+    ])
   );
 });
+
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") {
+    return;
+  }
+
+  if (event.request.mode === "navigate") {
+    event.respondWith(networkFirst(event.request, "./index.html"));
+    return;
+  }
+
+  event.respondWith(cacheFirst(event.request));
+});
+
+async function networkFirst(request, fallbackUrl) {
+  const cache = await caches.open(CACHE_NAME);
+
+  try {
+    const response = await fetch(request);
+    if (response && response.ok) {
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    return (await cache.match(request)) || cache.match(fallbackUrl);
+  }
+}
+
+async function cacheFirst(request) {
+  const cached = await caches.match(request);
+  if (cached) {
+    return cached;
+  }
+
+  const response = await fetch(request);
+  if (!response || !response.ok) {
+    return response;
+  }
+
+  const cache = await caches.open(CACHE_NAME);
+  try {
+    await cache.put(request, response.clone());
+  } catch (error) {
+    // Some opaque third-party CDN responses cannot be stored reliably.
+  }
+  return response;
+}
