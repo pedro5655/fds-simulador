@@ -1,10 +1,17 @@
 {
   "name": "soviheineken",
   "version": "1.0.0",
-  "description": "> **Fotografia de Sucesso (FDS)** - Ferramenta de Simulação e Auditoria de Execução no Ponto de Venda.",
+  "description": "Plataforma interna mobile-first para preparação de visitas e avaliação FDS.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite --config platform/vite.config.mts",
+    "build": "vite build --config platform/vite.config.mts",
+    "preview": "vite preview --config platform/vite.config.mts",
+    "lint": "eslint platform/src platform/scripts platform/vite.config.mts",
+    "typecheck": "tsc --noEmit -p platform/tsconfig.json",
+    "test": "vitest run --config platform/vite.config.mts",
+    "test:watch": "vitest --config platform/vite.config.mts",
+    "report:sample": "vite-node --config platform/vite.config.mts platform/scripts/generate-sample-report.ts"
   },
   "repository": {
     "type": "git",
@@ -20,10 +27,28 @@
   "homepage": "https://github.com/pedro5655/fds-simulador#readme",
   "dependencies": {
     "@capacitor/android": "^8.0.0",
-    "@capacitor/cli": "^8.0.0",
     "@capacitor/core": "^8.0.0",
     "@capacitor/filesystem": "^8.0.0",
     "@capacitor/share": "^8.0.0",
-    "esbuild": "^0.27.1"
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.31.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.0",
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "esbuild": "^0.27.1",
+    "eslint": "^10.8.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.4",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
+    "vite": "^8.2.1",
+    "vite-node": "^6.0.0",
+    "vitest": "^4.1.10"
   }
 }
