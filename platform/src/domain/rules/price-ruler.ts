@@ -9,7 +9,7 @@ export const PRICE_RULER_VERSION: RuleVersion = {
     'Conforme somente quando o preço observado for exatamente o Regular OU o Promocional.',
     'Um terceiro valor é fora da régua.',
     'A conformidade não alimenta automaticamente os 5 pontos de precificação FDS.',
-    'Inclui atualizações SPIN/Praya/NAB e lançamentos Heineken Ultimate (330ml régua 7,29 sem promo e 350ml régua 6,19 sem promo).',
+    'Inclui atualizações SPIN/Praya/NAB e lançamentos Heineken Ultimate (330ml régua 7,29 sem promo e 350ml régua 6,29 sem promo).',
   ],
 };
 
@@ -60,7 +60,7 @@ const sourceRows: SourceRow[] = [
   ['PREMIUM', 'HEINEKEN 0,0', 'LONG NECK', 7.19, 6.89, 7.19, 6.89],
   ['PREMIUM', 'HEINEKEN SPRITZ', 'LONG NECK', 7.19, 6.89, 7.19, 6.89],
   ['PREMIUM', 'HEINEKEN ULTIMATE', 'LN 330', 7.29, 7.29, 7.29, 7.29],
-  ['PREMIUM', 'HEINEKEN ULTIMATE', 'LATA 350', 6.19, 6.19, 6.19, 6.19],
+  ['PREMIUM', 'HEINEKEN ULTIMATE', 'LATA 350', 6.29, 6.29, 6.29, 6.29],
   ['PREMIUM', 'PRAYA LAGER', 'LN 330', 7.09, 6.29, 7.49, 6.99],
   ['PREMIUM', 'PRAYA LAGER', 'LATA 350', 6.19, 5.89, 6.49, 6.29],
   ['PREMIUM', 'PRAYA LAGER', 'LATA 473', 7.59, 6.89, 7.99, 7.49],
